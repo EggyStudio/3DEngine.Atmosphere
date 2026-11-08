@@ -90,6 +90,21 @@ its model here from the first commit rather than moving it later.
     PrivateAssets all, its nine files out and its users reading the module. Both engines take the
     module; the item is done.
 
+
+5. **The night's model.** From 3DEngine's item 221 on 2026-11-08, the owner having found Sponza's
+   night sky a field of white blobs with a disc many times the moon's size. The module holds the
+   moon's illuminance and Night's luminance and no stars, no earthshine and no Milky Way, so the
+   night's model comes here, written by the engine's session through the submodule as the vegetation
+   was, a catalog of the bright stars to about magnitude 6.5, their places and visual magnitudes
+   with a color index, as a compact data file with its source named in a comment, read into star
+   places by SkyClock's sidereal time for a latitude and a longitude as the sun and the moon are
+   placed; the moon's earthshine as the dark side's luminance by the earth's phase in Moon; the
+   Milky Way's band as a luminance along the galactic plane by a simple profile, with its figures
+   from the literature in the comment; and a star's magnitude to a luminance and an illuminance so
+   an engine can draw it at a camera's exposure. The drawing stays each engine's (Decision 6). Tests
+   hold a known star's place at a known hour against an almanac, the moon's earthshine against its
+   figure and the magnitude scale at 0 and at 6. After item 4.
+
 ## Verdicts
 
 None yet.
@@ -135,6 +150,14 @@ None yet.
     drawing and rain stay with each engine and come after the global illumination items (3DEngine
     Decision 79).
 
+
+7. **The night comes to the model.** The owner wrote in the engine's session on 2026-11-08 that the
+   night sky looks really bad, never updated from the voxel game's, while the day looks super good,
+   so the night's model, the stars, the moon's earthshine and the Milky Way, comes to this module
+   (item 5), the engines drawing it as they draw the day, Decision 6 standing; the engine's session
+   writes it through the submodule, the review pushing the module before the engine that points at
+   it.
+
 ## Replies
 
 Item 3's second part, from 3DEngine's item 170, is in the commit after `bff9e47`. It holds
@@ -163,3 +186,21 @@ that need no engine, the one that draws staying in BevyCSharp beside the look's 
 The README's table names the three. The strict build is clean and the tests pass, 40 where there
 were 20 (dotnet test Sky.Tests). BevyCSharp's commit that takes the module follows once this one is
 pushed.
+
+Item 5 done in the commit after `0e5864f`. `Stars.Catalog` holds the Bright Star Catalogue's 9,096
+stars with a place (Hoffleit and Warren, 1991, the Smithsonian Astrophysical Observatory's
+bsc5.dat), right ascension and declination for 2000, visual magnitude and B-V, as
+`Data/BrightStars.csv`, 246 KB carried as a resource, placed by `SkyClock.TowardSky`. The clock's
+hour is the local solar time, so the longitude is in it already and the clock takes none.
+`Stars.Illuminance` gives 2.54e-6 lux at magnitude 0 by the zero point `Night.SkyLuminance` is
+given by, `Stars.Luminance` a star spread over a pixel's solid angle and `Stars.Color` a black
+body's by Ballesteros's temperature. `Moon` holds the disc's 0.518 degrees and 6.4e-5 steradians,
+its sunlit part's luminance, 4,870 candelas a square meter full, and the earthshine on its dark
+part, 8e-5 of the full moon's at a full earth by the earth's light on it, falling with the earth's
+lit share. `Night.GalaxyLuminance` gives the Milky Way's band in galactic coordinates, 100 to 1,000
+S10 along the plane from the anticenter to the center, of the order Leinert and others give, a
+third each 8 degrees off it. Tests hold Sirius at the almanac's place and crossing the meridian at
+midnight on the first of January 28.3 degrees up at 45 north, Polaris within a degree of the pole
+at every hour, the magnitude scale at 0, 5 and 6 and the moonless sky's luminance at 21.7
+magnitudes a square arcsecond by it, the earthshine against its figure and the band at its center,
+anticenter and pole, the module's tests 49 in all.

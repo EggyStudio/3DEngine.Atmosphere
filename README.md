@@ -13,7 +13,8 @@ module.
 | `Atmosphere` | The air as data, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with their heights, the ground's albedo, and the transmittance along a way through it. `Atmosphere.Earth` is the Earth of Unity's HDRP, and `WithTurbidity` sets its haze |
 | `Sun` | The sun's light outside the air, 128,000 lux at 5,772 K, and `Sun.At`, its lux, color and color temperature at the ground for its height over the horizon |
 | `SkyLight` | The sky's luminance along a way and its illuminance on a level surface, the sun's light scattered once and more than once, in candelas a square meter and lux |
-| `Moon` and `Night` | The moon's light by its phase and height, and a moonless sky's luminance and illuminance |
+| `Moon` and `Night` | The moon's light by its phase and height, its disc's size and luminance and the earthshine on its dark part, and a moonless sky's luminance and illuminance with the Milky Way's band over it |
+| `Stars` and `Star` | The Bright Star Catalogue's 9,096 stars, their places, magnitudes and colors, and a star's illuminance and luminance by its magnitude |
 | `Colorimetry` | Linear sRGB's luminance and a black body's color, to and from its temperature |
 | `SkyClock` | Where the sun, the moon and the stars stand at an hour of a day of the year for a latitude, by spherical astronomy, with the moon's phase, how far the stars have turned about the pole, and the part of the day, a `DayPhase`, the sun's height makes it |
 | `WeatherState` | The weather as it goes, its `WeatherConditions` easing toward a `WeatherPreset` or toward a forecast a `WeatherClimate` writes from the clock, the wind gusting and the ground wetting in rain and whitening under snow |

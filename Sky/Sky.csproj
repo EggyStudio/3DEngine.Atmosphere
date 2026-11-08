@@ -13,4 +13,9 @@
         <WarningsAsErrors>$(WarningsAsErrors);CS1591;CS1574</WarningsAsErrors>
     </PropertyGroup>
 
+    <!-- The bright stars Stars reads, carried in the library so it needs no file of the engine's. -->
+    <ItemGroup>
+        <EmbeddedResource Include="Data/BrightStars.csv" LogicalName="Sky.BrightStars.csv" />
+    </ItemGroup>
+
 </Project>
