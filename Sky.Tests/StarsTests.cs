@@ -24,7 +24,7 @@ public class StarsTests
     }
 
     [Fact]
-    public void The_Catalogue_Holds_The_Bright_Stars_Sirius_The_Brightest_Where_The_Almanac_Puts_It()
+    public void The_Catalog_Holds_The_Bright_Stars_Sirius_The_Brightest_Where_The_Almanac_Puts_It()
     {
         var catalog = Stars.Catalog;
         Assert.Equal(9_096, catalog.Count);

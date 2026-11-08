@@ -9,7 +9,7 @@ namespace Sky;
 /// </summary>
 /// <remarks>
 /// <para>
-/// The catalogue is the Bright Star Catalogue's 9,096 stars with a place, named in the head of
+/// The catalog is the Bright Star Catalogue's 9,096 stars with a place, named in the head of
 /// <c>Data/BrightStars.csv</c>, which the library carries as a resource. A star's place is fixed
 /// for the equinox of 2000, and the precession since, a third of a degree by 2026, is left out.
 /// </para>
@@ -27,7 +27,7 @@ public static class Stars
     /// <summary>The illuminance in lux of a star of magnitude 0 on a surface facing it, outside the air.</summary>
     public const float ZeroIlluminance = 2.538e-6f;
 
-    /// <summary>The catalogue's stars in its order, by right ascension, read once.</summary>
+    /// <summary>The catalog's stars in its order, by right ascension, read once.</summary>
     public static IReadOnlyList<Star> Catalog => Read.Value;
 
     private static readonly Lazy<Star[]> Read = new(Load);
@@ -48,7 +48,7 @@ public static class Stars
     /// <summary>The color in linear sRGB at a luminance of 1 of a star of B-V color index <paramref name="colorIndex"/>.</summary>
     public static Vector3 Color(float colorIndex) => Colorimetry.FromTemperature(Temperature(colorIndex));
 
-    // The catalogue's lines, its head's lines of comment left out, each a right ascension in hours,
+    // The catalog's lines, its head's lines of comment left out, each a right ascension in hours,
     // a declination in degrees, a visual magnitude and a color index, which may be empty.
     private static Star[] Load()
     {

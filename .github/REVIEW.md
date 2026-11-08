@@ -1,18 +1,22 @@
 # Review
 
-Reviewed up to `a5e474b`, item 3's second part by the 3DEngine session, pushed at 23:34 on
+Reviewed up to `ff8f9df`, item 5, the night's model by the 3DEngine session, pushed at 12:31 on
+2026-11-08, its run green at 12:32 on the three systems in under a minute each; it keeps the form,
+carries the catalog as a resource with its source in the file's head and references no engine, and
+the common noun's spelling, catalog, goes in the module's next commit. Nothing is pushed after it.
+Before it `0e5864f` and `65b663d`, the review's files alone, pushed at 12:34 on 2026-11-05 and 14:51
+on 2026-11-03, with no run since the build passes over the review's files; they keep the form.
+Before it `fbc385e`, item 3's first part by the BevyCSharp session, pushed at 20:42 on 2026-11-02,
+its run green at 20:44 on the three systems in about a minute each; it keeps the form and references
+no engine. Before it `a5e474b`, item 3's second part by the 3DEngine session, pushed at 23:34 on
 2026-11-01, its run green at 23:36 on the three systems in about a minute each; it keeps the form
-and references no engine. After it `fbc385e`, item 3's first part by the BevyCSharp session, pushed
-at 20:42 on 2026-11-02, its run green at 20:44 on the three systems in about a minute each; it keeps
-the form and references no engine. After it `65b663d`, the review's head alone, pushed at 14:51 on
-2026-11-03, with no run since the build passes over the review's files; it keeps the form. Before it
-`bff9e47`, item 2, pushed at 14:15 on 2026-11-01, its run green at 14:18 on the three systems in
-about a minute each, the repository's first, the skeleton as Vegetation's with the name changed.
-Before it `c5ee6a9`, item 1, the documents as the other modules keep them with the opening paragraph
-saying what this module is for; the commit keeps the form, the three-mark subject, one sentence, the
-owner's identity as author and committer, no trailer (N 7.2 and N 7.6 kept at the first commit).
-Before it `cad5537`, this review and the norm, and `17aeab0`, the owner's first commit alone, made
-at 13:47.
+and references no engine. Before it `bff9e47`, item 2, pushed at 14:15 on 2026-11-01, its run green
+at 14:18 on the three systems in about a minute each, the repository's first, the skeleton as
+Vegetation's with the name changed. Before it `c5ee6a9`, item 1, the documents as the other modules
+keep them with the opening paragraph saying what this module is for; the commit keeps the form, the
+three-mark subject, one sentence, the owner's identity as author and committer, no trailer (N 7.2
+and N 7.6 kept at the first commit). Before it `cad5537`, this review and the norm, and `17aeab0`,
+the owner's first commit alone, made at 13:47.
 
 ## Now
 
@@ -90,20 +94,21 @@ its model here from the first commit rather than moving it later.
     PrivateAssets all, its nine files out and its users reading the module. Both engines take the
     module; the item is done.
 
-
 5. **The night's model.** From 3DEngine's item 221 on 2026-11-08, the owner having found Sponza's
-   night sky a field of white blobs with a disc many times the moon's size. The module holds the
-   moon's illuminance and Night's luminance and no stars, no earthshine and no Milky Way, so the
-   night's model comes here, written by the engine's session through the submodule as the vegetation
-   was, a catalog of the bright stars to about magnitude 6.5, their places and visual magnitudes
-   with a color index, as a compact data file with its source named in a comment, read into star
-   places by SkyClock's sidereal time for a latitude and a longitude as the sun and the moon are
-   placed; the moon's earthshine as the dark side's luminance by the earth's phase in Moon; the
-   Milky Way's band as a luminance along the galactic plane by a simple profile, with its figures
-   from the literature in the comment; and a star's magnitude to a luminance and an illuminance so
-   an engine can draw it at a camera's exposure. The drawing stays each engine's (Decision 6). Tests
-   hold a known star's place at a known hour against an almanac, the moon's earthshine against its
-   figure and the magnitude scale at 0 and at 6. After item 4.
+    night sky a field of white blobs with a disc many times the moon's size. The module holds the
+    moon's illuminance and Night's luminance and no stars, no earthshine and no Milky Way, so the
+    night's model comes here, written by the engine's session through the submodule as the
+    vegetation was, a catalog of the bright stars to about magnitude 6.5, their places and visual
+    magnitudes with a color index, as a compact data file with its source named in a comment, read
+    into star places by SkyClock's sidereal time for a latitude and a longitude as the sun and the
+    moon are placed; the moon's earthshine as the dark side's luminance by the earth's phase in
+    Moon; the Milky Way's band as a luminance along the galactic plane by a simple profile, with its
+    figures from the literature in the comment; and a star's magnitude to a luminance and an
+    illuminance so an engine can draw it at a camera's exposure. The drawing stays each engine's
+    (Decision 6). Tests hold a known star's place at a known hour against an almanac, the moon's
+    earthshine against its figure and the magnitude scale at 0 and at 6. After item 4. Done at
+    `ff8f9df`, its run green at 12:32 on 2026-11-08, the module's tests 49; the common noun's
+    spelling, catalog, follows in the next commit.
 
 ## Verdicts
 
@@ -149,7 +154,6 @@ None yet.
     clouds, 3DEngine builds its pass under item 170, and each feeds its sky from the module. Clouds'
     drawing and rain stay with each engine and come after the global illumination items (3DEngine
     Decision 79).
-
 
 7. **The night comes to the model.** The owner wrote in the engine's session on 2026-11-08 that the
    night sky looks really bad, never updated from the voxel game's, while the day looks super good,

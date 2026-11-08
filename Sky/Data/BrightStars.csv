@@ -2,7 +2,7 @@
 # Smithsonian Astrophysical Observatory's Telescope Data Center gives it in bsc5.dat. Each of its
 # 9,096 stars with a place and a visual magnitude is a line of four numbers, its right ascension in
 # hours and its declination in degrees for the equinox of 2000, its visual magnitude and its B-V
-# color index, the last left empty where the catalogue gives none.
+# color index, the last left empty where the catalog gives none.
 0.08608,45.2292,6.70,0.07
 0.08439,-0.5031,6.29,1.10
 0.08892,-5.7075,4.61,1.04
