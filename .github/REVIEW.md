@@ -1,9 +1,11 @@
 # Review
 
-Reviewed up to `ff8f9df`, item 5, the night's model by the 3DEngine session, pushed at 12:31 on
+Reviewed up to `a9573d6`, the common noun's spelling, catalog, in the sources, the catalog's head
+and a test's name, the Bright Star Catalogue keeping its name, pushed at 13:30 on 2026-11-08, its
+run green at 13:31 on the three systems in under a minute each; it keeps the form. Nothing is pushed
+after it. Before it `ff8f9df`, item 5, the night's model by the 3DEngine session, pushed at 12:31 on
 2026-11-08, its run green at 12:32 on the three systems in under a minute each; it keeps the form,
-carries the catalog as a resource with its source in the file's head and references no engine, and
-the common noun's spelling, catalog, goes in the module's next commit. Nothing is pushed after it.
+carries the catalog as a resource with its source in the file's head and references no engine.
 Before it `0e5864f` and `65b663d`, the review's files alone, pushed at 12:34 on 2026-11-05 and 14:51
 on 2026-11-03, with no run since the build passes over the review's files; they keep the form.
 Before it `fbc385e`, item 3's first part by the BevyCSharp session, pushed at 20:42 on 2026-11-02,
@@ -108,7 +110,7 @@ its model here from the first commit rather than moving it later.
     (Decision 6). Tests hold a known star's place at a known hour against an almanac, the moon's
     earthshine against its figure and the magnitude scale at 0 and at 6. After item 4. Done at
     `ff8f9df`, its run green at 12:32 on 2026-11-08, the module's tests 49; the common noun's
-    spelling, catalog, follows in the next commit.
+    spelling, catalog, in `a9573d6`, pushed at 13:30.
 
 ## Verdicts
 
