@@ -622,3 +622,22 @@ sources for an engine's name, its private members and comments among them, where
 public names and their documentation, beside its width of 100 columns. The library and its package
 take nothing of Tools', which `IndependenceTests` and the reference fact hold. AGENTS.md gains the
 row for `modules`, and the README's building section says how a clone fetches the submodule.
+
+The module's session, the sunset's gap by its candidates, read with nothing changed, at
+`.github/assets/readings/2026-11-18-sunset-candidates.webp`. From a clear day's air of turbidity 3
+the apparent sunset gives 586 lux on a level surface, the dome summed in quarter-degree bands by a
+probe that reads `SkyLight.Luminance`, which gives the module's own 586. Each candidate switched
+alone moves it so. The haze's height profile moves it most, its scale height of 1.2 km at 0.6 km
+giving 1.087 of it, at 2 km 0.919 and at 3 km 0.850, its depth kept. A haze that absorbs a fifth of
+what it takes, its albedo 0.8 for 0.9, gives 0.961. Its phase gives 1.005 and 1.008 at an anisotropy
+of 0.7 and 0.6 for 0.8. The ground's albedo gives nothing at none and at 0.3, since a sun under the
+horizon lights no ground. A horizon hidden to 2, 4 and 6 degrees, as trees and buildings hide a
+meter's, gives 0.999, 0.997 and 0.990, the level surface weighing the low sky by the cosine. The
+haze 2 km high and absorbing gives 515 lux, and the same at a turbidity of 4 gives 447 against the
+442 of Krisciunas and Schaefer after Brown and the 400 of the Lux article, both measured on a level
+surface as the module's is. So none of it is a fault of the module's arithmetic. The gap stands on
+the air `Atmosphere.Earth` holds, HDRP's haze, thin and low over a very clear day and absorbing
+little, where the sources read the air of their sites on days they called clear, which held more
+haze, higher and absorbing more; that is the sources' weather, which a binding gives the module by
+`Atmosphere.WithTurbidity` and the haze's own terms. Whether `Atmosphere.Earth`'s haze should stand
+nearer the sources' days is the owner's, as its ozone was.

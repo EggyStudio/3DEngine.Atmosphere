@@ -69,6 +69,13 @@ and under the Earth's column of 300 Dobson units that Atmosphere.Earth holds, so
 the horizon 1,127 lux where it was 1,399 and at 6 degrees down 6.3 lux where it was 9.1, its color
 7,400 K there where it was 5,850, with the published figures beside them.
 
+![](.github/assets/readings/2026-11-18-sunset-candidates.webp)
+The apparent sunset's light on a level surface from a clear day's air of turbidity 3, 586 lux, with
+each candidate switched alone, the haze's height moving it from 1.09 at 0.6 km to 0.85 at 3 km, a
+haze that absorbs a fifth taking 4%, its phase and the ground's albedo nothing and a horizon hidden
+to 6 degrees 1%, and the haze 2 km high and absorbing at a turbidity of 4 giving 447 lux against the
+442 of Krisciunas and Schaefer.
+
 ## 2026-11-08
 
 Done that day
