@@ -407,3 +407,21 @@ section's axes, a north wind blowing toward +Z; a `SkyLight` makes its tables on
 and a `Thunderstorm` belongs to one caller as the clock does, where a `LightningFlash` is read from
 any thread. A test fails where a public type is named whole in neither the section nor a row, a
 name as `Star` and not the start of `Stars`, and it failed on `LightningStrike` first.
+
+The module's session, the sky's lower half, read from 3DEngine at `ee7ac712`. Its SHARED.md asks
+that the sky below the horizon be drawn in the fog's color blended over a few degrees above it while
+the image's lower half still lights the scene, with a horizon color a program asks for without fog
+(line 139), and its lighting takes a surface's view below the horizon as the ground's color times
+the sky's light on it and each directional light's on a floor (RENDERING.md, line 2264). Its sky
+pass, `Shaders/atmosphere_sky.slang`, writes every texel as `SkyLight.Luminance` gives it from the
+ground, so a way below the horizon there meets the ground at once and shows the ground's light. Sky
+gave that light as the sun's on a level surface alone, times the albedo over pi, and left out the
+sky's light on the ground, so the lower half lacked the sky's share by day, some 8% at 54 degrees,
+and was black from sunset through the twilight, when the sky gives the ground 1,287 lux at the
+horizon and no sun reaches it. `SkyLight.Luminance` below the horizon gives the ground under the
+sun's light and the sky's, the second read from the ground's table, with the air between where the
+eye stands above the ground, and a test holds it within 1% of the albedo times both over pi at 54,
+10, 0 and -3 degrees, which failed at 54 degrees by the missing 8%. The engine's pass computes the
+ground's term on its own, `atmosphere_sky.slang` line 59, so its binding adds the sky's light there
+to match. The horizon color without fog is `SkyLight.Luminance` along the horizon, as it is; the
+fog's blend over it stays the engine's drawing.

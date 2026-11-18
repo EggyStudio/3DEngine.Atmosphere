@@ -85,8 +85,12 @@ public sealed class SkyLight
     /// <paramref name="altitude"/> meters, with the sun toward <paramref name="sunToward"/>, both
     /// with +Y up, in linear sRGB whose luminance is the sky's.
     /// </summary>
-    /// <remarks>The sun's own disc is left out, which an engine draws by its angular size from <see
-    /// cref="Sun.At"/>.</remarks>
+    /// <remarks>
+    /// The sun's own disc is left out, which an engine draws by its angular size from
+    /// <see cref="Sun.At"/>. A way below the horizon ends at the ground, which shows the light the
+    /// sun and the sky give it times its albedo over pi, with the air between, so the lower half of
+    /// the sky an engine lights by is the ground's under both.
+    /// </remarks>
     public Vector3 Luminance(Vector3 view, Vector3 sunToward, float altitude = 0)
     {
         view = Vector3.Normalize(view);
@@ -107,13 +111,19 @@ public sealed class SkyLight
                 + (rayleigh + aerosol) * ScatteredAt(height, sunZenith);
             (light, through) = Step(light, through, source, Air.ExtinctionAt(height), far - near);
         }
+        var sky = Vector3.Zero;
         if (toGround is { } ground)
         {
+            // The ground sends back its albedo of the light on it alike every way, the sun's on a
+            // level surface and the sky's, which its table gives in lux, so a way below the
+            // horizon at dusk shows the ground the sky lights, not black.
             var (_, up) = At(altitude, view, ground);
             var sunZenith = Vector3.Dot(up, sunToward);
             light += through * TransmittanceAt(0, sunZenith) * MathF.Max(sunZenith, 0) * Air.GroundAlbedo / MathF.PI;
+            var lit = new Vector3(MathF.Sqrt(MathF.Max(0, 1 - sunZenith * sunZenith)), sunZenith, 0);
+            sky = through * GroundIlluminance(lit) * Air.GroundAlbedo / MathF.PI;
         }
-        return light * Sun.Outside;
+        return light * Sun.Outside + sky;
     }
 
     /// <summary>

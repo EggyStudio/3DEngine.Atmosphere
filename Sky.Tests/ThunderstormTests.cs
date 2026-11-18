@@ -88,9 +88,9 @@ public class ThunderstormTests
     [Fact]
     public void No_Flash_Stands_Flat_At_Its_Peak_And_Every_Flash_Reaches_It()
     {
-        // Read every millisecond, no seed of a thousand holds within 1e-5 of its brightest for
-        // more than one step, as a product that passed 1 and was cut there did for some 30 ms,
-        // and each reaches its brightest, the flash's light at its peak being PeakLumens.
+        // Read every millisecond, each of a thousand seeds reaches within 0.005 of 1, the flash's
+        // light at its peak being PeakLumens, and holds within 1e-5 of its brightest for one step
+        // at most, so it comes to a point there.
         for (uint seed = 0; seed < 1_000; seed++)
         {
             var flash = new LightningFlash(seed);

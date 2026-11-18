@@ -117,4 +117,24 @@ public class SkyLightTests
             }
         }
     }
+
+    [Fact]
+    public void Below_The_Horizon_The_Ground_Shows_The_Suns_And_The_Skys_Light_It_Sends_Back()
+    {
+        // From the ground every way below the horizon meets the ground at once, which sends back
+        // its albedo of the light on it alike every way, the sun's on a level surface and the
+        // sky's, over pi, so at sunset, with no sun on it, the ground still shows the sky's light.
+        foreach (var elevation in new[] { 54f, 10, 0, -3 })
+        {
+            var sun = SunAt(elevation);
+            var direct = Sun.At(Atmosphere.Earth, elevation).Color * (Sun.At(Atmosphere.Earth, elevation).Illuminance * MathF.Max(sun.Y, 0));
+            var expected = Atmosphere.Earth.GroundAlbedo * (direct + Sky.GroundIlluminance(sun)) / MathF.PI;
+            foreach (var down in new[] { new Vector3(1, -0.2f, 0), new Vector3(0, -1, 0), new Vector3(-0.5f, -0.5f, 0.7f) })
+            {
+                var ground = Sky.Luminance(down, sun);
+                for (var c = 0; c < 3; c++)
+                    Assert.True(MathF.Abs(ground[c] - expected[c]) <= 0.01f * expected[c], $"at {elevation} degrees the ground along {down} shows {ground} for {expected}");
+            }
+        }
+    }
 }
