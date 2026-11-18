@@ -595,3 +595,14 @@ failed to build before the members, hold the horizon's 34.5 minutes, Saemundsson
 height against Bennett's of 1982 from the apparent within a tenth of a minute from the horizon to
 the zenith, the correction's air, and a refracted clock's sun at the horizon where an unrefracted
 one stands 0.57 degrees under it.
+
+The module's session, the turbidity as the caller's. It is the caller's already,
+`Atmosphere.WithTurbidity` giving an air of any turbidity and `Atmosphere.Turbidity` reading it, so
+nothing is added to the library and the reading becomes a table of tests. With the real column of
+ozone, the apparent sunset and the end of civil twilight give 774 and 6.53 lux at the Earth's 1.11,
+658 and 5.52 at 2, 586 and 4.93 at 3 and 534 and 4.48 at 4, against the Lux article's 400 and 3.4
+and the 442 of Krisciunas and Schaefer after Brown: 1.94, 1.65, 1.47 and 1.33 times the 400, 1.75,
+1.49, 1.33 and 1.21 times the 442, and 1.92, 1.62, 1.45 and 1.32 times the 3.4. The table holds each
+row within 2% of what it reads, every row within twice the sources and the rows from a turbidity of
+3, a clear day's, within half as much again, and a second test holds the light falling as the haze
+grows. The tests pin a reading rather than mend a fault, so none failed first.

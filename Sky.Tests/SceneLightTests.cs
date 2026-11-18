@@ -146,4 +146,54 @@ public class SceneLightTests
         Assert.Equal(0, overcast.Moon.Illuminance);
         Assert.Equal(0.25f, overcast.LevelIlluminance / full.LevelIlluminance, 1e-4f);
     }
+
+    // The sun's true height when its middle is seen at the horizon, 34.5 minutes of arc under it,
+    // which a published sunset is.
+    private const float ApparentSunset = -34.5f / 60;
+
+    // The light on a level surface through an air of a turbidity, the sky's and the sun's by its
+    // disc's share, for a sun at a height.
+    private static float Level(Atmosphere air, SkyLight sky, float elevation)
+    {
+        var r = float.DegreesToRadians(elevation);
+        var sun = Sun.At(air, elevation).Illuminance * MathF.Max(MathF.Sin(r), 0) * Sun.DiscShare(elevation);
+        return Colorimetry.Luminance(sky.Illuminance(new System.Numerics.Vector3(MathF.Cos(r), MathF.Sin(r), 0))) + sun;
+    }
+
+    [Theory]
+    [InlineData(1.11f, 774f, 6.53f)]
+    [InlineData(2f, 658f, 5.52f)]
+    [InlineData(3f, 586f, 4.93f)]
+    [InlineData(4f, 534f, 4.48f)]
+    public void The_Sunset_And_The_End_Of_Civil_Twilight_By_The_Airs_Turbidity(float turbidity, float sunset, float civil)
+    {
+        // Against the Lux article's 400 lux at sunset and 3.4 at the end of civil twilight, and
+        // the 442 at sunset of Krisciunas and Schaefer (1991) after Brown (1952), the sunset the
+        // apparent one and the twilight's six degrees the sun's true height. Every turbidity gives
+        // twice the sources' light at most, and from a turbidity of 3, a clear day's, half as much
+        // again at most, each row as it reads within 2% (dotnet test Sky.Tests).
+        var air = MathF.Abs(turbidity - Atmosphere.Earth.Turbidity) < 0.01f ? Atmosphere.Earth : Atmosphere.Earth.WithTurbidity(turbidity);
+        var sky = new SkyLight(air);
+        var (atSunset, atCivil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
+        Assert.Equal(sunset, atSunset, sunset * 0.02f);
+        Assert.Equal(civil, atCivil, civil * 0.02f);
+        var most = turbidity >= 3 ? 1.5f : 2f;
+        foreach (var source in new[] { 400f, 442f })
+            Assert.InRange(atSunset / source, 1, most);
+        Assert.InRange(atCivil / 3.4f, 1, most);
+    }
+
+    [Fact]
+    public void A_Hazier_Air_Gives_Less_Light_At_Sunset_And_At_The_End_Of_Civil_Twilight()
+    {
+        var (sunset, civil) = (float.MaxValue, float.MaxValue);
+        foreach (var turbidity in new[] { 1.11f, 2, 3, 4 })
+        {
+            var air = MathF.Abs(turbidity - Atmosphere.Earth.Turbidity) < 0.01f ? Atmosphere.Earth : Atmosphere.Earth.WithTurbidity(turbidity);
+            var sky = new SkyLight(air);
+            var (atSunset, atCivil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
+            Assert.True(atSunset < sunset && atCivil < civil, $"at a turbidity of {turbidity} the light is {atSunset} and {atCivil}");
+            (sunset, civil) = (atSunset, atCivil);
+        }
+    }
 }
