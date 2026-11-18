@@ -45,6 +45,35 @@ public sealed class SkyPicture
     /// <summary>The picture's height in pixels.</summary>
     public int Height { get; }
 
+    /// <summary>
+    /// The sky's mean luminance over the dome above the horizon, each way weighted by its solid
+    /// angle, the sun, the moon and the stars left out as a photographer's meter leaves them.
+    /// </summary>
+    public static float MeanLuminance(SkyLight sky, SkyClock clock)
+    {
+        // Rings of equal solid angle, even in the cosine of the zenith angle.
+        var moonLight = Moon.Outside(clock.MoonPhaseAngle);
+        var (rings, turns, sum) = (24, 48, 0f);
+        for (var ring = 0; ring < rings; ring++)
+        {
+            var cos = 1 - (ring + 0.5f) / rings;
+            var sin = MathF.Sqrt(1 - cos * cos);
+            for (var turn = 0; turn < turns; turn++)
+            {
+                var angle = (turn + 0.5f) * 2 * MathF.PI / turns;
+                sum += Colorimetry.Luminance(SkyAt(sky, clock, moonLight, new Vector3(sin * MathF.Cos(angle), cos, sin * MathF.Sin(angle))));
+            }
+        }
+        return sum / (rings * turns);
+    }
+
+    /// <summary>
+    /// The EV100 a reflected reading of the sky itself gives, ISO 2720's reflected meter with a
+    /// calibration constant of 12.5 at a sensitivity of 100 set on <see cref="MeanLuminance"/>, as
+    /// a photograph of the sky would be exposed.
+    /// </summary>
+    public static float ReflectedExposure(SkyLight sky, SkyClock clock) => MathF.Log2(MeanLuminance(sky, clock) * 100 / 12.5f);
+
     /// <summary>The luminance in candelas a square meter a pixel is full at by the EV100.</summary>
     public static float Saturation(float exposure) => 1.2f * MathF.Pow(2, exposure);
 
@@ -155,19 +184,7 @@ public sealed class SkyPicture
             for (var column = 0; column < Width; column++)
             {
                 if (pixel(column, row) is not { } p) continue;
-                var sum = sky.Luminance(p.Way, sunToward) + sky.LuminanceBy(moonLight, p.Way, moonToward);
-                if (p.Way.Y > 0)
-                {
-                    var (ra, dec) = Celestial(clock, p.Way);
-                    sum += Night.SkyColor * Night.SkyLuminance + new Vector3(Night.GalaxyLuminance(ra, dec)) * Share(air, p.Way);
-                }
-                else
-                {
-                    // The ground sends back the night's own glow as it does the sky's light, which
-                    // the sky's reader leaves to the scene.
-                    sum += air.GroundAlbedo * Night.SkyColor * (Night.SkyIlluminance / MathF.PI);
-                }
-                light[row * Width + column] = sum;
+                light[row * Width + column] = SkyAt(sky, clock, moonLight, p.Way);
                 solid[row * Width + column] = p.Solid;
             }
         });
@@ -204,6 +221,18 @@ public sealed class SkyPicture
                     (_pixels[(row * Width + column) * 3], _pixels[(row * Width + column) * 3 + 1], _pixels[(row * Width + column) * 3 + 2]) = (230, 20, 40);
             }
         }
+    }
+
+    // The sky's luminance along a way, lit by the sun and by the moon band by band, with the
+    // night's glow and the Milky Way's light over the horizon and the ground's return of the
+    // night's glow under it, which the sky's reader leaves to the scene.
+    private static Vector3 SkyAt(SkyLight sky, SkyClock clock, float[] moonLight, Vector3 way)
+    {
+        var sum = sky.Luminance(way, clock.SunDirection) + sky.LuminanceBy(moonLight, way, clock.MoonDirection);
+        if (way.Y <= 0)
+            return sum + sky.Air.GroundAlbedo * Night.SkyColor * (Night.SkyIlluminance / MathF.PI);
+        var (ra, dec) = Celestial(clock, way);
+        return sum + Night.SkyColor * Night.SkyLuminance + new Vector3(Night.GalaxyLuminance(ra, dec)) * Share(sky.Air, way);
     }
 
     // The share of a light's lux the air lets through from the top of the air to the ground along

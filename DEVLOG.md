@@ -131,8 +131,17 @@ The sky the module draws through the Earth's air as Hillaire's 2020 paper sets i
 candelas a square meter at 59,600 K where the ordinary day's was 7,278 at 9,349, each scene at its
 own metered EV100 and sRGB's curve.
 
+![](.github/assets/readings/2026-11-18-metered-two-ways.webp)
+The module's sky at the incident meter's exposure and at a reflected reading of the sky itself, ISO
+2720 with a constant of 12.5 on the sky's mean luminance, the dusk and the night reading as
+photographs do, an orange horizon under a dark sky, and the noon sky still a dark blue, its
+reflected EV100 15.06 against the incident 15.44.
+
 Commits that day
 
+- `c2927b7` The Earth's air is a clear day's as Hillaire's 2020 paper sets it, so the day sky is a
+  deep blue with a tight halo, the ordinary day's haze kept as a second air, and the drawing rings
+  the sun.
 - `1f090f8` The tests draw the sky from the module alone, a fisheye and a panorama of each hour
   exposed by the scene's EV100 and encoded by sRGB's curve, the noon picture held to the luminance
   the reader gives.

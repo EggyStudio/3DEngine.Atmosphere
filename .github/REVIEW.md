@@ -594,3 +594,14 @@ measured light bluer than the module's from 7 to 12 degrees down. A fresh sessio
 Replies, then `Sky/Spectrum.cs`, `Sky/Atmosphere.cs`, `Sky/SkyLight.cs` and `Sky/SkyLane.cs`; the
 scratch probes are outside the repository and not needed. Every commit runs pin.py and
 `commitcheck.py . --staged --message=<file>` first.
+
+The module's session, the drawing metered two ways. Each hour is drawn again at the EV100 a
+reflected reading of the sky itself gives, ISO 2720's reflected meter with a constant of 12.5 at a
+sensitivity of 100 on the sky's mean luminance over the dome, the sun, the moon and the stars left
+out, beside the incident meter's, and a test that failed first holds the reading to that mean. The
+dusk and the night now read as photographs do, sunset at 11.37 where the incident meter gave 8.22,
+the civil end at 4.80 for 1.25 and the moonless night at -9.05 for -11.78. Noon does not: the two
+readings stand 0.38 stops apart, 15.06 and 15.44, and the clear sky's mean placed at the meter's
+gray, a tenth of a full pixel, encoded by sRGB's curve alone, stays a dark blue; a camera's tone
+curve, which the drawing leaves out to keep its pixels the numbers, is what lifts it. The sheet is
+`.github/assets/readings/2026-11-18-metered-two-ways.webp`.
