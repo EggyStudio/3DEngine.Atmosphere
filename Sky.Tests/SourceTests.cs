@@ -54,8 +54,8 @@ public sealed partial class SourceTests
     }
 
     // The engines the module was written beside, and the framework the second stands on, which
-    // the library's sources and its public members' summaries name nowhere, so a stranger's
-    // engine reads no other engine's in them.
+    // no line of the library's sources names, its private members and comments among them, where
+    // ModuleTests reads its public names and their documentation alone.
     [GeneratedRegex(@"3DEngine|BevyCSharp|\bBevy\b", RegexOptions.IgnoreCase)]
     private static partial Regex EngineName();
 

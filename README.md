@@ -113,7 +113,9 @@ the second feeding Bevy's atmosphere and clouds from the clock and the weather.
 
 ## Building and testing
 
-With the .NET 10 SDK:
+The tests take the checks every module keeps from the Tools module, a git submodule under
+`modules/Tools`, so a clone fetches it with `git clone --recurse-submodules`, or with
+`git submodule update --init` in a clone made without it. With the .NET 10 SDK:
 
 ```bash
 dotnet build Sky.slnx

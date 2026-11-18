@@ -5,7 +5,8 @@ namespace Sky.Tests;
 
 /// <summary>
 /// The README's smallest binding, run against a host that stands for an engine and records what
-/// the binding gives it, so the build and the suite prove the guide.
+/// the binding gives it, so the build and the suite prove the guide, the block read against the
+/// README by <see cref="ModuleTests"/>.
 /// </summary>
 public class BindingTests
 {
@@ -62,49 +63,4 @@ public class BindingTests
         Assert.InRange(host.Exposure, 12, 16);
         Assert.True(host.FogExtinction.Y > 0 && host.FogExtinction.Z > host.FogExtinction.X);
     }
-
-    [Fact]
-    public void The_Readmes_Block_Stands_Word_For_Word_In_This_Host()
-    {
-        var root = new DirectoryInfo(AppContext.BaseDirectory);
-        while (root is not null && !File.Exists(Path.Combine(root.FullName, "Sky.slnx")))
-            root = root.Parent;
-        Assert.NotNull(root);
-        var readme = File.ReadAllText(Path.Combine(root.FullName, "README.md")).ReplaceLineEndings("\n");
-        var start = readme.IndexOf("## Binding it in your engine", StringComparison.Ordinal);
-        Assert.True(start >= 0, "the README has no section Binding it in your engine");
-        var open = readme.IndexOf("```csharp\n", start, StringComparison.Ordinal) + "```csharp\n".Length;
-        var block = readme[open..readme.IndexOf("```\n", open, StringComparison.Ordinal)];
-        var source = File.ReadAllText(Path.Combine(root.FullName, "Sky.Tests", "BindingTests.cs")).ReplaceLineEndings("\n");
-        var lines = source.Split('\n');
-        var from = Array.FindIndex(lines, l => l.Contains("// The README's block from here", StringComparison.Ordinal)) + 1;
-        var to = Array.FindIndex(lines, l => l.Contains("// The end marker.", StringComparison.Ordinal));
-        var hosted = string.Join("\n", lines[from..to].Select(l => l.Length >= 8 ? l[8..] : l.TrimStart())) + "\n";
-        Assert.Equal(block, hosted);
-    }
-
-    [Fact]
-    public void Every_Public_Type_Is_In_The_Binding_Section_Or_A_Row_Of_A_Readme_Table()
-    {
-        // A stranger finds every type the library offers from the README alone, by its name in
-        // code, whole, as `Star` or `Star.Name`, and not as the start of `Stars`.
-        var root = new DirectoryInfo(AppContext.BaseDirectory);
-        while (root is not null && !File.Exists(Path.Combine(root.FullName, "Sky.slnx")))
-            root = root.Parent;
-        Assert.NotNull(root);
-        var readme = File.ReadAllText(Path.Combine(root.FullName, "README.md")).ReplaceLineEndings("\n");
-        var start = readme.IndexOf("## Binding it in your engine", StringComparison.Ordinal);
-        var end = readme.IndexOf("\n## ", start + 1, StringComparison.Ordinal);
-        var section = readme[start..(end < 0 ? readme.Length : end)];
-        var rows = string.Join("\n", readme.Split('\n').Where(l => l.StartsWith('|')));
-        var missing = typeof(SkyClock).Assembly.GetExportedTypes()
-            .Select(t => t.Name)
-            .Where(name => !Named(section, name) && !Named(rows, name))
-            .OrderBy(name => name, StringComparer.Ordinal)
-            .ToList();
-        Assert.True(missing.Count == 0, $"the README names {string.Join(", ", missing)} neither in Binding it in your engine nor in a table");
-    }
-
-    private static bool Named(string text, string name) =>
-        System.Text.RegularExpressions.Regex.IsMatch(text, $@"`{name}([`.(<\[ ])");
 }

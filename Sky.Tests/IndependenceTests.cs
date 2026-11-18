@@ -5,7 +5,7 @@ using Xunit;
 namespace Sky.Tests;
 
 /// <summary>
-/// The library stands on .NET alone, so any engine takes it. Beside <see cref="ReferenceTests"/>,
+/// The library stands on .NET alone, so any engine takes it. Beside <see cref="ModuleTests"/>,
 /// which refuses the names of engines, windows and graphics APIs, these allow .NET's own assemblies
 /// alone, no call into native code and no reference in the project file.
 /// </summary>

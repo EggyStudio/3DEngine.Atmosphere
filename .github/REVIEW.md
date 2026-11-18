@@ -606,3 +606,19 @@ and the 442 of Krisciunas and Schaefer after Brown: 1.94, 1.65, 1.47 and 1.33 ti
 row within 2% of what it reads, every row within twice the sources and the rows from a turbidity of
 3, a clear day's, within half as much again, and a second test holds the light falling as the haze
 grows. The tests pin a reading rather than mend a fault, so none failed first.
+
+The module's session, Tools' shared checks, taken as Tools' README section A module's checks says.
+The submodule stands under `modules/Tools` at `f92df1c`, referenced by the test project alone with
+the target `NeedsTools`, which stops a build where it is not fetched with the sentence naming the
+command, read with the submodule moved aside; `ModuleTests.cs` holds the README's four facts with
+`Library` 3DEngine.Sky, `Root` and `Host` the binding's test set above them; the workflow checks the
+submodule out; and the host's marker lines stand as Tools reads them. The four facts found nothing
+on their first run, the binding's fact naming the line where a word of the README's block was
+changed to read it. Out went the copies of the same checks, Tools' old `ReferenceTests.cs` and the
+binding's word-for-word and public-type tests, so the suite holds 118 where it held 128. Two checks
+Tools does not hold stay. `IndependenceTests` allows .NET's own assemblies alone, refuses a call
+into native code and reads the project file, and `SourceTests` reads every line of the library's
+sources for an engine's name, its private members and comments among them, where Tools reads the
+public names and their documentation, beside its width of 100 columns. The library and its package
+take nothing of Tools', which `IndependenceTests` and the reference fact hold. AGENTS.md gains the
+row for `modules`, and the README's building section says how a clone fetches the submodule.
