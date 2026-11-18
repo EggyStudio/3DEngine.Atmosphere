@@ -19,13 +19,14 @@ namespace Sky;
 /// <see cref="Earth"/> holds the Earth of Unity's HDRP, whose physically based sky the values are
 /// taken from so an engine's sky can be read beside one drawn there, but for its ozone, a column of
 /// 300 Dobson units in a layer from 10 to 40 km (<see cref="OzoneAbsorption"/>), a vertical optical
-/// depth of 0.028 in green, which turns the twilight's zenith blue.
+/// depth of 0.028 in green, which turns the twilight's zenith blue, and its haze, an ordinary clear
+/// day's (<see cref="AerosolExtinction"/>), a turbidity of 2.40.
 /// </para>
 /// </remarks>
 public sealed record Atmosphere
 {
     /// <summary>
-    /// The Earth's air on a clear day, its ozone a column of 300 Dobson units.
+    /// The Earth's air on an ordinary clear day, its ozone a column of 300 Dobson units.
     /// </summary>
     public static Atmosphere Earth { get; } = new();
 
@@ -49,26 +50,30 @@ public sealed record Atmosphere
     /// </summary>
     /// <remarks>
     /// <see cref="Turbidity"/> reads the air's haze from it and <see cref="WithTurbidity"/> sets it
-    /// from one.
+    /// from one. Unless set, the haze with the four terms below it is the continental average
+    /// aerosol of Hess, Koepke and Schult's OPAC (1998) at a relative humidity of 80%, 0.075 of the
+    /// light a kilometer at the ground at 550 nm in a layer an optical depth of 0.151 deep, which
+    /// one exponential of a 2,013 m scale height holds both of, scattering 0.925 of what it takes
+    /// with an asymmetry of 0.703, an ordinary clear day's of 44 km visibility.
     /// </remarks>
-    public float AerosolExtinction { get; init; } = 10e-6f;
+    public float AerosolExtinction { get; init; } = 7.5e-5f;
 
     /// <summary>
     /// The share of the light the aerosols take out that they scatter, the rest absorbed, at each
     /// wavelength.
     /// </summary>
-    public Vector3 AerosolAlbedo { get; init; } = new(0.9f);
+    public Vector3 AerosolAlbedo { get; init; } = new(0.925f);
 
     /// <summary>
-    /// The height in meters over which the aerosols thin to a share of 1/e, 1,200 for the Earth.
+    /// The height in meters over which the aerosols thin to a share of 1/e, 2,013 for the Earth.
     /// </summary>
-    public float AerosolScaleHeight { get; init; } = 1_200;
+    public float AerosolScaleHeight { get; init; } = 2_013;
 
     /// <summary>
     /// How strongly the aerosols scatter forward, from -1 for all of the light back the way it came
     /// to 1 for all of it on, as Cornette and Shanks's phase function takes it.
     /// </summary>
-    public float AerosolAnisotropy { get; init; } = 0.8f;
+    public float AerosolAnisotropy { get; init; } = 0.703f;
 
     /// <summary>
     /// How much of the light the ozone absorbs a meter in the middle of its layer, at each

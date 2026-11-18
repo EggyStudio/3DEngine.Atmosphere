@@ -59,7 +59,7 @@ public static class Sun
     /// <summary>
     /// The luminance of the sun's disc in candelas a square meter at <paramref name="altitude"/>
     /// meters through <paramref name="air"/>, the sun <paramref name="elevation"/> degrees over the
-    /// horizon, in linear sRGB whose luminance is the disc's, about 1.6e9 under a high sun.
+    /// horizon, in linear sRGB whose luminance is the disc's, about 1.3e9 under a high sun.
     /// </summary>
     /// <remarks>
     /// The light of <see cref="At"/> spread over <see cref="SolidAngle"/>, alike over the disc.

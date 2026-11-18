@@ -12,17 +12,17 @@ public class HazeTests
     private static readonly Atmosphere Air = Atmosphere.Earth;
 
     [Fact]
-    public void Clear_Air_Is_Seen_Through_For_166_Kilometers_And_Hazes_A_Thousandth_At_25_Meters()
+    public void Clear_Air_Is_Seen_Through_For_44_Kilometers_And_Hazes_A_Five_Hundredth_At_25_Meters()
     {
         // Koschmieder's visibility is 3.912 over the extinction at 550 nm, the distance at which
-        // a black thing's contrast falls to 2%. Clear air at the ground takes 13.5e-6 a meter in
-        // green by the molecules' scattering and 10e-6 by the aerosols' extinction, 2.35e-5 in
-        // all.
-        Assert.InRange(Haze.Visibility(Air), 165_000, 168_000);
+        // a black thing's contrast falls to 2%. An ordinary clear day's air at the ground takes
+        // 13.5e-6 a meter in green by the molecules' scattering and 75e-6 by the aerosols'
+        // extinction, 8.85e-5 in all.
+        Assert.InRange(Haze.Visibility(Air), 43_800, 44_600);
         var near = Haze.Share(Air, 25);
         var far = Haze.Share(Air, 1_000);
-        Assert.InRange(near.Y, 5.5e-4f, 6.3e-4f);
-        Assert.InRange(far.Y, 0.022f, 0.025f);
+        Assert.InRange(near.Y, 2.1e-3f, 2.3e-3f);
+        Assert.InRange(far.Y, 0.083f, 0.087f);
         // The molecules take more of the blue, so the far air is bluer than it is red.
         Assert.True(far.Z > far.Y && far.Y > far.X, $"the haze at a kilometer is {far}");
     }

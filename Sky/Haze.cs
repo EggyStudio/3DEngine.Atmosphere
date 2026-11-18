@@ -39,8 +39,8 @@ public static class Haze
 
     /// <summary>
     /// How far a black thing can be told from the horizon through <paramref name="air"/> at the
-    /// ground in <paramref name="weather"/>'s fog, in meters, 166 km in clear air and 80 m in the
-    /// thickest fog.
+    /// ground in <paramref name="weather"/>'s fog, in meters, 44 km in the Earth's clear air and 80
+    /// m in the thickest fog.
     /// </summary>
     public static float Visibility(Atmosphere air, WeatherConditions? weather = null)
     {
@@ -75,7 +75,7 @@ public static class Haze
     /// <summary>
     /// The share of a thing's light the air hides over <paramref name="distance"/> meters along the
     /// ground in <paramref name="weather"/>'s fog, in each channel, which the air's own light
-    /// fills, 6e-4 at 25 meters and 0.023 at a kilometer in clear air, in green.
+    /// fills, 0.0022 at 25 meters and 0.085 at a kilometer in the Earth's clear air, in green.
     /// </summary>
     public static Vector3 Share(Atmosphere air, float distance, WeatherConditions? weather = null) =>
         Vector3.One - Transmittance(air, distance, weather);

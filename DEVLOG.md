@@ -83,6 +83,14 @@ tables' rows to 456 at four times and its ground table in 95 to 220 ms by the er
 halved to, the noon's light the same at every one and the sunset's within 1% from half the tables'
 rows and a ground error of 0.01.
 
+![](.github/assets/readings/2026-11-18-haze-opac.webp)
+Atmosphere.Earth's haze moved from HDRP's to OPAC's continental average, a turbidity of 2.40 and a
+visibility of 44 km, the sun 54 degrees high 91,138 lux at 5,025 K where it was 108,177, the level
+light 93,068 lux at 5,415 K where it was 95,225 at 5,433, the apparent sunset 600 lux where it was
+777 and the end of civil twilight 4.92 where it was 6.54, with OPAC's polluted type and the
+reading's fit beside them, and the dusk's light and its color under the old haze and the new, the
+twilight's light 13,600 K at 10.5 degrees down.
+
 ## 2026-11-08
 
 Done that day

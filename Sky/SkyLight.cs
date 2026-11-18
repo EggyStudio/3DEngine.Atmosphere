@@ -35,8 +35,9 @@ public sealed class SkyLight
     // and is read between rows as one, where the light itself read so lit the twilight three
     // times too brightly 8 degrees down. Its heights crowd near the ground as the transmittance's
     // do, so through 111 km of air the light near the ground, where the aerosols lie, is read with
-    // its lowest rows 115 meters apart.
-    private const int TransmittanceHeights = 32, TransmittanceAngles = 256, ScatterHeights = 32, ScatterAngles = 64;
+    // its lowest rows 115 meters apart, and its 128 angles stand under a degree apart, fine enough
+    // for the bend a haze 2 km deep gives the twilight 14 degrees down, where 64 jumped there.
+    private const int TransmittanceHeights = 32, TransmittanceAngles = 256, ScatterHeights = 32, ScatterAngles = 128;
 
     // The steps along a way, from the eye and over the 64 ways the light scattered more than once
     // is gathered from.

@@ -27,19 +27,25 @@ public class AtmosphereTests
     {
         // HDRP's own transmittance for its Earth, Chapman's function for the two exponential layers
         // and its ozone's sum, from the ground with the sun 53.97 degrees high, 0.925, 0.849
-        // and 0.710, read here with HDRP's ozone, its absorption times 0.6 from 20 to 40 km.
+        // and 0.710, read here with HDRP's ozone, its absorption times 0.6 from 20 to 40 km, and
+        // its haze, 1e-5 a meter at the ground over 1,200 m scattering 0.9 with an asymmetry of
+        // 0.8.
         var sin = MathF.Sin(float.DegreesToRadians(53.97f));
-        var hdrp = Earth with { OzoneAbsorption = new Vector3(0.65e-6f, 1.88e-6f, 0.08e-6f) * 0.6f, OzoneBottom = 20_000, OzoneWidth = 20_000 };
+        var hdrp = Earth with
+        {
+            OzoneAbsorption = new Vector3(0.65e-6f, 1.88e-6f, 0.08e-6f) * 0.6f, OzoneBottom = 20_000, OzoneWidth = 20_000,
+            AerosolExtinction = 10e-6f, AerosolScaleHeight = 1_200, AerosolAlbedo = new Vector3(0.9f), AerosolAnisotropy = 0.8f,
+        };
         var through = hdrp.Transmittance(0, sin);
         Assert.Equal(0.925f, through.X, 0.004f);
         Assert.Equal(0.849f, through.Y, 0.004f);
         Assert.Equal(0.710f, through.Z, 0.004f);
-        // The Earth's column of 300 Dobson units takes more of the red and the green, 0.919, 0.833
-        // and 0.709 (dotnet test Sky.Tests).
+        // The Earth's own air, its column of 300 Dobson units and an ordinary clear day's haze,
+        // lets through 0.775, 0.702 and 0.598 (dotnet test Sky.Tests).
         var earth = Earth.Transmittance(0, sin);
-        Assert.Equal(0.919f, earth.X, 0.002f);
-        Assert.Equal(0.833f, earth.Y, 0.002f);
-        Assert.Equal(0.709f, earth.Z, 0.002f);
+        Assert.Equal(0.775f, earth.X, 0.002f);
+        Assert.Equal(0.702f, earth.Y, 0.002f);
+        Assert.Equal(0.598f, earth.Z, 0.002f);
     }
 
     [Fact]
@@ -55,7 +61,7 @@ public class AtmosphereTests
     [Fact]
     public void Turbidity_Sets_The_Aerosols_And_Reads_Back()
     {
-        Assert.Equal(1.111f, Earth.Turbidity, 0.001f);
+        Assert.Equal(2.398f, Earth.Turbidity, 0.001f);
         Assert.Equal(3, Earth.WithTurbidity(3).Turbidity, 0.0001f);
         Assert.Equal(1, Earth.WithTurbidity(0.5f).Turbidity, 0.0001f);
         Assert.Equal(0, Earth.WithTurbidity(1).AerosolExtinction);

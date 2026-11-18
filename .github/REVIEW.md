@@ -665,3 +665,33 @@ and the ground's error at 0.01, 113 ms, together 0.69% under the finest at sunse
 within 0.23%. The ground table's cost moves little with its rows, its 111 rows a degree apart taking
 most of it, so halving the tables saves 30 ms of a build of some 200 and nothing a call. Whether to
 take the smaller tables is the review's; nothing is changed.
+
+The module's session, the Earth's haze, for the review's Decision. Decision line: by the owner's
+choice of 2026-11-18, `Atmosphere.Earth` holds an ordinary clear day's haze, OPAC's continental
+average aerosol of Hess, Koepke and Schult (1998) at a relative humidity of 80%, and no second
+preset; the rest of its air stays as it was. OPAC gives the type 0.075 of the light a kilometer at
+550 nm at the ground, an optical depth of 0.151 over a mixing layer 2 km deep, a single-scattering
+albedo of 0.925 and an asymmetry of 0.703 (its Tables 3 and 5), and one exponential of a 2,013 m
+scale height holds both its ground extinction and its depth, so the haze is 7.5e-5 a meter over
+2,013 m scattering 0.925 with an asymmetry of 0.703, a turbidity of 2.40 and a visibility of 44 km,
+where HDRP's was 1e-5 over 1,200 m scattering 0.9 with 0.8, 1.11 and 166 km. Of the three
+candidates read, A was taken. B, OPAC's continental polluted, a turbidity of 4.03, holds the
+sources within 1.21 times but is a polluted day, and C, the reading's fit, holds them within 1.12
+times and has no source. The scattering table takes 128 angles where it took 64, since the new haze
+bends the twilight 14 degrees down and 64 angles jumped there, the slope moving by 0.309 where the
+test holds 0.1 and by 0.036 with 128. The apparent sunset converges to 601 lux as the angles grow,
+600.8, 600.9 and 601.4 at 128, 256 and 512, 1.50 times the Lux article's 400 and 1.36 times
+Krisciunas and Schaefer's 442, and the end of civil twilight to 4.93 lux, 1.45 times the 3.4, so the
+tests hold 1.55 times all three, and the turbidity table's rows from the Earth's own 2.40 likewise.
+The numbers both engines' daylight and the Sponza match are reread by, at 54 degrees: the sun at
+the ground 91,138 lux at 5,025 K where it was 108,177 at 5,025, 16% less, the sky on a level
+surface 19,336 lux where it was 7,708, and the level light in all 93,068 lux at 5,415 K where it was
+95,225 at 5,433, 2.3% less and 18 K warmer, the sun's disc 1.34e9 candelas a square meter where it
+was 1.59e9 and the sunny 16 exposure an EV100 of 15.18 where it was 15.22. The transmittance at
+53.97 degrees is 0.775, 0.702 and 0.598, the test holding HDRP's own with HDRP's ozone and haze set
+in it; the twilight's light reaches 13,600 K 10.5 degrees down, bluer, as Spitschan and others
+measured it. 3DEngine reads `Atmosphere.Earth`'s haze with its pointer, its examples changing the
+aerosols' extinction and scale height and the ground's albedo themselves, so Sponza and Bistro keep
+the haze they set and take the new albedo of 0.925 and asymmetry of 0.703; BevyCSharp draws Bevy's
+own haze and reads none of the module's. The sheet is
+`.github/assets/readings/2026-11-18-haze-opac.webp`.

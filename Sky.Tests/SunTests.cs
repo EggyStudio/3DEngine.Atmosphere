@@ -5,16 +5,16 @@ namespace Sky.Tests;
 public class SunTests
 {
     [Fact]
-    public void The_Sun_At_54_Degrees_Reaches_The_Ground_At_108000_Lux_And_5000_Kelvin()
+    public void The_Sun_At_54_Degrees_Reaches_The_Ground_At_91000_Lux_And_5000_Kelvin()
     {
         // The reference scene, 27 June at 15:05 in Cologne, sets its sun 53.97 degrees high to
         // 97,050 lux at 5,633 K outside the air, which HDRP's Earth dims to 73,900 lux at 4,924 K
         // at the ground, the sun's color the same within a hundred kelvin and its lux two thirds
         // of this, since that sun outside the air is 120,000 lux times the sine of its height.
-        // The ozone Atmosphere.Earth holds takes its share of the light as well, so the sun
-        // reaches the ground at some 108,000 lux.
+        // The ozone and the haze Atmosphere.Earth holds take their share of the light as well, so
+        // the sun reaches the ground at some 91,000 lux.
         var sun = Sun.At(Atmosphere.Earth, 53.97f);
-        Assert.InRange(sun.Illuminance, 107_100, 109_300);
+        Assert.InRange(sun.Illuminance, 90_200, 92_000);
         Assert.InRange(sun.Temperature, 4_976, 5_076);
         Assert.Equal(1, Colorimetry.Luminance(sun.Color), 0.001f);
     }
@@ -35,20 +35,21 @@ public class SunTests
     [Fact]
     public void Haze_Dims_The_Sun()
     {
-        var clear = Sun.At(Atmosphere.Earth, 30).Illuminance;
+        var clear = Sun.At(Atmosphere.Earth.WithTurbidity(1.11f), 30).Illuminance;
         var hazy = Sun.At(Atmosphere.Earth.WithTurbidity(3), 30).Illuminance;
         Assert.InRange(hazy / clear, 0.5f, 0.8f);
     }
 
     [Fact]
-    public void The_Suns_Disc_Is_Half_A_Degree_Wide_And_1_6e9_Candelas_A_Square_Meter_Bright_At_Noon()
+    public void The_Suns_Disc_Is_Half_A_Degree_Wide_And_1_3e9_Candelas_A_Square_Meter_Bright_At_Noon()
     {
         // The sun's mean diameter seen from the earth is 32 minutes of arc, and its disc at the
-        // ground under a high sun is about 1.6e9 candelas a square meter.
+        // ground under a high sun is about 1.6e9 candelas a square meter in very clear air, 1.3e9
+        // through an ordinary clear day's haze.
         Assert.Equal(0.533f, Sun.AngularDiameter, 0.001f);
         Assert.InRange(Sun.SolidAngle, 6.75e-5f, 6.85e-5f);
         var disc = Colorimetry.Luminance(Sun.DiscLuminance(Atmosphere.Earth, 53.97f));
-        Assert.InRange(disc, 1.5e9f, 1.7e9f);
+        Assert.InRange(disc, 1.25e9f, 1.45e9f);
         Assert.Equal(Sun.At(Atmosphere.Earth, 53.97f).Illuminance / Sun.SolidAngle, disc, disc * 1e-4f);
     }
 

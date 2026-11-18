@@ -28,10 +28,10 @@ public class SceneLightTests
     public void Full_Sun_At_54_Degrees_Is_Exposed_As_The_Sunny_16_Rule_Within_A_Stop()
     {
         // The sunny 16 rule, f/16 at a hundredth of a second at ISO 100 in full sun, is an EV100
-        // of log2(256 / 0.01), 14.64. The sun 54 degrees high gives 87,500 lux on a level surface
-        // and the sky 7,710.
+        // of log2(256 / 0.01), 14.64. The sun 54 degrees high gives 73,700 lux on a level surface
+        // and the sky 19,300.
         var light = SceneLight.At(Clock(12 - 36 / 15f, 0), Sky);
-        Assert.InRange(light.LevelIlluminance, 95_000, 98_500);
+        Assert.InRange(light.LevelIlluminance, 92_000, 94_500);
         Assert.InRange(light.Exposure, 14.64f - 1, 14.64f + 1);
         Assert.False(light.MoonIsKey);
     }
@@ -161,23 +161,24 @@ public class SceneLightTests
     }
 
     [Theory]
-    [InlineData(1.11f, 774f, 6.53f)]
-    [InlineData(2f, 658f, 5.52f)]
-    [InlineData(3f, 586f, 4.93f)]
-    [InlineData(4f, 534f, 4.48f)]
+    [InlineData(1.11f, 777f, 6.48f)]
+    [InlineData(2f, 639f, 5.24f)]
+    [InlineData(2.398f, 601f, 4.92f)]
+    [InlineData(3f, 553f, 4.53f)]
+    [InlineData(4f, 492f, 4.01f)]
     public void The_Sunset_And_The_End_Of_Civil_Twilight_By_The_Airs_Turbidity(float turbidity, float sunset, float civil)
     {
         // Against the Lux article's 400 lux at sunset and 3.4 at the end of civil twilight, and
         // the 442 at sunset of Krisciunas and Schaefer (1991) after Brown (1952), the sunset the
         // apparent one and the twilight's six degrees the sun's true height. Every turbidity gives
-        // twice the sources' light at most, and from a turbidity of 3, a clear day's, half as much
-        // again at most, each row as it reads within 2% (dotnet test Sky.Tests).
+        // twice the sources' light at most, and from the Earth's own 2.40, an ordinary clear day's,
+        // 1.55 times at most, each row as it reads within 2% (dotnet test Sky.Tests).
         var air = MathF.Abs(turbidity - Atmosphere.Earth.Turbidity) < 0.01f ? Atmosphere.Earth : Atmosphere.Earth.WithTurbidity(turbidity);
         var sky = new SkyLight(air);
         var (atSunset, atCivil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
         Assert.Equal(sunset, atSunset, sunset * 0.02f);
         Assert.Equal(civil, atCivil, civil * 0.02f);
-        var most = turbidity >= 3 ? 1.5f : 2f;
+        var most = turbidity >= 2.39f ? 1.55f : 2f;
         foreach (var source in new[] { 400f, 442f })
             Assert.InRange(atSunset / source, 1, most);
         Assert.InRange(atCivil / 3.4f, 1, most);
@@ -195,5 +196,18 @@ public class SceneLightTests
             Assert.True(atSunset < sunset && atCivil < civil, $"at a turbidity of {turbidity} the light is {atSunset} and {atCivil}");
             (sunset, civil) = (atSunset, atCivil);
         }
+    }
+
+    [Fact]
+    public void The_Earths_Own_Air_Lights_The_Sunset_And_The_End_Of_Civil_Twilight_Within_1_55_Times_The_Sources()
+    {
+        // Atmosphere.Earth is an ordinary clear day's air, so its apparent sunset is within 1.55
+        // times the Lux article's 400 lux and Krisciunas and Schaefer's 442 after Brown, and its
+        // end of civil twilight within 1.55 times the Lux article's 3.4.
+        var sky = new SkyLight(Atmosphere.Earth);
+        var (sunset, civil) = (Level(Atmosphere.Earth, sky, ApparentSunset), Level(Atmosphere.Earth, sky, -6));
+        foreach (var source in new[] { 400f, 442f })
+            Assert.InRange(sunset / source, 1, 1.55f);
+        Assert.InRange(civil / 3.4f, 1, 1.55f);
     }
 }
