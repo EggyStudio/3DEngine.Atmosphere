@@ -46,6 +46,63 @@ A clone of the engine fetches the module with `git clone --recurse-submodules`, 
 before the engine's commit that moves its pointer, so the engine's history never names a commit
 this repository does not have.
 
+## Binding it in your engine
+
+The module declares no interface, since it asks nothing of an engine. It draws nothing, opens no
+window, reads no file (the star catalog is carried in its assembly) and keeps no thread of its own,
+so a binding is the engine's code that calls it and gives the numbers it returns to the engine's
+lights, sky, fog and camera. The library references nothing past .NET's own assemblies, which a
+test of its own holds.
+
+It stands on these conventions.
+
+- Lengths are in meters, and an altitude is meters above the ground.
+- +Y is up, -Z north and +X east, so the axes are right-handed with +Z south. A way toward a body
+  points from the place to it, and a directional light from that body shines along its negative.
+- A height over the horizon, a latitude, a disc's angular size and the moon's phase angle are in
+  degrees. A right ascension, a declination and `SkyClock.SkyTurn` are in radians.
+- `SkyClock.Hour` is the local solar time from 0 to 24, noon when the sun stands highest, and
+  `DayOfYear` counts from 0 on the first of January in a year of 365 days. `WeatherState` advances
+  by seconds.
+- A color is linear sRGB, the BT.709 primaries with a D65 white and no transfer curve. Where a
+  color carries a light, its luminance is the light's lux or candelas a square meter; a
+  `CelestialLight`'s color has a luminance of 1 and its illuminance carries the strength.
+- Illuminance is in lux, luminance in candelas a square meter, a color temperature in kelvin and an
+  exposure in EV100 by an incident meter's calibration of 250. The sun gives 128,000 lux outside the
+  air, and an engine whose sun is another strength scales what the module returns by its sun's over
+  `Sun.OutsideIlluminance`.
+- A `SkyLight` does not change once made and is read from any thread. A `SkyClock` and a
+  `WeatherState` change as they advance and belong to one caller.
+
+The smallest binding makes the sky once and reads the scene's light each step of the world's
+clock, in a file that references the assembly `3DEngine.Sky` and opens the namespaces `Sky` and
+`System.Numerics`. `host` stands for the engine's own calls, whatever it names them.
+
+```csharp
+// Once, as the world loads and off the frame, the air, its sky and the sky's ground table.
+var sky = new SkyLight(Atmosphere.Earth);
+sky.GroundIlluminance(Vector3.UnitY);
+var clock = new SkyClock { Latitude = 51, DayOfYear = 172, Hour = 15 };
+var weather = new WeatherState { Clock = clock, Forecast = true };
+
+// Each step of the world's clock, seconds long.
+clock.Advance(seconds / 3600);
+weather.Advance(seconds);
+var light = SceneLight.At(clock, sky).Under(weather.Current);
+var key = light.MoonIsKey ? light.Moon : light.Sun;
+host.SetDirectionalLight(-light.KeyToward, key.Color * key.Illuminance);
+host.SetAmbientLuminance(light.SkyIlluminance / MathF.PI);
+host.SetExposure(light.Exposure);
+host.SetFogExtinction(Haze.Extinction(sky.Air, weather.Current));
+```
+
+The ambient luminance is the sky's illuminance over pi, the luminance of a sky alike over its
+dome that lights a level surface as this one does. An engine that draws its own sky reads
+`SkyLight.Luminance` along each way, the sun's disc from `Sun.DiscLuminance`, the moon's from
+`Moon`, and the stars from `Stars.Catalog` placed by `SkyClock.TowardSky`. 3DEngine and BevyCSharp
+are two such bindings, the first drawing its sky in a pass of its own from `SkyLight`'s numbers and
+the second feeding Bevy's atmosphere and clouds from the clock and the weather.
+
 ## Building and testing
 
 With the .NET 10 SDK:

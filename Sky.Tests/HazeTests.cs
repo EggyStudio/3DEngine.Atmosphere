@@ -15,8 +15,9 @@ public class HazeTests
     public void Clear_Air_Is_Seen_Through_For_166_Kilometers_And_Hazes_A_Thousandth_At_25_Meters()
     {
         // Koschmieder's visibility is 3.912 over the extinction at 550 nm, the distance at which
-        // a black thing's contrast falls to 2%. The clear air of HDRP's Earth at the ground takes
-        // 13.5e-6 a meter by the molecules and 10e-6 by the aerosols in green, 2.35e-5 in all.
+        // a black thing's contrast falls to 2%. Clear air at the ground takes 13.5e-6 a meter in
+        // green by the molecules' scattering and 10e-6 by the aerosols' extinction, 2.35e-5 in
+        // all.
         Assert.InRange(Haze.Visibility(Air), 165_000, 168_000);
         var near = Haze.Share(Air, 25);
         var far = Haze.Share(Air, 1_000);
