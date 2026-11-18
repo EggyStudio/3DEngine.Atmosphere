@@ -18,6 +18,11 @@ namespace Sky;
 /// which keeps a dark color dark, and contrast once encoded moves a level about the middle gray the
 /// eye sees as the middle, which deepens the shade without moving it.
 /// </para>
+/// <para>
+/// The module draws nothing, so the look is a pass the engine writes, run on the linear picture in
+/// place of its tonemapper in the order above. An engine that keeps a tonemapper of its own reads
+/// <see cref="Exposure"/> alone and leaves the rest.
+/// </para>
 /// </remarks>
 public sealed class LookSettings
 {
