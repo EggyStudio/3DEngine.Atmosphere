@@ -8,7 +8,7 @@ namespace Sky.Tests;
 /// </summary>
 public class SkyPictureTests
 {
-    private static readonly SkyLight Sky = new(Atmosphere.Earth);
+    private static readonly SkyLight Sky = Skies.Earth;
 
     [Fact]
     public void The_Fisheyes_Middle_Pixel_At_Noon_Is_The_Zeniths_Luminance_Exposed_And_Encoded()

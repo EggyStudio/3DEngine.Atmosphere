@@ -8,7 +8,7 @@ namespace Sky.Tests;
 /// </summary>
 public class SceneLightTests
 {
-    private static readonly SkyLight Sky = new(Atmosphere.Earth);
+    private static readonly SkyLight Sky = Skies.Earth;
 
     // A clock on the equator at the March equinox, the sun 15 degrees a hour from the horizon at
     // six, the moon's age at the hour given.
@@ -175,7 +175,7 @@ public class SceneLightTests
         // times at most, each row as it reads within 2% (dotnet test Sky.Tests).
         var ordinary = Atmosphere.ContinentalAverage;
         var air = MathF.Abs(turbidity - ordinary.Turbidity) < 0.01f ? ordinary : ordinary.WithTurbidity(turbidity);
-        var sky = new SkyLight(air);
+        var sky = Skies.Of(air);
         var (atSunset, atCivil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
         Assert.Equal(sunset, atSunset, sunset * 0.02f);
         Assert.Equal(civil, atCivil, civil * 0.02f);
@@ -193,7 +193,7 @@ public class SceneLightTests
         {
             var ordinary = Atmosphere.ContinentalAverage;
             var air = MathF.Abs(turbidity - ordinary.Turbidity) < 0.01f ? ordinary : ordinary.WithTurbidity(turbidity);
-            var sky = new SkyLight(air);
+            var sky = Skies.Of(air);
             var (atSunset, atCivil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
             Assert.True(atSunset < sunset && atCivil < civil, $"at a turbidity of {turbidity} the light is {atSunset} and {atCivil}");
             (sunset, civil) = (atSunset, atCivil);
@@ -207,7 +207,7 @@ public class SceneLightTests
         // times the Lux article's 400 lux and Krisciunas and Schaefer's 442 after Brown, and its
         // end of civil twilight within 1.55 times the Lux article's 3.4.
         var air = Atmosphere.ContinentalAverage;
-        var sky = new SkyLight(air);
+        var sky = Skies.Of(air);
         var (sunset, civil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
         foreach (var source in new[] { 400f, 442f })
             Assert.InRange(sunset / source, 1, 1.55f);

@@ -9,7 +9,7 @@ namespace Sky.Tests;
 /// </summary>
 public class EdgeTests
 {
-    private static readonly SkyLight Sky = new(Atmosphere.Earth);
+    private static readonly SkyLight Sky = Skies.Earth;
 
     public static TheoryData<Vector3> Wayless => new() { Vector3.Zero, new Vector3(float.NaN, 1, 0), new Vector3(0, float.PositiveInfinity, 0) };
 

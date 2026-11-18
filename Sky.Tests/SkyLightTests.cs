@@ -5,7 +5,7 @@ namespace Sky.Tests;
 
 public class SkyLightTests
 {
-    private static readonly SkyLight Sky = new(Atmosphere.Earth);
+    private static readonly SkyLight Sky = Skies.Earth;
 
     private static Vector3 SunAt(float elevation) =>
         new(MathF.Cos(float.DegreesToRadians(elevation)), MathF.Sin(float.DegreesToRadians(elevation)), 0);
@@ -17,14 +17,14 @@ public class SkyLightTests
         // times its red, and its horizon six times as bright; an ordinary day's haze makes the
         // zenith 4,506 and the horizon 1.3 times that (dotnet test Sky.Tests).
         var sun = SunAt(54);
-        foreach (var (sky, blue, horizonOver) in new[] { (Sky, 3f, 5f), (new SkyLight(Atmosphere.ContinentalAverage), 1.5f, 1.2f) })
+        foreach (var (sky, blue, horizonOver) in new[] { (Sky, 3f, 5f), (Skies.ContinentalAverage, 1.5f, 1.2f) })
         {
             var zenith = sky.Luminance(Vector3.UnitY, sun);
             Assert.True(zenith.Z > blue * zenith.X && zenith.Y > zenith.X, $"zenith {zenith}");
             var horizon = sky.Luminance(new Vector3(-1, 0.02f, 0), sun);
             Assert.True(Colorimetry.Luminance(horizon) > horizonOver * Colorimetry.Luminance(zenith), $"horizon {horizon}, zenith {zenith}");
         }
-        Assert.InRange(Colorimetry.Luminance(new SkyLight(Atmosphere.ContinentalAverage).Luminance(Vector3.UnitY, sun)), 3_000, 5_500);
+        Assert.InRange(Colorimetry.Luminance(Skies.ContinentalAverage.Luminance(Vector3.UnitY, sun)), 3_000, 5_500);
     }
 
     [Fact]
@@ -40,7 +40,7 @@ public class SkyLightTests
         Assert.InRange(sky, 9_000, 9_400);
         var ordinary = Sun.At(Atmosphere.ContinentalAverage, 54).Illuminance * MathF.Sin(float.DegreesToRadians(54));
         Assert.InRange(ordinary, 75_400, 76_900);
-        Assert.InRange(Colorimetry.Luminance(new SkyLight(Atmosphere.ContinentalAverage).Illuminance(SunAt(54))), 19_700, 20_500);
+        Assert.InRange(Colorimetry.Luminance(Skies.ContinentalAverage.Illuminance(SunAt(54))), 19_700, 20_500);
     }
 
     [Fact]
@@ -59,7 +59,7 @@ public class SkyLightTests
     [Fact]
     public void Haze_Brightens_The_Sky_As_It_Dims_The_Sun()
     {
-        var hazy = new SkyLight(Atmosphere.Earth.WithTurbidity(3));
+        var hazy = Skies.Of(Atmosphere.Earth.WithTurbidity(3));
         var clear = Colorimetry.Luminance(Sky.Illuminance(SunAt(30)));
         Assert.True(Colorimetry.Luminance(hazy.Illuminance(SunAt(30))) > clear);
     }
@@ -158,7 +158,7 @@ public class SkyLightTests
         // 10 degrees down the zenith is bluer than it is red, and at 6, 8 and 10 bluer by a
         // quarter at least than in the same air with no ozone, the Earth's column making it 1.34
         // to 1.39 times as blue (dotnet test Sky.Tests).
-        var bare = new SkyLight(Atmosphere.Earth with { OzoneAbsorption = Vector3.Zero });
+        var bare = Skies.Of(Atmosphere.Earth with { OzoneAbsorption = Vector3.Zero });
         foreach (var elevation in new[] { -4f, -6, -8, -10 })
         {
             var zenith = Sky.Luminance(Vector3.UnitY, SunAt(elevation));
@@ -194,7 +194,7 @@ public class SkyLightTests
         // the sky's light on a level surface falls through the twilight with its logarithm's slope
         // moving by under 0.1 every quarter degree down to 16 degrees, so a table read too coarsely
         // for some haze shows here first.
-        var sky = new SkyLight(Atmosphere.Earth.WithTurbidity(turbidity));
+        var sky = Skies.Of(Atmosphere.Earth.WithTurbidity(turbidity));
         float Lux(float elevation) => Colorimetry.Luminance(sky.Illuminance(SunAt(elevation)));
         var (before, last) = (float.NaN, Lux(0));
         for (var elevation = -0.25f; elevation >= -16; elevation -= 0.25f)

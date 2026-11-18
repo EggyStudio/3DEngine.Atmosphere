@@ -605,3 +605,10 @@ readings stand 0.38 stops apart, 15.06 and 15.44, and the clear sky's mean place
 gray, a tenth of a full pixel, encoded by sRGB's curve alone, stays a dark blue; a camera's tone
 curve, which the drawing leaves out to keep its pixels the numbers, is what lifts it. The sheet is
 `.github/assets/readings/2026-11-18-metered-two-ways.webp`.
+
+The module's session, the suite's time. The tests now read one sky made for each air and shared,
+`Sky.Tests/Skies.cs`, two airs set alike sharing one, where each test class and many tests made
+their own; the test that counts the ground rows a sky makes and the binding test, which runs the
+README's block word for word, still make theirs. On this machine the suite went from 113 s of wall
+time and 1,420 s of processor time to 71 s and 899, the processor's time the steadier figure since
+the wall time has read from 58 to 113 s between runs of the same tree.

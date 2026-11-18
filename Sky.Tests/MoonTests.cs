@@ -54,7 +54,7 @@ public class MoonTests
         // sun's, so the moonlit sky is 0.982 of the sunlit sky's by the moon's lux over the sun's
         // and 13,346 K where the sunlit is 26,272, the light 29 degrees high (dotnet test
         // Sky.Tests).
-        var sky = new SkyLight(Atmosphere.Earth);
+        var sky = Skies.Earth;
         var toward = new System.Numerics.Vector3(MathF.Cos(0.5f), MathF.Sin(0.5f), 0);
         var (sunlit, moonlit) = (sky.GroundIlluminance(toward), sky.GroundIlluminanceBy(Moon.Outside(0), toward, 0));
         var share = Colorimetry.Luminance(moonlit) / Colorimetry.Luminance(sunlit) / (Moon.OutsideIlluminance(0) / Sun.OutsideIlluminance);
@@ -89,7 +89,7 @@ public class MoonTests
         // light would be the night's color with none of the airglow's red in it.
         Assert.Equal(Stars.Temperature(0.8f), Colorimetry.TemperatureOf(Night.SkyColor), 150f);
         Assert.Equal(1, Colorimetry.Luminance(Night.SkyColor), 1e-4f);
-        var night = SceneLight.At(new SkyClock { Latitude = 0, DayOfYear = 79, Hour = 0, MoonAgeAtStart = -79 }, new SkyLight(Atmosphere.Earth));
+        var night = SceneLight.At(new SkyClock { Latitude = 0, DayOfYear = 79, Hour = 0, MoonAgeAtStart = -79 }, Skies.Earth);
         Assert.Equal(Stars.Temperature(0.8f), Colorimetry.TemperatureOf(night.SkyIlluminance), 150f);
     }
 }

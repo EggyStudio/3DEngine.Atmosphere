@@ -139,6 +139,8 @@ reflected EV100 15.06 against the incident 15.44.
 
 Commits that day
 
+- `a8b0391` The drawing exposes each hour again by a reflected reading of the sky itself, so the
+  dusk and the night read as photographs of the sky do.
 - `c2927b7` The Earth's air is a clear day's as Hillaire's 2020 paper sets it, so the day sky is a
   deep blue with a tight halo, the ordinary day's haze kept as a second air, and the drawing rings
   the sun.
