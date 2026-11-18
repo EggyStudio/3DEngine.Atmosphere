@@ -166,4 +166,28 @@ public class SkyLightTests
         Assert.Equal(19_336f, Colorimetry.Luminance(Sky.Illuminance(SunAt(54))), 19_336f * 0.005f);
         Assert.Equal(4_316f, Colorimetry.Luminance(Sky.Luminance(Vector3.UnitY, SunAt(54))), 4_316f * 0.005f);
     }
+
+    [Theory]
+    [InlineData(1.1f)]
+    [InlineData(2f)]
+    [InlineData(3f)]
+    [InlineData(4f)]
+    [InlineData(6.95f)]
+    public void The_Twilight_Darkens_Without_A_Bend_Under_Every_Haze(float turbidity)
+    {
+        // Under any haze from the clearest air to a city's, OPAC's urban type a turbidity of 6.95,
+        // the sky's light on a level surface falls through the twilight with its logarithm's slope
+        // moving by under 0.1 every quarter degree down to 16 degrees, so a table read too coarsely
+        // for some haze shows here first.
+        var sky = new SkyLight(Atmosphere.Earth.WithTurbidity(turbidity));
+        float Lux(float elevation) => Colorimetry.Luminance(sky.Illuminance(SunAt(elevation)));
+        var (before, last) = (float.NaN, Lux(0));
+        for (var elevation = -0.25f; elevation >= -16; elevation -= 0.25f)
+        {
+            var lux = Lux(elevation);
+            var slope = MathF.Log(lux / last);
+            Assert.True(float.IsNaN(before) || MathF.Abs(slope - before) < 0.1f, $"at a turbidity of {turbidity}, {elevation} degrees down, the slope moves from {before} to {slope}");
+            (before, last) = (slope, lux);
+        }
+    }
 }

@@ -751,3 +751,19 @@ it; it passes under both hazes, so it guards the reading rather than mends a fau
 The module's session, the README's link row. It stands as the file's first line above the title,
 the devlog and the cheat sheet by their addresses on `main`, a space between them, then a blank
 line and the title.
+
+The module's session, the next three, proposed from what a stranger binding the module would miss
+first, each with a failing test first. One, the dusk's slope under every haze, which the review
+weighed. Two, the sky's light away from the ground: `SceneLight.At` reads the ground's table at an
+altitude of 0 alone and sums the dome elsewhere, some 14 ms a call, so a binding whose camera flies
+or stands on a mountain pays it each frame; a table over the altitude too, held within 1% of the
+sum to 10 km. Three, the edges a stranger meets first, a way of no length, a clock at a pole, a
+weather stepped back, answered with a number or a plain exception and never a NaN.
+
+The first, read. The test walks the sky's light on a level surface every quarter degree to 16
+degrees down at turbidities of 1.1, 2, 3, 4 and 6.95, OPAC's urban type, and holds its logarithm's
+slope moving by under 0.1, as the Earth's own twilight test does. It found no jump: the worst moves
+are 0.017, 0.029, 0.045, 0.056 and 0.079, each near 14.75 degrees down from a turbidity of 2,
+growing with the haze, and a turbidity of 10 gives 0.096, so the 128 angles hold to the haziest
+air a binding would set. With no fault the test failed on none and stays as the guard the review
+named; the second is begun.
