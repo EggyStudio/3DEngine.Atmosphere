@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace Sky;
 
@@ -59,9 +60,19 @@ public sealed record Atmosphere
     /// aerosol of Hess, Koepke and Schult's OPAC (1998) at a relative humidity of 80%, 0.075 of the
     /// light a kilometer at the ground at 550 nm in a layer an optical depth of 0.151 deep, which
     /// one exponential of a 2,013 m scale height holds both of, scattering 0.925 of what it takes
-    /// with an asymmetry of 0.703, an ordinary clear day's of 44 km visibility.
+    /// with an asymmetry of 0.703 and falling with wavelength by an Angstrom exponent of 1.42 from
+    /// 500 to 800 nm, an ordinary clear day's of 44 km visibility.
     /// </remarks>
     public float AerosolExtinction { get; init; } = 7.5e-5f;
+
+    /// <summary>
+    /// How steeply the aerosols' extinction falls with wavelength, the power of 550 nm over the
+    /// wavelength it goes as, 1.42 unless set.
+    /// </summary>
+    public float AerosolAngstrom { get; init; } = 1.42f;
+
+    // The aerosols' extinction at sea level in each of a lane's three bands, set in a lane alone.
+    internal Vector3? LaneAerosol { get; init; }
 
     /// <summary>
     /// The share of the light the aerosols take out that they scatter, the rest absorbed, at each
@@ -147,14 +158,49 @@ public sealed record Atmosphere
     /// How much of the light the air takes out a meter at <paramref name="altitude"/> meters,
     /// scattered or absorbed, at each wavelength.
     /// </summary>
-    public Vector3 ExtinctionAt(float altitude) => RayleighAt(altitude) + new Vector3(AerosolAt(altitude)) + OzoneAt(altitude);
+    public Vector3 ExtinctionAt(float altitude) => RayleighAt(altitude) + AerosolsAt(altitude) + OzoneAt(altitude);
+
+    // The aerosols' extinction a meter at an altitude in each channel, or each of a lane's bands.
+    internal Vector3 AerosolsAt(float altitude) =>
+        (LaneAerosol ?? new Vector3(AerosolExtinction)) * MathF.Exp(-MathF.Max(altitude, 0) / AerosolScaleHeight);
+
+    // The air read in each lane of the module's bands, made once an air and kept by the air
+    // itself rather than by its value, so an air made from this one with another term never reads
+    // this one's lanes.
+    internal Atmosphere[] Lanes() =>
+        Made.GetValue(this, air => [.. Enumerable.Range(0, Spectrum.Light.Lanes).Select(lane => air.Lane(Spectrum.Light, lane))]);
+
+    private static readonly ConditionalWeakTable<Atmosphere, Atmosphere[]> Made = new();
+
+    // The air read in three of a spectrum's bands from the lane's first, its molecules' scattering
+    // falling as the wavelength to the power of 4.08 from its 550 nm value, the green channel's,
+    // its ozone's absorption as the ozone's cross-section against its value at 550, its aerosols'
+    // extinction as 550 nm over the wavelength to the power of AerosolAngstrom, and its albedos
+    // read between the channels' wavelengths, the sRGB primaries' dominant 611, 549 and 464 nm.
+    internal Atmosphere Lane(Spectrum spectrum, int lane)
+    {
+        Vector3 Bands(Func<int, float> of) => new(of(3 * lane), of(3 * lane + 1), of(3 * lane + 2));
+        float Between(Vector3 rgb, float nm) => nm >= 611 ? rgb.X : nm >= 549
+            ? float.Lerp(rgb.Y, rgb.X, (nm - 549) / 62) : nm >= 464 ? float.Lerp(rgb.Z, rgb.Y, (nm - 464) / 85) : rgb.Z;
+        return this with
+        {
+            RayleighScattering = Bands(b => RayleighScattering.Y * spectrum.Mean(b, nm => MathF.Pow(550 / nm, 4.08f))),
+            OzoneAbsorption = Bands(b => OzoneAbsorption.Y * spectrum.Ozone[b] / Spectrum.OzoneAt550),
+            LaneAerosol = Bands(b => AerosolExtinction * spectrum.Mean(b, nm => MathF.Pow(550 / nm, AerosolAngstrom))),
+            AerosolAlbedo = Bands(b => Between(AerosolAlbedo, spectrum.Centers[b])),
+            GroundAlbedo = Bands(b => Between(GroundAlbedo, spectrum.Centers[b])),
+        };
+    }
 
     /// <summary>
-    /// The share of the light that crosses the air from <paramref name="altitude"/> meters toward a
-    /// way whose cosine with the zenith there is <paramref name="cosZenith"/>, out to the top of
-    /// the air, at each wavelength, or nothing where the way meets the ground.
+    /// The share of the sun's light that crosses the air from <paramref name="altitude"/> meters
+    /// toward a way whose cosine with the zenith there is <paramref name="cosZenith"/>, out to the
+    /// top of the air, in each channel of linear sRGB, or nothing where the way meets the ground.
     /// </summary>
     /// <remarks>
+    /// The air takes the light by wavelength, so the share is the sun's light through it summed by
+    /// band and turned into color, over the sun's light outside it, which a light of the sun's
+    /// spectrum keeps in each channel.
     /// The planet is round, so a way below the level of the eye still leaves the air where it
     /// passes over the ground's horizon. The optical depth is summed over steps that are short near
     /// the start, where the air is thickest along a way that starts low, and lengthen toward the
@@ -162,6 +208,16 @@ public sealed record Atmosphere
     /// </remarks>
     public Vector3 Transmittance(float altitude, float cosZenith)
     {
+        if (LaneAerosol is null)
+        {
+            // The sun's light by band through the air, over the sun's light outside it, in each
+            // channel.
+            var (spectrum, lanes) = (Spectrum.Light, Lanes());
+            var through = Vector3.Zero;
+            for (var lane = 0; lane < lanes.Length; lane++)
+                through += spectrum.ToLinearSrgb(lane, spectrum.LaneSun(lane) * lanes[lane].Transmittance(altitude, cosZenith));
+            return through / Sun.Outside;
+        }
         var (toGround, toTop) = Distances(altitude, cosZenith);
         if (toGround is not null) return Vector3.Zero;
         var depth = OpticalDepth(altitude, cosZenith, toTop, 64);

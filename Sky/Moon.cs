@@ -46,8 +46,8 @@ public static class Moon
     /// </summary>
     /// <remarks>
     /// A full earth seen from the moon is a disc of 8.6e-4 steradians sending back some 0.3 of the
-    /// sunlight it takes, a luminance near 12,000 candelas a square meter against the 128,000 lux
-    /// of the sun, so it lights the moon with some 10 lux, 8e-5 of the sun's light there, and the
+    /// sunlight it takes, a luminance near 12,800 candelas a square meter against the 133,800 lux
+    /// of the sun, so it lights the moon with some 11 lux, 8e-5 of the sun's light there, and the
     /// moon's dark part shows that share of the full moon's luminance, falling as the earth's lit
     /// share, one less the moon's, falls.
     /// </remarks>

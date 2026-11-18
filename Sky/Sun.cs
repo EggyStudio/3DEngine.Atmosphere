@@ -16,25 +16,28 @@ public readonly record struct CelestialLight(float Illuminance, Vector3 Color, f
 
 /// <summary>The sun's light outside the air and where it reaches the ground through it.</summary>
 /// <remarks>
-/// Outside the air the sun gives the same light at every height over the horizon, 1,361 watts a
-/// square meter at about 94 lumens a watt, 128,000 lux, in the color of a black body at the sun's
-/// effective temperature. Through the air the molecules take more of its blue than of its red and
-/// the way through grows long as the sun sinks, so the light that reaches the ground dims and warms
-/// toward the horizon.
+/// Outside the air the sun gives the same light at every height over the horizon, the luminous
+/// solar constant of 133,800 lux Darula, Kittler and Gueymard give (2005), in the color of its
+/// measured spectrum, some 5,900 K. Through the air the molecules take more of its blue than of its
+/// red and the way through grows long as the sun sinks, so the light that reaches the ground dims
+/// and warms toward the horizon, the air taking it wavelength by wavelength.
 /// </remarks>
 public static class Sun
 {
     /// <summary>The sun's illuminance outside the air in lux on a surface facing it.</summary>
-    public const float OutsideIlluminance = 128_000;
+    public const float OutsideIlluminance = 133_800;
 
     /// <summary>
-    /// The sun's effective temperature in kelvin, the black body's whose color its light outside
-    /// the air is taken to have.
+    /// The sun's effective temperature in kelvin, the black body's that sends out as much power a
+    /// square meter as it does, its light's color being its spectrum's.
     /// </summary>
     public const float Temperature = 5_772;
 
-    /// <summary>The sun's light outside the air in linear sRGB, its luminance in lux.</summary>
-    public static Vector3 Outside { get; } = Colorimetry.FromTemperature(Temperature) * OutsideIlluminance;
+    /// <summary>
+    /// The sun's light outside the air in linear sRGB, its luminance in lux, its color its measured
+    /// spectrum's.
+    /// </summary>
+    public static Vector3 Outside { get; } = Spectrum.Light.ToLinearSrgb(Spectrum.Light.SunLight);
 
     /// <summary>
     /// How wide the sun's disc looks from the earth, in degrees, its mean of 0.533.

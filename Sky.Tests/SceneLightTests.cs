@@ -28,10 +28,10 @@ public class SceneLightTests
     public void Full_Sun_At_54_Degrees_Is_Exposed_As_The_Sunny_16_Rule_Within_A_Stop()
     {
         // The sunny 16 rule, f/16 at a hundredth of a second at ISO 100 in full sun, is an EV100
-        // of log2(256 / 0.01), 14.64. The sun 54 degrees high gives 73,700 lux on a level surface
-        // and the sky 19,300.
+        // of log2(256 / 0.01), 14.64. The sun 54 degrees high gives 76,200 lux on a level surface
+        // and the sky 20,100.
         var light = SceneLight.At(Clock(12 - 36 / 15f, 0), Sky);
-        Assert.InRange(light.LevelIlluminance, 92_000, 94_500);
+        Assert.InRange(light.LevelIlluminance, 95_500, 97_200);
         Assert.InRange(light.Exposure, 14.64f - 1, 14.64f + 1);
         Assert.False(light.MoonIsKey);
     }
@@ -64,9 +64,9 @@ public class SceneLightTests
     public void The_Light_Falls_Through_Sunset_Without_A_Step()
     {
         // Every minute from the sun two degrees up to two down the light falls by a share that
-        // moves slowly with the sky's, 0.91 to 0.85 a minute, and by 0.900 on either side of the
-        // disc's going under, so a step would show as one minute's share apart from its
-        // neighbor's; no two neighbors differ by more than 0.01 (dotnet test Sky.Tests).
+        // moves slowly with the sky's, 0.91 to 0.84 a minute, so a step would show as one minute's
+        // share apart from its neighbor's; no two neighbors differ by more than 0.013 (dotnet test
+        // Sky.Tests).
         var (last, lastShare) = (0f, 0f);
         for (var minute = 0; minute <= 16; minute++)
         {
@@ -74,7 +74,7 @@ public class SceneLightTests
             if (last > 0)
             {
                 var share = lux / last;
-                Assert.InRange(share, 0.84f, 0.92f);
+                Assert.InRange(share, 0.83f, 0.92f);
                 if (lastShare > 0)
                     Assert.True(MathF.Abs(share - lastShare) < 0.02f, $"minute {minute} falls by {share} after {lastShare}");
                 lastShare = share;
@@ -161,11 +161,11 @@ public class SceneLightTests
     }
 
     [Theory]
-    [InlineData(1.11f, 777f, 6.48f)]
-    [InlineData(2f, 639f, 5.24f)]
-    [InlineData(2.398f, 601f, 4.92f)]
-    [InlineData(3f, 553f, 4.53f)]
-    [InlineData(4f, 492f, 4.01f)]
+    [InlineData(1.11f, 749f, 5.86f)]
+    [InlineData(2f, 626f, 4.92f)]
+    [InlineData(2.398f, 590f, 4.64f)]
+    [InlineData(3f, 545f, 4.29f)]
+    [InlineData(4f, 485f, 3.82f)]
     public void The_Sunset_And_The_End_Of_Civil_Twilight_By_The_Airs_Turbidity(float turbidity, float sunset, float civil)
     {
         // Against the Lux article's 400 lux at sunset and 3.4 at the end of civil twilight, and
@@ -215,18 +215,62 @@ public class SceneLightTests
     public void The_Light_Is_Bluest_In_The_Nautical_Twilight()
     {
         // Spitschan, Aguirre, Brainard and Sweeney (2016) measured the downwelling light's
-        // chromaticity through the twilight shift toward blue and back, bluest during the nautical
-        // twilight at their rural site; so the light on a level surface, the sun's and the sky's
-        // together with no moon, is bluest with the sun between 6 and 12 degrees down.
-        var (bluest, at) = (0f, 0f);
+        // chromaticity through the twilight shift toward blue and back, its x and y least during
+        // the nautical twilight at their rural site; so the light on a level surface, the sun's
+        // and the sky's together with no moon, has its least x with the sun between 6 and 12
+        // degrees down. Its x rather than its color temperature, which past the end of the
+        // Planckian locus is none.
+        var (bluest, at) = (1f, 0f);
         for (var minute = 0; minute <= 100; minute++)
         {
             var light = SceneLight.At(Clock(17.5f + minute / 60f, 0), Sky);
             var level = light.Sun.Color * (light.Sun.Illuminance * MathF.Max(light.SunToward.Y, 0)) + light.SkyIlluminance;
-            var kelvin = Colorimetry.TemperatureOf(level);
-            if (kelvin > bluest)
-                (bluest, at) = (kelvin, float.RadiansToDegrees(MathF.Asin(light.SunToward.Y)));
+            var xyz = Colorimetry.ToXyz(level);
+            var x = xyz.X / (xyz.X + xyz.Y + xyz.Z);
+            if (x < bluest)
+                (bluest, at) = (x, float.RadiansToDegrees(MathF.Asin(light.SunToward.Y)));
         }
         Assert.InRange(at, -12, -6);
+    }
+
+    [Theory]
+    [InlineData(0f, 0.276f, 0.295f)]
+    [InlineData(-3f, 0.262f, 0.278f)]
+    [InlineData(-6f, 0.235f, 0.242f)]
+    public void The_Civil_Twilights_Color_Is_The_Measured_Evenings_Within_0_02(float elevation, float x, float y)
+    {
+        // The mean CIE 1931 x and y of the downwelling light Spitschan, Aguirre, Brainard and
+        // Sweeney (2016) measured at their rural site on three July evenings, the moon less than
+        // a third lit, a degree of the sun's height a bin, read from their published spectra
+        // through the module's observer. Each bin's evenings spread by 0.023 to 0.033 in x and y,
+        // and the light on a level surface is held within 0.02 of their mean.
+        var r = float.DegreesToRadians(elevation);
+        var sun = Sun.At(Atmosphere.Earth, elevation);
+        var level = sun.Color * (sun.Illuminance * MathF.Max(MathF.Sin(r), 0) * Sun.DiscShare(elevation))
+            + Sky.GroundIlluminance(new System.Numerics.Vector3(MathF.Cos(r), MathF.Sin(r), 0));
+        var xyz = Colorimetry.ToXyz(level);
+        var sum = xyz.X + xyz.Y + xyz.Z;
+        Assert.Equal(x, xyz.X / sum, 0.02f);
+        Assert.Equal(y, xyz.Y / sum, 0.02f);
+    }
+
+    [Theory]
+    [InlineData(20f, 5_300f)]
+    [InlineData(30f, 5_300f)]
+    [InlineData(40f, 5_500f)]
+    [InlineData(54f, 5_500f)]
+    [InlineData(90f, 5_500f)]
+    public void Daylight_From_40_Degrees_Up_Is_Between_5500_And_6500_Kelvin(float elevation, float lowest)
+    {
+        // The global light on a level surface stands near 6,500 K at a clear noon as measured at
+        // Ny-Alesund against lower latitudes, and Peyvandi and others (2016) give clear daylight's
+        // interquartile range as 5,712 to 7,757 K, so the sun's and the sky's light together is
+        // between 5,500 and 6,500 K from 40 degrees up. Under 40 the module's light is redder
+        // than that, 5,342 K at 20 degrees (dotnet test Sky.Tests), and is held at 5,300 K so
+        // neither height slips while what it lacks there is read.
+        var r = float.DegreesToRadians(elevation);
+        var sun = Sun.At(Atmosphere.Earth, elevation);
+        var level = sun.Color * (sun.Illuminance * MathF.Sin(r)) + Sky.GroundIlluminance(new System.Numerics.Vector3(MathF.Cos(r), MathF.Sin(r), 0));
+        Assert.InRange(Colorimetry.TemperatureOf(level), lowest, 6_500);
     }
 }

@@ -13,7 +13,7 @@ module.
 | Type | Gives |
 |---|---|
 | `Atmosphere` | The air as data, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with their heights, the ground's albedo, and the transmittance along a way through it. `Atmosphere.Earth` is the Earth's air, a real column of ozone, 300 Dobson units, and an ordinary clear day's haze, and `WithTurbidity` sets its haze |
-| `Sun` | The sun's light outside the air, 128,000 lux at 5,772 K, and `Sun.At`, its lux, color and color temperature at the ground for its height over the horizon, with its disc's size, its luminance and the share of it above the horizon, and `Sun.Through` for a light of another strength or color |
+| `Sun` | The sun's light outside the air, 133,800 lux in its measured spectrum's color, and `Sun.At`, its lux, color and color temperature at the ground for its height over the horizon, with its disc's size, its luminance and the share of it above the horizon, and `Sun.Through` for a light of another strength or color |
 | `SkyLight` | The sky's luminance along a way and its illuminance on a level surface, the sun's light scattered once and more than once, in candelas a square meter and lux, with the illuminance at the ground read from a table in microseconds |
 | `SceneLight` | The light a scene takes at an hour of a `SkyClock`, the sun's and the moon's at the ground by the share of their discs above the horizon, the sky's lit by each and the night's own on a level surface, the key light's way, and the EV100 an incident meter gives for all of it, and the same light under a `WeatherConditions`'s cloud |
 | `Haze` | The air near the ground between the eye and what it sees, the share of a thing's light that comes through a distance and the share hidden, clear and in a `WeatherConditions`'s fog, and the visibility by Koschmieder's law |
@@ -26,8 +26,9 @@ module.
 | `LookCycle` | A camera's look by the sun's height, the `LookSettings` kept at heights of the sun and worked out between the two about any other, its curve a `LookCurve` |
 
 Through the Earth's air, its own ozone and an ordinary clear day's haze, the sun 54 degrees high
-reaches the ground at 91,100 lux and 5,025 K and the sky lights a level surface with 19,300 lux
-beside the sun's 73,700 (`dotnet test Sky.Tests`).
+reaches the ground at 94,200 lux and 5,033 K and the sky lights a level surface with 20,100 lux
+beside the sun's 76,200 (`dotnet test Sky.Tests`). The air takes the light in 12 bands of wavelength
+and turns it into color at the end.
 
 ## Taking it into an engine
 
@@ -81,11 +82,11 @@ It stands on these conventions.
   within 1.55 times the published figures. A binding with another day's air sets it through
   `Atmosphere.WithTurbidity` and the haze's terms.
 - Illuminance is in lux, luminance in candelas a square meter, a color temperature in kelvin and an
-  exposure in EV100 by an incident meter's calibration of 250. The sun gives 128,000 lux outside the
+  exposure in EV100 by an incident meter's calibration of 250. The sun gives 133,800 lux outside the
   air, and an engine whose sun is another strength scales what the module returns by its sun's over
   `Sun.OutsideIlluminance`.
 - A `SkyLight` makes its table of the sky's light at an altitude the first time that altitude is
-  read, a fifth of a second to most of a second a row, so a binding calls
+  read, two thirds of a second to four fifths a row, so a binding calls
   `SkyLight.PrepareGround` over the altitudes its camera keeps while the world loads, and reads
   the light in microseconds after.
 - A `SkyLight` does not change once made and is read from any thread, as a `LightningFlash` is.

@@ -16,6 +16,7 @@ float PlanetRadius { get; init; }                        // The planet's radius 
 Vector3 RayleighScattering { get; init; }                // How much of the light the molecules scatter a meter at sea level, at 680, 550 and 440 nanometers, which they take nothing of otherwise
 float RayleighScaleHeight { get; init; }                 // The height in meters over which the molecules thin to a share of 1/e, 8,000 for the Earth
 float AerosolExtinction { get; init; }                   // How much of the light the aerosols take out a meter at sea level, scattered or absorbed, alike at every wavelength
+float AerosolAngstrom { get; init; }                     // How steeply the aerosols' extinction falls with wavelength, the power of 550 nm over the wavelength it goes as, 1.42 unless set
 Vector3 AerosolAlbedo { get; init; }                     // The share of the light the aerosols take out that they scatter, the rest absorbed, at each wavelength
 float AerosolScaleHeight { get; init; }                  // The height in meters over which the aerosols thin to a share of 1/e, 2,013 for the Earth
 float AerosolAnisotropy { get; init; }                   // How strongly the aerosols scatter forward, from -1 for all of the light back the way it came to 1 for all of it on, as Cornette and Shanks's phase function takes it
@@ -30,13 +31,13 @@ Vector3 RayleighAt(float altitude);                      // How much of the ligh
 float AerosolAt(float altitude);                         // How much of the light the aerosols take out a meter at altitude meters
 Vector3 OzoneAt(float altitude);                         // How much of the light the ozone absorbs a meter at altitude meters, at each wavelength
 Vector3 ExtinctionAt(float altitude);                    // How much of the light the air takes out a meter at altitude meters, scattered or absorbed, at each wavelength
-Vector3 Transmittance(float altitude, float cosZenith);  // The share of the light that crosses the air from altitude meters toward a way whose cosine with the zenith there is cosZenith, out to the top of the air, at each wavelength, or nothing where the way meets the ground
+Vector3 Transmittance(float altitude, float cosZenith);  // The share of the sun's light that crosses the air from altitude meters toward a way whose cosine with the zenith there is cosZenith, out to the top of the air, in each channel of linear sRGB, or nothing where the way meets the ground
 
 class Sun                                                // The sun's light outside the air and where it reaches the ground through it
-float OutsideIlluminance = 128000f;                      // The sun's illuminance outside the air in lux on a surface facing it
-float Temperature = 5772f;                               // The sun's effective temperature in kelvin, the black body's whose color its light outside the air is taken to have
+float OutsideIlluminance = 133800f;                      // The sun's illuminance outside the air in lux on a surface facing it
+float Temperature = 5772f;                               // The sun's effective temperature in kelvin, the black body's that sends out as much power a square meter as it does, its light's color being its spectrum's
 float AngularDiameter = 0.533f;                          // How wide the sun's disc looks from the earth, in degrees, its mean of 0.533
-Vector3 Outside { get; }                                 // The sun's light outside the air in linear sRGB, its luminance in lux
+Vector3 Outside { get; }                                 // The sun's light outside the air in linear sRGB, its luminance in lux, its color its measured spectrum's
 float SolidAngle { get; }                                // The solid angle of the sun's disc, in steradians, 6.8e-5
 CelestialLight At(Atmosphere air, float elevation, float altitude = 0f);  // The sun's light at altitude meters through air, with the sun elevation degrees over the horizon there
 Vector3 DiscLuminance(Atmosphere air, float elevation, float altitude = 0f);  // The luminance of the sun's disc in candelas a square meter at altitude meters through air, the sun elevation degrees over the horizon, in linear sRGB whose luminance is the disc's, about 1.3e9 under a high sun

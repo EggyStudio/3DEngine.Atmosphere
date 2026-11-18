@@ -852,3 +852,76 @@ Darula, Kittler and Gueymard give, 133.8 klux, within 1%, and ozone's absorption
 nm at some 5.1e-21 square centimeters. The sun's measured light outside the air is 132,727, 132,974
 and 133,375 lux at 5,793, 5,925 and 5,929 K in 6, 12 and 24 bands, where the module's sun is 128,000
 lux of a black body at 5,772 K; the next step reads the air by band and gives the sun that light.
+
+The module's session, the spectral mend's second and third steps in one commit, the air and the
+sky by 12 bands, since the sun's light by band under a sky in three channels would have moved every
+figure twice. The molecules scatter as the wavelength to the power of 4.08 from their 550 nm value,
+the ozone absorbs by its cross-section against its value at 550, the aerosols' extinction falls by
+OPAC's Angstrom exponent of 1.42, a new term, `Atmosphere.AerosolAngstrom`, and the two albedos are
+read between the channels' wavelengths. `SkyLight` is now four lanes of three bands, each the old
+arithmetic, turned into linear sRGB at the end, and `Atmosphere.Transmittance` is the sun's light
+through the air by band over its light outside, in each channel. The sun outside the air is the
+measured spectrum at the luminous solar constant, 133,800 lux at 5,925 K, where it was 128,000 lux
+of a black body at 5,772 K. Twelve bands stand within 0.003 of 24 in x and y from 60 degrees up to
+12 down, 6 bands apart by up to 0.019, so the module keeps 12.
+
+At noon, the sun 54 degrees high, the measured sun outside the air adds 4.5% to all sunlight and the
+air by band takes back about 1%. The sun at the ground is 94,200 lux at 5,033 K where it was 91,138
+at 5,025, 3.4% more, the sky lights a level surface with 20,118 lux where it gave 19,336, and the
+level light is 96,327 lux at 5,648 K where it was 93,068 at 5,415, 3.5% more. At 20 degrees the
+level light is 32,412 lux at 5,342 K where it was 31,706 at 5,082. The apparent sunset is 590 lux
+where it was 600 and the end of civil twilight 4.64 where it was 4.92, 1.47 and 1.37 times the
+sources, so the bound of 1.55 holds, and every turbidity's row stays within twice. The 128
+scattering angles hold, the ground table within 1% of the sum from 24 degrees down to the zenith.
+
+The daylight test is committed with its bounds as the review set them, 5,500 to 6,500 K from 40
+degrees up and 5,300 K as a floor at 20 and 30, 5,342 and 5,472 K now. What the low sun lacks is
+still open. Spitschan's rural evenings below read 6,600 K at 10 degrees where the module gives
+5,374, though those evenings were not chosen clear, so the measured figure may hold cloud. The
+review's two candidates, the haze's albedo and asymmetry by wavelength and the orders of scattering
+the sky's table sums, are untried.
+
+The twilight's color, read against the downwelling spectra Spitschan, Aguirre, Brainard and Sweeney
+published with their paper of 2016, three July evenings at the rural site with the moon under a
+third lit, binned a degree of the sun's height and read through the module's observer
+(`.github/assets/readings/2026-11-18-spectral-twilight.webp`). With the sun 6 degrees down their
+mean is x 0.235 and y 0.242, the evenings spread by 0.025 and 0.029. The module gives 0.240 and
+0.249 where it gave 0.289 and 0.251, so the old twilight stood 2 deviations toward purple in x and
+the new stands within a quarter of one. From the sun at the horizon to 6 degrees down the new
+twilight holds within 0.014 of their mean in x and y, and a test holds it within 0.02 at 0, 3 and 6
+degrees down, the old model missing by 0.033 at the horizon and 0.054 at 6 down. In the nautical
+twilight their light is bluer still, x 0.216 at 10 degrees down against the module's 0.238. The term
+that makes the blue is ozone by band, its Chappuis absorption, which the paper itself names. Under
+the old three channels ozone was read at 680, 550 and 440 nm, and its band near 600 nm, where its
+absorption peaks, was missing. I found no other source with figures by the sun's height. The papers
+of Lee and Hernandez-Andres on twilight's colors were closed to the fetch.
+
+What I sent as the civil end's color before the mend was wrong. It read 11,639 K, not 5,850.
+`Colorimetry.TemperatureOf` is McCamy's cubic, which holds to about 12,500 K. Past that its
+figures mean nothing, so the civil end's 24,335 K reads 44,300 K exactly, the nearest point of the
+Planckian locus in CIE 1960 uv, and the measured evenings' 140,500 K, near the locus's end. The test
+of the bluest twilight now finds its least x, where it took the cubic's figure, and still finds it
+between 6 and 12 degrees down.
+
+Rule: `Colorimetry.TemperatureOf` is a public member that gives wrong figures for the twilight the
+module now makes. It is untouched here, and the exact reading, or Robertson's, is the mend I would
+propose as an item of its own.
+
+Where the cost goes, read on this machine. Making a `SkyLight` takes 353 to 380 ms where it took 112
+to 154. Of that, the four lanes' transmittance tables are 54 to 60 ms and their light scattered more
+than once some 240 ms, a lane 73 to 76 ms, and the rest is first-time work, the lanes' air and the
+spectrum's bands. Its tables hold 632 KB where they held 193. A row of the ground table takes 630 to
+780 ms where it took 340 to 430, and holds 13 KB where it held 3. Each band is now held to its own
+GroundError, set to 0.002 from 0.003, since a dim band held against the lane's mean missed the sum
+by 1.07% 15.8 degrees down, its red turned from bands the matrix subtracts. A read of the table takes
+8 microseconds where it took 5, a luminance 52 to 77 where it took 9 to 16, and `Sun.At` 21 where it
+took 9, after each air's lanes are kept with the air. The suite takes 73 to 82 s here where it took
+11.
+
+The tests the mend moved, each to its figure as it reads, the arithmetic ones now held per lane
+where the albedo or the coefficient takes the light band by band. They are the optical depth
+straight up, the ground below the horizon, Chapman's thin air read as one lane, the reference
+scene's figures, the sun at 54 degrees, now 94,000 lux, sunny 16's level light, the minute's share
+through sunset, now 0.83 at least, and the turbidity rows. The dusk's zenith over the day's had a
+floor of 0.005 from no source, and it reads 0.0048, so it is lowered to 0.003, the comment saying
+the bounds are orders of magnitude rather than a source's.

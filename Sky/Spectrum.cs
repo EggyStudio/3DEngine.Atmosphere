@@ -33,6 +33,7 @@ internal sealed class Spectrum
 
     private static readonly Lazy<(float Nm, float Sun, float Ozone)[]> Rows = new(Read);
     private static readonly Dictionary<int, Spectrum> Made = [];
+    private float[]? _sunLight;
 
     private Spectrum(int count)
     {
@@ -57,8 +58,30 @@ internal sealed class Spectrum
         }
     }
 
+    /// <summary>
+    /// The bands the module reads the light in, 12, each 33 nm wide, chosen by how the day's and
+    /// the twilight's light settle as the bands narrow.
+    /// </summary>
+    public static Spectrum Light => Of(12);
+
+    /// <summary>
+    /// Ozone's absorption cross-section at 550 nm, by which its absorption is given.
+    /// </summary>
+    public static float OzoneAt550 => Rows.Value.First(r => r.Nm == 550).Ozone;
+
     /// <summary>How many bands the light is in.</summary>
     public int Count { get; }
+
+    /// <summary>
+    /// How many lanes of three bands the light is read in, a band left over read alone.
+    /// </summary>
+    public int Lanes => (Count + 2) / 3;
+
+    /// <summary>
+    /// The sun's light outside the air in each band, scaled so its lux is
+    /// <see cref="Sky.Sun.OutsideIlluminance"/>.
+    /// </summary>
+    public float[] SunLight => _sunLight ??= Scaled();
 
     /// <summary>Each band's width in nanometers.</summary>
     public float Width { get; }
@@ -78,6 +101,46 @@ internal sealed class Spectrum
 
     /// <summary>The observer's X, Y and Z integrated over each band, in nanometers.</summary>
     public Vector3[] Observer { get; }
+
+    /// <summary>
+    /// The sun's light outside the air in a lane's three bands, a band past the last none.
+    /// </summary>
+    public Vector3 LaneSun(int lane) => Lane(lane, b => SunLight[b]);
+
+    /// <summary>
+    /// A light given in a lane's three bands, in linear sRGB whose luminance is its lux.
+    /// </summary>
+    public Vector3 ToLinearSrgb(int lane, Vector3 light)
+    {
+        var xyz = Vector3.Zero;
+        for (var i = 0; i < 3; i++)
+            if (3 * lane + i < Count)
+                xyz += Observer[3 * lane + i] * light[i];
+        return Colorimetry.FromXyz(xyz * Efficacy);
+    }
+
+    /// <summary>
+    /// The mean of <paramref name="of"/> over band <paramref name="band"/>, a nanometer at a time.
+    /// </summary>
+    public float Mean(int band, Func<float, float> of)
+    {
+        var (from, sum, n) = (Shortest + band * Width, 0f, 0);
+        for (var nm = from + 0.5f; nm < from + Width; nm += 1, n++)
+            sum += of(nm);
+        return sum / n;
+    }
+
+    // A lane's three bands of a value, a band past the last none.
+    private Vector3 Lane(int lane, Func<int, float> of) =>
+        new(Band(3 * lane, of), Band(3 * lane + 1, of), Band(3 * lane + 2, of));
+
+    private float Band(int band, Func<int, float> of) => band < Count ? of(band) : 0;
+
+    private float[] Scaled()
+    {
+        var lux = Colorimetry.Luminance(ToLinearSrgb(Sun));
+        return [.. Sun.Select(light => light * Sky.Sun.OutsideIlluminance / lux)];
+    }
 
     /// <summary>The light in <paramref name="count"/> bands, made once a count.</summary>
     public static Spectrum Of(int count)

@@ -105,6 +105,13 @@ light on a level surface, 4,960 to 5,490 K from 10 degrees up, under the 5,500 t
 daylight in the middle of the day, the molecules read at the sRGB primaries' wavelengths raising it
 by 100 to 220 K.
 
+![](.github/assets/readings/2026-11-18-spectral-twilight.webp)
+The light on a level surface through the twilight before the air was read by wavelength and after,
+against the rural evenings Spitschan, Aguirre, Brainard and Sweeney measured, x at 6 degrees down
+0.240 after and 0.289 before against their 0.235, the exact color temperature 44,300 K after and
+12,200 before where theirs is 140,500, and the level light's x at 6, 12 and 24 bands, 12 within
+0.003 of 24.
+
 ## 2026-11-08
 
 Done that day

@@ -13,13 +13,19 @@ public class AtmosphereTests
     public void The_Optical_Depth_Straight_Up_Is_Each_Layers_Coefficient_Times_Its_Depth()
     {
         // Each exponential layer holds its sea level's coefficient over its scale height, cut at
-        // the top, and the ozone's layer its middle's over half its width.
-        var rayleigh = Earth.RayleighScattering * Earth.RayleighScaleHeight * (1 - MathF.Exp(-Earth.Top / Earth.RayleighScaleHeight));
-        var aerosol = Earth.AerosolExtinction * Earth.AerosolScaleHeight * (1 - MathF.Exp(-Earth.Top / Earth.AerosolScaleHeight));
-        var expected = rayleigh + new Vector3(aerosol) + Earth.OzoneAbsorption * Earth.OzoneWidth / 2;
-        var depth = Depth(Earth.Transmittance(0, 1));
-        for (int i = 0; i < 3; i++)
-            Assert.InRange(depth[i] / expected[i], 0.995f, 1.005f);
+        // the top, and the ozone's layer its middle's over half its width, in each band of every
+        // lane the air is read in.
+        var spectrum = Spectrum.Light;
+        for (var lane = 0; lane < spectrum.Lanes; lane++)
+        {
+            var air = Earth.Lane(spectrum, lane);
+            var rayleigh = air.RayleighScattering * air.RayleighScaleHeight * (1 - MathF.Exp(-air.Top / air.RayleighScaleHeight));
+            var aerosol = air.AerosolsAt(0) * air.AerosolScaleHeight * (1 - MathF.Exp(-air.Top / air.AerosolScaleHeight));
+            var expected = rayleigh + aerosol + air.OzoneAbsorption * air.OzoneWidth / 2;
+            var depth = Depth(air.Transmittance(0, 1));
+            for (int i = 0; i < 3; i++)
+                Assert.InRange(depth[i] / expected[i], 0.995f, 1.005f);
+        }
     }
 
     [Fact]
@@ -28,23 +34,25 @@ public class AtmosphereTests
         // Chapman's function for the two exponential layers and the ozone's sum gives 0.925, 0.849
         // and 0.710 from the ground with the sun 53.97 degrees high, for a thin air of the Earth's
         // molecules, a third of its column of ozone from 20 to 40 km and a haze of 1e-5 a meter at
-        // the ground over 1,200 m.
+        // the ground over 1,200 m, read as one lane of three bands with those coefficients.
         var sin = MathF.Sin(float.DegreesToRadians(53.97f));
         var thin = Earth with
         {
             OzoneAbsorption = new Vector3(0.65e-6f, 1.88e-6f, 0.08e-6f) * 0.6f, OzoneBottom = 20_000, OzoneWidth = 20_000,
             AerosolExtinction = 10e-6f, AerosolScaleHeight = 1_200, AerosolAlbedo = new Vector3(0.9f), AerosolAnisotropy = 0.8f,
+            LaneAerosol = new Vector3(10e-6f),
         };
         var through = thin.Transmittance(0, sin);
         Assert.Equal(0.925f, through.X, 0.004f);
         Assert.Equal(0.849f, through.Y, 0.004f);
         Assert.Equal(0.710f, through.Z, 0.004f);
         // The Earth's own air, its column of 300 Dobson units and an ordinary clear day's haze,
-        // lets through 0.775, 0.702 and 0.598 (dotnet test Sky.Tests).
+        // lets through 0.765, 0.698 and 0.561 of the sun's light in each channel, taken by band
+        // (dotnet test Sky.Tests).
         var earth = Earth.Transmittance(0, sin);
-        Assert.Equal(0.775f, earth.X, 0.002f);
-        Assert.Equal(0.702f, earth.Y, 0.002f);
-        Assert.Equal(0.598f, earth.Z, 0.002f);
+        Assert.Equal(0.765f, earth.X, 0.002f);
+        Assert.Equal(0.698f, earth.Y, 0.002f);
+        Assert.Equal(0.561f, earth.Z, 0.002f);
     }
 
     [Fact]
