@@ -26,6 +26,11 @@ namespace Sky;
 /// </remarks>
 public sealed class LookSettings
 {
+    /// <summary>The look that changes nothing under the knee, each number until set.</summary>
+    public LookSettings()
+    {
+    }
+
     /// <summary>
     /// The curve that brings light past white under it, <see cref="LookCurve.Knee"/> unless set.
     /// </summary>

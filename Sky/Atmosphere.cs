@@ -25,6 +25,11 @@ namespace Sky;
 /// </remarks>
 public sealed record Atmosphere
 {
+    /// <summary>The Earth's air, each term as <see cref="Earth"/> holds it until set.</summary>
+    public Atmosphere()
+    {
+    }
+
     /// <summary>
     /// The Earth's air on an ordinary clear day, its ozone a column of 300 Dobson units.
     /// </summary>

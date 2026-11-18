@@ -12,6 +12,13 @@ namespace Sky;
 /// </remarks>
 public sealed class WeatherConditions
 {
+    /// <summary>
+    /// Clear conditions, no cloud, rain, snow, fog or thunder and a light wind, each until set.
+    /// </summary>
+    public WeatherConditions()
+    {
+    }
+
     /// <summary>How much of the sky has cloud, from none at 0 to all at 1.</summary>
     public float CloudCover { get; set; }
 

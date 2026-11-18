@@ -24,6 +24,14 @@ namespace Sky;
 /// </remarks>
 public sealed class SkyClock
 {
+    /// <summary>
+    /// A clock at noon on the March equinox at 45 degrees north, the moon new on day 0, each until
+    /// set.
+    /// </summary>
+    public SkyClock()
+    {
+    }
+
     /// <summary>The days of a synodic month, from one new moon to the next.</summary>
     public const float SynodicMonth = 29.530589f;
 

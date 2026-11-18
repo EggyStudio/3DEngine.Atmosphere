@@ -28,6 +28,13 @@ namespace Sky;
 /// </remarks>
 public sealed class WeatherState
 {
+    /// <summary>
+    /// Clear weather easing toward clear, its forecast off and its seed 0, each until set.
+    /// </summary>
+    public WeatherState()
+    {
+    }
+
     /// <summary>The conditions now.</summary>
     public WeatherConditions Current { get; private set; } = WeatherConditions.Of(WeatherPreset.Clear);
 

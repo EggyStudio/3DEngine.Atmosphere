@@ -695,3 +695,12 @@ aerosols' extinction and scale height and the ground's albedo themselves, so Spo
 the haze they set and take the new albedo of 0.925 and asymmetry of 0.703; BevyCSharp draws Bevy's
 own haze and reads none of the module's. The sheet is
 `.github/assets/readings/2026-11-18-haze-opac.webp`.
+
+The module's session, the cheat sheet. Tools stands at `3720852`, the fifth fact beside the four,
+and CHEATSHEET.md is written by `Cheatsheet.Write` with `CHEATSHEET_WRITE=1`, its opening by hand,
+linked from the README's top row beside the devlog and named in AGENTS.md's documents table. It
+lists 23 types and 208 members. Ten constructors stood with no summary. Six were the parameterless
+constructors the compiler makes, of `Atmosphere`, `SkyClock`, `WeatherConditions`, `WeatherState`,
+`LookCycle` and `LookSettings`, which the source gives explicitly with summaries of what each
+holds until set; four are the positional records' own, of `SceneLight`, `Star`, `LightningStrike`
+and `CelestialLight`, which the writer leaves bare where their type's line says what they hold.

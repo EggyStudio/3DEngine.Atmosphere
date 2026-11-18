@@ -25,6 +25,11 @@ namespace Sky;
 /// </example>
 public sealed class LookCycle
 {
+    /// <summary>A cycle with no looks kept, which <see cref="Add"/> fills.</summary>
+    public LookCycle()
+    {
+    }
+
     private readonly SortedList<float, LookSettings> _keys = [];
 
     /// <summary>The looks kept, by the sun's height in degrees, lowest first.</summary>
