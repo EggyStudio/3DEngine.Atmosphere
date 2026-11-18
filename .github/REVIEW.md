@@ -612,3 +612,14 @@ their own; the test that counts the ground rows a sky makes and the binding test
 README's block word for word, still make theirs. On this machine the suite went from 113 s of wall
 time and 1,420 s of processor time to 71 s and 899, the processor's time the steadier figure since
 the wall time has read from 58 to 113 s between runs of the same tree.
+
+The module's session, the sky's tables for a GPU. `SkyLight.Tables` gives a made sky's tables as a
+read-only view, `SkyTables` with the air's shared terms, the march's 48 steps, the ground's lowest
+height and its altitudes, and a `SkyLaneTables` a lane: the sun's light and the air's coefficients
+in its three bands, its transmittance and its light scattered more than once, the latter as its
+natural logarithm held at the logarithm of 1e-30, each with its rows and columns, the ground's rows
+made on asking, and the nine numbers of the matrix that turns its bands into linear sRGB. The
+README's section "Drawing the sky on a GPU" states the axes' mapping and the march in words, and
+the binding block uploads the view. A reader written in the test from those words alone, using the
+view alone, gives `SkyLight.Luminance` within 0.5% in every channel at six sun heights and altitudes
+to 8 km and seven ways each, above and below the horizon; it failed first, the view absent.

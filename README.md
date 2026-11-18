@@ -15,6 +15,7 @@ module.
 | `Atmosphere` | The air as data, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with their heights, the ground's albedo, and the transmittance along a way through it. `Atmosphere.Earth` is the Earth's air on a clear day, a real column of ozone, 300 Dobson units, `Atmosphere.ContinentalAverage` an ordinary day's, and `WithTurbidity` sets its haze |
 | `Sun` | The sun's light outside the air, 133,800 lux in its measured spectrum's color, and `Sun.At`, its lux, color and color temperature at the ground for its height over the horizon, with its disc's size, its luminance and the share of it above the horizon, and `Sun.Through` for a light of another strength or color |
 | `SkyLight` | The sky's luminance along a way and its illuminance on a level surface, the sun's light scattered once and more than once, in candelas a square meter and lux, with the illuminance at the ground read from a table in microseconds |
+| `SkyTables` and `SkyLaneTables` | A made `SkyLight`'s tables as a read-only view, each lane's transmittance, light scattered more than once and ground table with its sizes and axes, the air's coefficients in its bands and the matrix that turns its bands into linear sRGB, for a sky drawn on a GPU |
 | `SceneLight` | The light a scene takes at an hour of a `SkyClock`, the sun's and the moon's at the ground by the share of their discs above the horizon, the sky's lit by each and the night's own on a level surface, the key light's way, and the EV100 an incident meter gives for all of it, and the same light under a `WeatherConditions`'s cloud |
 | `Haze` | The air near the ground between the eye and what it sees, the share of a thing's light that comes through a distance and the share hidden, clear and in a `WeatherConditions`'s fog, and the visibility by Koschmieder's law |
 | `Moon` and `Night` | The moon's light by its phase and height, redder than the sun's by the lunar disc's reflectance, its disc's size and luminance and the earthshine on its dark part, and a moonless sky's luminance, illuminance and color with the Milky Way's band over it |
@@ -107,6 +108,7 @@ clock, in a file that references the assembly `3DEngine.Sky` and opens the names
 // Once, as the world loads and off the frame, the air, its sky and the sky's ground table.
 var sky = new SkyLight(Atmosphere.Earth);
 sky.PrepareGround(0, 2_000);
+host.UploadSkyTables(sky.Tables);
 var clock = new SkyClock { Latitude = 51, DayOfYear = 172, Hour = 15 };
 var weather = new WeatherState { Clock = clock, Forecast = true };
 
@@ -130,6 +132,50 @@ written where `SKY_PICTURES` names a folder, as a reference a binding's own sky 
 engine that draws its sky in a pass of its own on the GPU reads `Atmosphere`'s terms into it, and
 one whose renderer holds an atmosphere and clouds of its own feeds them from the clock and the
 weather.
+
+### Drawing the sky on a GPU
+
+`SkyLight.Tables` holds a made sky's tables and the terms its arithmetic reads, read-only, which an
+engine uploads once a sky is made, the binding's `host.UploadSkyTables`, and a pass of its own
+repeats `SkyLight.Luminance` from them. The sky is held in lanes of three wavelength bands, each lane
+its own tables, its air's coefficients in its bands and its sun's light outside the air, and every
+table holds three floats a cell, one a band, row after row. For each lane, the light along a unit way
+`v` from an altitude `h` in meters, the sun toward the unit way `s`, both with +Y up, is this.
+
+- The way's length. With `R` the planet's radius, `r = R + max(h, 0)` and `m = v.y`, the way meets
+  the ground at `-r m - sqrt(r^2 (m^2 - 1) + R^2)` where `m < 0` and the root's argument is not
+  negative, and otherwise leaves the air at `max(0, -r m + sqrt(r^2 (m^2 - 1) + (R + Top)^2))`, or
+  at 0 where that argument is not positive. The march runs to the ground where the way meets it.
+- The steps. Of `ViewSteps`, 48, step `i` runs from `D (i / 48)^2` to `D ((i + 1) / 48)^2` of the
+  way's length `D`, and is read at its middle distance `d`: the point `p = (0, R + h, 0) + v d`, its
+  altitude `|p| - R` and its up `p / |p|`, and the sun's cosine there `up . s`.
+- The air at an altitude `y`, `y` held at 0 at least in the exponentials. The molecules scatter
+  `RayleighScattering e^(-y / RayleighScaleHeight)` and the aerosols take out `AerosolExtinction
+  e^(-y / AerosolScaleHeight)`, scattering `AerosolAlbedo` of it; the ozone absorbs `OzoneAbsorption
+  max(0, 1 - |2 (y - OzoneBottom) / OzoneWidth - 1|)`; the extinction is the three's sum.
+- The phases, with `c = v . s` and `g` the `AerosolAnisotropy`: the molecules' `3 (1 + c^2) / (16
+  pi)`, and the aerosols' Cornette and Shanks `3 (1 - g^2) (1 + c^2) / (8 pi (2 + g^2) b^1.5)` with
+  `b = max(1 + g^2 - 2 g c, 1e-6)`.
+- The tables, `Transmittance` and `Scattered`, each read at an altitude and a cosine in row `sqrt(
+  clamp(y / Top, 0, 1)) (rows - 1)` and column `(clamp(cosine, -1, 1) + 1) / 2 (columns - 1)`,
+  bilinearly, the next row and column held at the last, first along the column and then the row.
+  `Scattered` holds the natural logarithm, read between cells as it is and then raised by `e`.
+- Each step adds to the light the step's source, the molecules' scattering times their phase and
+  the aerosols' scattering times theirs times the transmittance toward the sun, with the sum of the
+  two scatterings times `Scattered`, times the light that has come through so far and times the
+  step's span, `(1 - e^(-x l)) / x` for the extinction `x` and the step's length `l`, or `l` where
+  `x l` is under 1e-5, and the light that comes through is multiplied by `e^(-x l)`.
+- A way that meets the ground adds, from the cosine `u` of the sun at the ground point, the light
+  come through times the transmittance from the ground at `u` times `max(u, 0)` times
+  `GroundAlbedo` over pi. The light is then multiplied by `Sun`, and to it is added the light come
+  through times `GroundAlbedo` over pi times the ground's table at its first row, altitude 0, read
+  at the height `asin(u)` in degrees between the two heights about it in its logarithm, and none
+  under `LowestGround`.
+
+The sky's luminance in linear sRGB, candelas a square meter, is the sum over the lanes of each
+lane's `ToLinearSrgb`, nine floats row by row, times its light. The sun's disc is apart, as
+`Sun.DiscLuminance` gives it, and the ground's other rows give `SkyLight.GroundIlluminance` at those
+altitudes.
 
 ## Building and testing
 

@@ -49,10 +49,40 @@ class SkyLight                                           // The light the sky gi
 SkyLight(Atmosphere air);                                // Makes the sky of air, its tables made at once over the processor's cores, a row of heights to a core, the light scattered more than once read from the transmittance's
 Atmosphere Air { get; }                                  // The air the sky is made of
 int GroundRowsMade { get; }                              // How many of the ground table's 13 rows are made, which PrepareGround and a first reading near an altitude make
+SkyTables Tables { get; }                                // The sky's tables as a read-only view, for an engine that draws the sky on a GPU and repeats Luminance's arithmetic there, its README section "Drawing the sky on a GPU" saying how each is read
 Vector3 Luminance(Vector3 view, Vector3 sunToward, float altitude = 0f);  // The sky's luminance in candelas a square meter along view from altitude meters, with the sun toward sunToward, both with +Y up, in linear sRGB whose luminance is the sky's
 Vector3 Illuminance(Vector3 sunToward, float altitude = 0f);  // The illuminance in lux the sky gives a level surface at altitude meters, with the sun toward sunToward, in linear sRGB whose luminance is the lux, the sun's own light apart
 Vector3 GroundIlluminance(Vector3 lightToward, float altitude = 0f);  // The illuminance in lux the sky gives a level surface altitude meters above the ground with the light that lights it toward lightToward, as Illuminance gives it within 1%, read from a table in microseconds where the sum takes hundredths of a second
 void PrepareGround(float lowest, float highest);         // Makes the ground table's rows about the altitudes from lowest to highest meters, so a reading in that span afterward makes none, a fifth of a second to most of a second a row by the processor's cores
+
+class SkyTables                                          // A made SkyLight's tables and the terms its arithmetic reads, for an engine that uploads them and draws the sky on a GPU, the README's section "Drawing the sky on a GPU" giving how each is read and the march that turns them into Luminance
+float PlanetRadius { get; }                              // The planet's radius in meters
+float Top { get; }                                       // The height in meters the air ends at, the tables' altitude axes' end
+float RayleighScaleHeight { get; }                       // The molecules' scale height in meters
+float AerosolScaleHeight { get; }                        // The aerosols' scale height in meters
+float AerosolAnisotropy { get; }                         // The aerosols' asymmetry in Cornette and Shanks's phase function
+float OzoneBottom { get; }                               // The height in meters the ozone's layer starts at
+float OzoneWidth { get; }                                // The ozone layer's depth in meters, densest halfway up it
+int ViewSteps { get; }                                   // The steps the march along a view takes, 48
+float LowestGround { get; }                              // The lowest height in degrees of the light over the horizon the ground's table holds, -24, under which the sky gives the ground no light
+ReadOnlyMemory<float> GroundAltitudes { get; }           // The altitudes in meters the ground's table holds a row at, from 0 to 10,000, a row's light read between two of them in its logarithm
+IReadOnlyList<SkyLaneTables> Lanes { get; }              // The lanes, each three of the module's wavelength bands
+
+class SkyLaneTables                                      // One lane of a sky's tables, three of the module's wavelength bands, each table's values three floats a cell, one a band, row after row
+Vector3 Sun { get; }                                     // The sun's light outside the air in the lane's three bands, watts a square meter a nanometer
+Vector3 RayleighScattering { get; }                      // The molecules' scattering a meter at sea level in each band
+Vector3 AerosolExtinction { get; }                       // The aerosols' extinction a meter at sea level in each band
+Vector3 AerosolAlbedo { get; }                           // The share of the aerosols' extinction they scatter in each band
+Vector3 OzoneAbsorption { get; }                         // The ozone's absorption a meter in the middle of its layer in each band
+Vector3 GroundAlbedo { get; }                            // The ground's albedo in each band
+ReadOnlyMemory<float> ToLinearSrgb { get; }              // The matrix that turns a light in the lane's three bands into linear sRGB whose luminance is its lux, or its candelas a square meter for a radiance, nine floats row by row
+int TransmittanceHeights { get; }                        // The transmittance table's rows, its altitudes, 32
+int TransmittanceAngles { get; }                         // The transmittance table's columns, its cosines of the zenith angle, 256
+ReadOnlyMemory<float> Transmittance { get; }             // The share of the light that crosses the air to its top from an altitude toward a way, each band's as it is, row h at the altitude Top (h / (rows - 1))^2 and column a at the cosine -1 + 2 a / (columns - 1), none where the way meets the ground
+int ScatterHeights { get; }                              // The scattering table's rows, its altitudes, 32
+int ScatterAngles { get; }                               // The scattering table's columns, the sun's zenith cosines, 128
+ReadOnlyMemory<float> Scattered { get; }                 // The natural logarithm of the light scattered more than once a steradian a meter of the scattering coefficient, per unit of the sun's light outside the air, held at no less than the logarithm of 1e-30, rows and columns mapped as Transmittance's with the sun's cosine in place of the way's
+(ReadOnlyMemory<float> Heights, ReadOnlyMemory<float> LogLight) Ground(int row);  // The ground's table at the altitude of GroundAltitudes's row, made where it was not yet: the heights in degrees of the light over the horizon the row holds, rising, and the natural logarithm of the sky's light on a level surface at each in the lane's three bands, read between two heights in its logarithm
 
 record SceneLight                                        // The light a scene takes at an hour of the sky's clock, the sun's and the moon's at the ground, the sky's on a level surface and the exposure an incident meter gives for all of it, in lux and EV100
 SceneLight(CelestialLight Sun, Vector3 SunToward, CelestialLight Moon, Vector3 MoonToward, Vector3 SkyIlluminance);

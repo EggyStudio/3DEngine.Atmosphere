@@ -24,6 +24,10 @@ public class BindingTests
         public void SetAmbientLuminance(Vector3 luminance) => AmbientLuminance = luminance;
         public void SetExposure(float ev100) => Exposure = ev100;
         public void SetFogExtinction(Vector3 extinction) => FogExtinction = extinction;
+
+        public SkyTables? Tables { get; private set; }
+
+        public void UploadSkyTables(SkyTables tables) => Tables = tables;
     }
 
     private static Host Bind(float seconds)
@@ -33,6 +37,7 @@ public class BindingTests
         // Once, as the world loads and off the frame, the air, its sky and the sky's ground table.
         var sky = new SkyLight(Atmosphere.Earth);
         sky.PrepareGround(0, 2_000);
+        host.UploadSkyTables(sky.Tables);
         var clock = new SkyClock { Latitude = 51, DayOfYear = 172, Hour = 15 };
         var weather = new WeatherState { Clock = clock, Forecast = true };
 
@@ -62,5 +67,6 @@ public class BindingTests
         Assert.InRange(Colorimetry.Luminance(host.AmbientLuminance), 500, 12_000);
         Assert.InRange(host.Exposure, 12, 16);
         Assert.True(host.FogExtinction.Y > 0 && host.FogExtinction.Z > host.FogExtinction.X);
+        Assert.Equal(4, host.Tables!.Lanes.Count);
     }
 }

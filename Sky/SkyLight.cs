@@ -149,6 +149,15 @@ public sealed class SkyLight
     /// </summary>
     public int GroundRowsMade => _lanes[0].GroundRowsMade;
 
+    /// <summary>
+    /// The sky's tables as a read-only view, for an engine that draws the sky on a GPU and repeats
+    /// <see cref="Luminance"/>'s arithmetic there, its README section "Drawing the sky on a GPU"
+    /// saying how each is read.
+    /// </summary>
+    public SkyTables Tables => _tables ??= new SkyTables(Air, _bands, _lanes);
+
+    private SkyTables? _tables;
+
     // A reading of every lane, its bands turned into color and summed.
     private Vector3 Combine(Func<SkyLane, Vector3> read)
     {

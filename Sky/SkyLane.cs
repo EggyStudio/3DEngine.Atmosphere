@@ -22,11 +22,12 @@ internal sealed class SkyLane
     // do, so through 111 km of air the light near the ground, where the aerosols lie, is read with
     // its lowest rows 115 meters apart, and its 128 angles stand under a degree apart, fine enough
     // for the bend a haze 2 km deep gives the twilight 14 degrees down, where 64 jumped there.
-    private const int TransmittanceHeights = 32, TransmittanceAngles = 256, ScatterHeights = 32, ScatterAngles = 128;
+    internal const int TransmittanceHeights = 32, TransmittanceAngles = 256, ScatterHeights = 32, ScatterAngles = 128;
 
     // The steps along a way, from the eye and over the 64 ways the light scattered more than once
     // is gathered from.
-    private const int ViewSteps = 48, ScatterSteps = 20, ScatterWays = 8;
+    internal const int ViewSteps = 48;
+    private const int ScatterSteps = 20, ScatterWays = 8;
 
     private readonly Vector3[] _transmittance = new Vector3[TransmittanceHeights * TransmittanceAngles];
     // The logarithm of the light scattered more than once.
@@ -37,12 +38,13 @@ internal sealed class SkyLane
     // GroundError of the band, down to a 64th of a degree. The light
     // 7 to 9 degrees down bends sharply as the earth's shadow overhead passes the top of the air,
     // where the molecules that scatter the most blue lie, and the halving finds that bend.
-    private const float LowestGround = -24, GroundError = 0.002f;
+    internal const float LowestGround = -24;
+    private const float GroundError = 0.002f;
     private const int GroundHalvings = 6;
 
     // The altitudes in meters the ground's table holds a row of heights at, the light between two
     // read as a straight line in its logarithm, and above the highest summed over the dome.
-    private static readonly float[] GroundAltitudes = [0, 500, 1_000, 1_500, 2_000, 3_000, 4_000, 5_000, 6_000, 7_000, 8_000, 9_000, 10_000];
+    internal static readonly float[] GroundAltitudes = [0, 500, 1_000, 1_500, 2_000, 3_000, 4_000, 5_000, 6_000, 7_000, 8_000, 9_000, 10_000];
 
     // The ground's table, a row at each of those altitudes made at its first reading, each the
     // light's heights in degrees rising and the logarithm of the sky's light on a level surface at
@@ -71,6 +73,17 @@ internal sealed class SkyLane
 
     // The air the sky is made of.
     public Atmosphere Air { get; }
+
+    // The sun's light outside the air in the lane's three bands.
+    internal Vector3 SunLight => _sun;
+
+    // The tables as they are held, for the public view of them.
+    internal Vector3[] TransmittanceTable => _transmittance;
+
+    internal Vector3[] ScatteredTable => _scattered;
+
+    // A row of the ground's table, made where it was not yet.
+    internal (float[] Heights, Vector3[] Light) GroundRow(int row) => _ground[row].Value;
 
     // The sky's luminance in candelas a square meter along view from
     // altitude meters, with the sun toward sunToward, both
