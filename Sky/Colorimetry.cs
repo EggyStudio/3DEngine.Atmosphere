@@ -55,12 +55,12 @@ public static class Colorimetry
     }
 
     // Linear sRGB to and from CIE 1931's XYZ, D65 white.
-    private static Vector3 ToXyz(Vector3 c) => new(
+    internal static Vector3 ToXyz(Vector3 c) => new(
         0.4124564f * c.X + 0.3575761f * c.Y + 0.1804375f * c.Z,
         0.2126729f * c.X + 0.7151522f * c.Y + 0.0721750f * c.Z,
         0.0193339f * c.X + 0.1191920f * c.Y + 0.9503041f * c.Z);
 
-    private static Vector3 FromXyz(Vector3 c) => new(
+    internal static Vector3 FromXyz(Vector3 c) => new(
         3.2404542f * c.X - 1.5371385f * c.Y - 0.4985314f * c.Z,
         -0.9692660f * c.X + 1.8760108f * c.Y + 0.0415560f * c.Z,
         0.0556434f * c.X - 0.2040259f * c.Y + 1.0572252f * c.Z);

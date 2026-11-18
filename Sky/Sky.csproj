@@ -20,6 +20,12 @@
     <!-- The bright stars Stars reads, carried in the library so it needs no file of the engine's. -->
     <ItemGroup>
         <EmbeddedResource Include="Data/BrightStars.csv" LogicalName="Sky.BrightStars.csv" />
+        <EmbeddedResource Include="Data/Spectra.csv" LogicalName="Sky.Spectra.csv" />
+    </ItemGroup>
+
+    <!-- The tests read the light by wavelength the library keeps to itself. -->
+    <ItemGroup>
+        <InternalsVisibleTo Include="3DEngine.Sky.Tests" />
     </ItemGroup>
 
 </Project>

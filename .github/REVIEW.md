@@ -837,3 +837,18 @@ at the horizon, and the key's light then is some 2e-7 lux on a surface facing it
 800 lux on a level surface. A light so faint turns unseen, so no test is written and nothing is
 mended. Tools stands at `75d77f2`, and the module writes cheatsheet as one word, the README's link
 row among its lines.
+
+The module's session, the spectral mend's first step, the light by wavelength, with no figure the
+engines read moved. `Data/Spectra.csv` carries the sun's light outside the air, the extraterrestrial
+spectrum of the ASTM G173-03 reference spectra after Gueymard's SMARTS 2.9.2, and ozone's absorption
+cross-section, Serdyuchenko and Gorshelev's of 2011 at 233 K, each the mean over a 5 nm band from
+380 to 780 nm, its sources named in its head. The internal `Spectrum` divides that light into bands
+of equal width, integrates Wyman, Sloan and Shirley's fit of 2013 to the CIE 1931 observer over
+each, and turns a light by band into linear sRGB whose luminance is its lux, the tests reading it
+through the library's internals. Seven tests, which failed to build first, hold an equal-energy
+light at the white of a third within 0.004 at 12 and 24 bands, a black body at 4,000, 5,772 and
+6,500 K read back within 1.5%, the sun's light outside the air at the luminous solar constant
+Darula, Kittler and Gueymard give, 133.8 klux, within 1%, and ozone's absorption greatest near 600
+nm at some 5.1e-21 square centimeters. The sun's measured light outside the air is 132,727, 132,974
+and 133,375 lux at 5,793, 5,925 and 5,929 K in 6, 12 and 24 bands, where the module's sun is 128,000
+lux of a black body at 5,772 K; the next step reads the air by band and gives the sun that light.
