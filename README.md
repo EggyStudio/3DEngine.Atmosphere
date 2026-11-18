@@ -17,7 +17,7 @@ module.
 | `Haze` | The air near the ground between the eye and what it sees, the share of a thing's light that comes through a distance and the share hidden, clear and in a `WeatherConditions`'s fog, and the visibility by Koschmieder's law |
 | `Moon` and `Night` | The moon's light by its phase and height, its disc's size and luminance and the earthshine on its dark part, and a moonless sky's luminance and illuminance with the Milky Way's band over it |
 | `Stars` and `Star` | The Bright Star Catalogue's 9,096 stars, their places, magnitudes and colors, and a star's illuminance and luminance by its magnitude |
-| `Thunderstorm` | A storm's lightning about a place at a `WeatherConditions`'s rate of strikes, each placed, timed and flickered from the storm's seed, with the flash's light at a distance and the thunder's delay by the air's temperature |
+| `Thunderstorm` | A storm's lightning about a place at a `WeatherConditions`'s rate of strikes, each placed, timed and flickered from the storm's seed, with the flash's light at a distance and the thunder's delay by the air's temperature, and a `LightningFlash`, one strike's flicker made once from its seed |
 | `Colorimetry` | Linear sRGB's luminance and a black body's color, to and from its temperature |
 | `SkyClock` | Where the sun, the moon and the stars stand at an hour of a day of the year for a latitude, by spherical astronomy, with the moon's phase, how far the stars have turned about the pole, and the part of the day, a `DayPhase`, the sun's height makes it |
 | `WeatherState` | The weather as it goes, its `WeatherConditions` easing toward a `WeatherPreset` or toward a forecast a `WeatherClimate` writes from the clock, the wind gusting and the ground wetting in rain and whitening under snow |

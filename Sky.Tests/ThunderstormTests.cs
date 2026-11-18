@@ -86,6 +86,23 @@ public class ThunderstormTests
     }
 
     [Fact]
+    public void No_Flash_Stands_Flat_At_Its_Peak_And_Every_Flash_Reaches_It()
+    {
+        // Read every millisecond, no seed of a thousand holds within 1e-5 of its brightest for
+        // more than one step, as a product that passed 1 and was cut there did for some 30 ms,
+        // and each reaches its brightest, the flash's light at its peak being PeakLumens.
+        for (uint seed = 0; seed < 1_000; seed++)
+        {
+            var flash = new LightningFlash(seed);
+            var samples = Enumerable.Range(0, 551).Select(i => flash.Brightness(i / 1000f)).ToList();
+            var top = samples.Max();
+            Assert.InRange(top, 0.995f, 1);
+            var held = samples.Count(v => v > top - 1e-5f);
+            Assert.True(held <= 2, $"seed {seed} stands at its peak of {top} for {held} ms");
+        }
+    }
+
+    [Fact]
     public void A_Flash_Lights_A_Surface_Facing_It_By_The_Inverse_Square_Of_Its_Distance()
     {
         // The flash's lumens spread over the sphere about it, 4e9 at its peak unless set.

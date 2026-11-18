@@ -47,9 +47,6 @@ public sealed class Thunderstorm
     /// </summary>
     public const float FlashDuration = 0.55f;
 
-    // The fall's value at the flash's end, e to the minus 4.5.
-    private static readonly float EndOfFall = MathF.Exp(-4.5f);
-
     private uint _state;
     private uint _strikes;
     private float _left = float.NaN;
@@ -152,26 +149,14 @@ public sealed class Thunderstorm
     /// <summary>
     /// How bright a flash is from 0 to 1, <paramref name="elapsed"/> seconds after it began, a rise
     /// in its first 22 ms and a fall, with two or three return strokes at
-    /// <paramref name="seed"/>'s times brightening it again, none before it and after
-    /// <see cref="FlashDuration"/>.
+    /// <paramref name="seed"/>'s times brightening it again, scaled so its brightest is 1, none
+    /// before it and after <see cref="FlashDuration"/>.
     /// </summary>
-    public static float Envelope(float elapsed, uint seed)
-    {
-        if (elapsed < 0 || elapsed > FlashDuration) return 0;
-        var t = elapsed / FlashDuration;
-        var rise = MathF.Min(t / 0.04f, 1);
-        // The fall less its value at the end, so the flash dies away to none there rather than
-        // going out from a hundredth of its peak.
-        var fall = (MathF.Exp(-4.5f * t) - EndOfFall) / (1 - EndOfFall);
-        var flicker = 1f;
-        var state = seed;
-        for (var stroke = 0; stroke < 3; stroke++)
-        {
-            var d = (t - (0.12f + Unit(ref state) * 0.55f)) / 0.05f;
-            flicker += 0.9f * MathF.Exp(-d * d);
-        }
-        return Math.Clamp(rise * fall * flicker, 0, 1);
-    }
+    /// <remarks>
+    /// Each call finds the flash's brightest anew, so a binding that reads one flash every frame
+    /// makes a <see cref="LightningFlash"/> once, as the strike begins, and reads it instead.
+    /// </remarks>
+    public static float Envelope(float elapsed, uint seed) => new LightningFlash(seed).Brightness(elapsed);
 
     /// <summary>
     /// The lux a flash gives a surface facing it <paramref name="distance"/> meters off at
@@ -187,12 +172,67 @@ public sealed class Thunderstorm
     private float Next() => Unit(ref _state);
 
     // A number from 0 to under 1 by SplitMix32's step, the same on every system and runtime.
-    private static float Unit(ref uint state)
+    internal static float Unit(ref uint state)
     {
         var z = state += 0x9E3779B9u;
         z = (z ^ (z >> 16)) * 0x85EBCA6Bu;
         z = (z ^ (z >> 13)) * 0xC2B2AE35u;
         z ^= z >> 16;
         return (z >> 8) * (1f / (1 << 24));
+    }
+}
+
+/// <summary>
+/// The flicker of one strike's flash, made from its seed once as the strike begins and read
+/// through the flash, from 0 to 1, as <see cref="Thunderstorm.Envelope"/> gives it.
+/// </summary>
+/// <remarks>
+/// A rise in the flash's first 22 ms, a fall less its value at the end, so the flash dies away to
+/// none there rather than going out from a hundredth of its peak, and two or three return strokes
+/// at the seed's times that brighten it again, all over the shape's own brightest, so every flash
+/// reaches 1 once and none is cut flat where its strokes pass it.
+/// </remarks>
+public readonly struct LightningFlash
+{
+    // The points through a flash its brightest is sought at, a 512th of it apart, where a return
+    // stroke's peak, a tenth of the flash wide, is found to within a thousandth of its height.
+    private const int PeakSamples = 512;
+
+    // The fall's value at the flash's end, e to the minus 4.5.
+    private static readonly float EndOfFall = MathF.Exp(-4.5f);
+
+    private readonly float _first, _second, _third, _peak;
+
+    /// <summary>Makes the flash of <paramref name="seed"/>, a strike's own.</summary>
+    public LightningFlash(uint seed)
+    {
+        var state = seed;
+        (_first, _second, _third) = (0.12f + Thunderstorm.Unit(ref state) * 0.55f, 0.12f + Thunderstorm.Unit(ref state) * 0.55f, 0.12f + Thunderstorm.Unit(ref state) * 0.55f);
+        _peak = 1;
+        var peak = 0f;
+        for (var i = 0; i <= PeakSamples; i++)
+            peak = MathF.Max(peak, Shape((float)i / PeakSamples));
+        _peak = peak;
+    }
+
+    /// <summary>
+    /// How bright the flash is from 0 to 1, <paramref name="elapsed"/> seconds after it began, none
+    /// before it and after <see cref="Thunderstorm.FlashDuration"/>.
+    /// </summary>
+    public float Brightness(float elapsed) =>
+        elapsed < 0 || elapsed > Thunderstorm.FlashDuration ? 0 : Math.Clamp(Shape(elapsed / Thunderstorm.FlashDuration) / _peak, 0, 1);
+
+    // The flash's brightness through it, t from 0 to 1, before it is scaled to its brightest.
+    private float Shape(float t)
+    {
+        var rise = MathF.Min(t / 0.04f, 1);
+        var fall = (MathF.Exp(-4.5f * t) - EndOfFall) / (1 - EndOfFall);
+        return rise * fall * (1 + Stroke(t, _first) + Stroke(t, _second) + Stroke(t, _third));
+    }
+
+    private static float Stroke(float t, float at)
+    {
+        var d = (t - at) / 0.05f;
+        return 0.9f * MathF.Exp(-d * d);
     }
 }

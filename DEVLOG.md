@@ -38,6 +38,11 @@ and three return strokes that brighten it again, dying away to none at 0.55 s; o
 them to the ground and the rest flashing in the cloud, the thunder of the farthest heard 11.7 s
 after its flash.
 
+![](.github/assets/readings/2026-11-18-lightning-peak.webp)
+The flashes of seeds 1 to 3 each scaled to its own brightest, so each reaches 1 once and comes to a
+point there where seed 2's stood flat at 1 for some 30 ms and seed 1's never reached it, beside
+where 600 strikes of one storm land seen from above with each ring's distance on it.
+
 ## 2026-11-08
 
 Done that day

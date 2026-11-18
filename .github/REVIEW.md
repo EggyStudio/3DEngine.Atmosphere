@@ -375,3 +375,14 @@ one frame, which a test holds. And the storm draws its numbers by SplitMix32 rat
 its peak and its bluish white are the bridge's, set by sight and said so in their summaries. Nine
 tests, the suite 114, and a sheet of three flashes and a storm's strikes from above at
 `.github/assets/readings/2026-11-18-lightning.webp`.
+
+The module's session, the flash's peak. A flash's shape, its rise, fall and return strokes, is
+divided by its own brightest, found at 513 points through the flash, so every flash reaches 1 once
+and comes to a point there; a product passing 1 was cut flat at it, seed 2's for some 30 ms, and
+one that never reached 1 left a flash dimmer than `PeakLumens` says, seed 1's at 0.95. Finding
+the brightest takes 513 readings of the shape, so it is made once a flash in `LightningFlash`, a
+value of the strike's seed that a binding makes as the strike begins and reads every frame, and
+`Thunderstorm.Envelope` makes one a call. The test reads 1,000 seeds every millisecond, each
+reaching within 0.005 of 1 and none holding within 1e-5 of its brightest for more than one step,
+and it failed on the cut flashes before the mend. The sheet is
+`.github/assets/readings/2026-11-18-lightning-peak.webp`.
