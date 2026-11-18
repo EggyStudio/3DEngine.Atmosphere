@@ -386,3 +386,15 @@ value of the strike's seed that a binding makes as the strike begins and reads e
 reaching within 0.005 of 1 and none holding within 1e-5 of its brightest for more than one step,
 and it failed on the cut flashes before the mend. The sheet is
 `.github/assets/readings/2026-11-18-lightning-peak.webp`.
+
+The module's session, the sum by the sky's mirror. `SkyLight.Illuminance` turns the sun to stand
+at the turn of 0 and reads the dome on one side of its vertical plane, each way counted twice,
+since the sky is alike either side of it. A call takes 3.78 ms where it took 6.57, and making a
+`SkyLight` with its ground's table 129 ms where it took 204, in a release build's probe outside the
+repository on 32 cores, the mean of 220 calls. The results are not equal to the last bit, since the
+sum adds in another order. For a sun toward +X, the plane the sum stood in before, they hold within
+2.2e-6 of the larger of the channel and the lux. For a sun turned about the zenith they move by
+up to 0.6%, the old sum's own error, which read the dome at 48 fixed turns, so its lux moved as
+the sun turned between them where the light on a level surface depends on the sun's height alone.
+The new sum reads the same ways about the sun at every turn, and a test holds the lux alike within
+1e-5 at any turn, which failed on the old sum by 2.7e-5 at 10 degrees high.

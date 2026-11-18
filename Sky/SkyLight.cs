@@ -124,19 +124,24 @@ public sealed class SkyLight
     public Vector3 Illuminance(Vector3 sunToward, float altitude = 0)
     {
         // The dome in bands of the cosine with the zenith, each the same solid angle, and around.
+        // The sky is alike either side of the sun's vertical plane, so with the sun turned to
+        // stand at the turn of 0 the ways on one side are read and each counted twice, the way
+        // at a turn and the one at the turn less it seeing the same sky.
         const int Bands = 24, Around = 48;
+        sunToward = Vector3.Normalize(sunToward);
+        var sun = new Vector3(MathF.Sqrt(MathF.Max(0, 1 - sunToward.Y * sunToward.Y)), sunToward.Y, 0);
         var sum = Vector3.Zero;
         for (int b = 0; b < Bands; b++)
         {
             var cos = (b + 0.5f) / Bands;
             var sin = MathF.Sqrt(1 - cos * cos);
-            for (int a = 0; a < Around; a++)
+            for (int a = 0; a < Around / 2; a++)
             {
                 var turn = 2 * MathF.PI * (a + 0.5f) / Around;
-                sum += Luminance(new Vector3(sin * MathF.Cos(turn), cos, sin * MathF.Sin(turn)), sunToward, altitude) * cos;
+                sum += Luminance(new Vector3(sin * MathF.Cos(turn), cos, sin * MathF.Sin(turn)), sun, altitude) * cos;
             }
         }
-        return sum * (2 * MathF.PI / (Bands * Around));
+        return sum * (2 * 2 * MathF.PI / (Bands * Around));
     }
 
     /// <summary>

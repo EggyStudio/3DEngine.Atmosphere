@@ -97,4 +97,24 @@ public class SkyLightTests
             Assert.True(Colorimetry.Luminance(Sky.Illuminance(SunAt(elevation))) < Night.SkyIlluminance * 1e-3f);
         }
     }
+
+    [Fact]
+    public void The_Sky_Lights_A_Level_Surface_Alike_Whatever_Way_The_Sun_Stands_Around()
+    {
+        // The light on a level surface depends on the sun's height alone, so a sun turned about
+        // the zenith gives the same lux to 1e-5 of the larger of each channel and the lux, where
+        // ways read at fixed turns moved it by 0.6% as the sun turned between them.
+        foreach (var elevation in new[] { 54f, 10, -4 })
+        {
+            var r = float.DegreesToRadians(elevation);
+            var at = Sky.Illuminance(SunAt(elevation));
+            var lux = Colorimetry.Luminance(at);
+            for (var turn = 0.1f; turn < MathF.Tau; turn += 0.7f)
+            {
+                var turned = Sky.Illuminance(new Vector3(MathF.Cos(r) * MathF.Cos(turn), MathF.Sin(r), MathF.Cos(r) * MathF.Sin(turn)));
+                for (var c = 0; c < 3; c++)
+                    Assert.True(MathF.Abs(turned[c] - at[c]) <= 1e-5f * MathF.Max(at[c], lux), $"at {elevation} degrees turned {turn} the sky gives {turned} for {at}");
+            }
+        }
+    }
 }
