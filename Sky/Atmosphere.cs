@@ -16,11 +16,11 @@ namespace Sky;
 /// a coefficient multiplies is a color of the frame.
 /// </para>
 /// <para>
-/// <see cref="Earth"/> holds the Earth of Unity's HDRP, whose physically based sky the values are
-/// taken from so an engine's sky can be read beside one drawn there, but for its ozone, a column of
-/// 300 Dobson units in a layer from 10 to 40 km (<see cref="OzoneAbsorption"/>), a vertical optical
-/// depth of 0.028 in green, which turns the twilight's zenith blue, and its haze, an ordinary clear
-/// day's (<see cref="AerosolExtinction"/>), a turbidity of 2.40.
+/// <see cref="Earth"/> holds the Earth's air, its molecules' scattering Bruneton and Neyret's
+/// precomputed atmospheric scattering of 2008 gives, its ozone a column of 300 Dobson units in a
+/// layer from 10 to 40 km (<see cref="OzoneAbsorption"/>), a vertical optical depth of 0.028 in
+/// green, which turns the twilight's zenith blue, and its haze an ordinary clear day's
+/// (<see cref="AerosolExtinction"/>), a turbidity of 2.40.
 /// </para>
 /// </remarks>
 public sealed record Atmosphere

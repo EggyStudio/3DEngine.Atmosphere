@@ -13,7 +13,7 @@ module.
 
 | Type | Gives |
 |---|---|
-| `Atmosphere` | The air as data, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with their heights, the ground's albedo, and the transmittance along a way through it. `Atmosphere.Earth` is the Earth of Unity's HDRP with a real column of ozone, 300 Dobson units, and an ordinary clear day's haze, and `WithTurbidity` sets its haze |
+| `Atmosphere` | The air as data, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with their heights, the ground's albedo, and the transmittance along a way through it. `Atmosphere.Earth` is the Earth's air, a real column of ozone, 300 Dobson units, and an ordinary clear day's haze, and `WithTurbidity` sets its haze |
 | `Sun` | The sun's light outside the air, 128,000 lux at 5,772 K, and `Sun.At`, its lux, color and color temperature at the ground for its height over the horizon, with its disc's size, its luminance and the share of it above the horizon, and `Sun.Through` for a light of another strength or color |
 | `SkyLight` | The sky's luminance along a way and its illuminance on a level surface, the sun's light scattered once and more than once, in candelas a square meter and lux, with the illuminance at the ground read from a table in microseconds |
 | `SceneLight` | The light a scene takes at an hour of a `SkyClock`, the sun's and the moon's at the ground by the share of their discs above the horizon, the sky's lit by each and the night's own on a level surface, the key light's way, and the EV100 an incident meter gives for all of it, and the same light under a `WeatherConditions`'s cloud |
@@ -26,9 +26,9 @@ module.
 | `WeatherState` | The weather as it goes, its `WeatherConditions` easing toward a `WeatherPreset` or toward a forecast a `WeatherClimate` writes from the clock, the wind gusting and the ground wetting in rain and whitening under snow |
 | `LookCycle` | A camera's look by the sun's height, the `LookSettings` kept at heights of the sun and worked out between the two about any other, its curve a `LookCurve` |
 
-Read against HDRP's Earth with the Earth's own ozone and an ordinary clear day's haze, the sun 54
-degrees high reaches the ground at 91,100 lux and 5,025 K and the sky lights a level surface with
-19,300 lux beside the sun's 73,700 (`dotnet test Sky.Tests`).
+Through the Earth's air, its own ozone and an ordinary clear day's haze, the sun 54 degrees high
+reaches the ground at 91,100 lux and 5,025 K and the sky lights a level surface with 19,300 lux
+beside the sun's 73,700 (`dotnet test Sky.Tests`).
 
 ## Taking it into an engine
 

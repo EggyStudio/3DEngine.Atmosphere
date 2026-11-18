@@ -25,9 +25,9 @@ public enum LookCurve
     /// <see cref="LookSettings.CurveUpper"/> in the light, and shown at a gamma of 2.2.
     /// </summary>
     /// <remarks>
-    /// The curve the BSL shaders tonemap Minecraft's picture by, numbered as their settings are, so
-    /// a look copied from them is set here by the same numbers. It darkens the shadows and holds
-    /// the highlights back, which with a saturation above 1 gives a vivid picture.
+    /// Its four numbers are those a look graded by such a curve is given, so a look copied from
+    /// one is set here by the same numbers. It darkens the shadows and holds the highlights back,
+    /// which with a saturation above 1 gives a vivid picture.
     /// </remarks>
     Numbered = 1,
 }

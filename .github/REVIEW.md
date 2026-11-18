@@ -715,3 +715,16 @@ engines or the engines. `SourceTests` reads the library's source lines through
 names Tools' checks refuse, which a name planted in `Sun.cs` showed. The weather's half-life and
 step are seconds of the world's clock, where they said the game's, and CHEATSHEET.md and DEVLOG.md
 are written again.
+
+The module's session, outside products in the module's text. The rule held for the engines holds
+for any product, so every place the module named one is reworded, not the two the review named
+alone. The transmittance test holds Chapman's function's figures for a thin air, a third of the
+Earth's ozone and a haze of 1e-5 a meter over 1,200 m, set in the test, in place of another sky's.
+`Atmosphere`'s remarks name the published source of the molecules' scattering, Bruneton and
+Neyret's precomputed atmospheric scattering of 2008, where they named a product. The reference
+scene's sun in the sun's test is dimmed by the scene's own air. `LookCurve.Numbered`'s remarks say
+what its four numbers are without the shader pack and the game they were read from. The README's
+`Atmosphere` row and its figures under the table read in the module's terms. The haze sheet and the
+ozone's dusk sheet are remade, the old haze and the old ozone named as they were, with their
+captions and DEVLOG.md. The search for the products' names finds none outside REVIEW.md, NORM.md and
+STYLE.md, the last Tools' shared text.

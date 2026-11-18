@@ -64,10 +64,11 @@ sunset 776 lux where it is 991 and the end of civil twilight 6.53 where it is 9.
 zenith's blue over red 3.6 at 10 degrees down where it is 2.9.
 
 ![](.github/assets/readings/2026-11-18-ozone-dusk.webp)
-The scene's light and its color from dusk into night at 51 degrees north under HDRP's ozone, dashed,
-and under the Earth's column of 300 Dobson units that Atmosphere.Earth holds, solid, the light at
-the horizon 1,127 lux where it was 1,399 and at 6 degrees down 6.3 lux where it was 9.1, its color
-7,400 K there where it was 5,850, with the published figures beside them.
+The scene's light and its color from dusk into night at 51 degrees north under the ozone as it was,
+a third of a real column, dashed, and under the Earth's column of 300 Dobson units that
+Atmosphere.Earth holds, solid, the light at the horizon 1,127 lux where it was 1,399 and at 6
+degrees down 6.3 lux where it was 9.1, its color 7,400 K there where it was 5,850, with the
+published figures beside them.
 
 ![](.github/assets/readings/2026-11-18-sunset-candidates.webp)
 The apparent sunset's light on a level surface from a clear day's air of turbidity 3, 586 lux, with
@@ -84,12 +85,12 @@ halved to, the noon's light the same at every one and the sunset's within 1% fro
 rows and a ground error of 0.01.
 
 ![](.github/assets/readings/2026-11-18-haze-opac.webp)
-Atmosphere.Earth's haze moved from HDRP's to OPAC's continental average, a turbidity of 2.40 and a
-visibility of 44 km, the sun 54 degrees high 91,138 lux at 5,025 K where it was 108,177, the level
-light 93,068 lux at 5,415 K where it was 95,225 at 5,433, the apparent sunset 600 lux where it was
-777 and the end of civil twilight 4.92 where it was 6.54, with OPAC's polluted type and the
-reading's fit beside them, and the dusk's light and its color under the old haze and the new, the
-twilight's light 13,600 K at 10.5 degrees down.
+Atmosphere.Earth's haze moved from the haze as it was to OPAC's continental average, a turbidity of
+2.40 and a visibility of 44 km, the sun 54 degrees high 91,138 lux at 5,025 K where it was 108,177,
+the level light 93,068 lux at 5,415 K where it was 95,225 at 5,433, the apparent sunset 600 lux
+where it was 777 and the end of civil twilight 4.92 where it was 6.54, with OPAC's polluted type and
+the reading's fit beside them, and the dusk's light and its color under the old haze and the new,
+the twilight's light 13,600 K at 10.5 degrees down.
 
 ## 2026-11-08
 

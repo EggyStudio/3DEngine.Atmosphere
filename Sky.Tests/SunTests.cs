@@ -8,9 +8,10 @@ public class SunTests
     public void The_Sun_At_54_Degrees_Reaches_The_Ground_At_91000_Lux_And_5000_Kelvin()
     {
         // The reference scene, 27 June at 15:05 in Cologne, sets its sun 53.97 degrees high to
-        // 97,050 lux at 5,633 K outside the air, which HDRP's Earth dims to 73,900 lux at 4,924 K
-        // at the ground, the sun's color the same within a hundred kelvin and its lux two thirds
-        // of this, since that sun outside the air is 120,000 lux times the sine of its height.
+        // 97,050 lux at 5,633 K outside the air, which the scene's own air dims to 73,900 lux at
+        // 4,924 K at the ground, the sun's color the same within a hundred kelvin and its lux two
+        // thirds of this, since that sun outside the air is 120,000 lux times the sine of its
+        // height.
         // The ozone and the haze Atmosphere.Earth holds take their share of the light as well, so
         // the sun reaches the ground at some 91,000 lux.
         var sun = Sun.At(Atmosphere.Earth, 53.97f);
