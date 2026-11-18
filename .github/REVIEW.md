@@ -728,3 +728,22 @@ what its four numbers are without the shader pack and the game they were read fr
 ozone's dusk sheet are remade, the old haze and the old ozone named as they were, with their
 captions and DEVLOG.md. The search for the products' names finds none outside REVIEW.md, NORM.md and
 STYLE.md, the last Tools' shared text.
+
+The module's session, the twilight's color, read with the haze unchanged, at
+`.github/assets/readings/2026-11-18-twilight-color.webp`. The light on a level surface, the sun's
+and the sky's together with no moon, is bluest at 13,589 K with the sun 10.5 degrees down, where
+under the haze as it was it was bluest at 7,532 K 7 degrees down. Switched alone and together, the
+ozone makes it and the haze multiplies it: with no ozone the light reaches 6,894 K at most under
+today's haze, and with no haze the ozone takes it to some 6,900 K at 6 degrees down; with both, the
+haze 2 km deep scatters down to the ground the light that has crossed the ozone's layer along long
+grazing ways, and the ozone's Chappuis band takes its yellow and green, which the review's guess
+named. No measured source gives a twilight color in kelvin to hold it to. Krisciunas and Schaefer
+(1991) model the moon's light and give none. Spitschan, Aguirre, Brainard and Sweeney (2016)
+measured the downwelling light's chromaticity on or near the daylight locus, shifting toward blue
+through the twilight and bluest during the nautical twilight, near 12 degrees down at their rural
+site, and plot it against the locus from 4,000 to 25,000 K without stating a temperature.
+Hernández-Andrés and others (2001) measured daylight at Granada from 3,758 to 34,573 K, as a later
+paper of theirs quotes it, though the paper's own conditions could not be read here. So 13,589 K
+stands inside what was measured and where the measurement says the light is bluest, and no fault is
+found. A test holds the bluest light between 6 and 12 degrees down, as Spitschan and others measured
+it; it passes under both hazes, so it guards the reading rather than mends a fault.

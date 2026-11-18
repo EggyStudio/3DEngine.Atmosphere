@@ -92,6 +92,12 @@ where it was 777 and the end of civil twilight 4.92 where it was 6.54, with OPAC
 the reading's fit beside them, and the dusk's light and its color under the old haze and the new,
 the twilight's light 13,600 K at 10.5 degrees down.
 
+![](.github/assets/readings/2026-11-18-twilight-color.webp)
+The color of the light on a level surface through the twilight, the sun's and the sky's together,
+bluest in the nautical twilight under both hazes, 13,589 K at 10.5 degrees down under an ordinary
+clear day's and 7,532 K at 7 down under the haze as it was, and with no ozone 6,894 K at most, so
+the ozone's absorption makes the blue and the deeper haze multiplies it.
+
 ## 2026-11-08
 
 Done that day

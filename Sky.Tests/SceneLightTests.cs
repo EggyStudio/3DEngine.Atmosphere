@@ -210,4 +210,23 @@ public class SceneLightTests
             Assert.InRange(sunset / source, 1, 1.55f);
         Assert.InRange(civil / 3.4f, 1, 1.55f);
     }
+
+    [Fact]
+    public void The_Light_Is_Bluest_In_The_Nautical_Twilight()
+    {
+        // Spitschan, Aguirre, Brainard and Sweeney (2016) measured the downwelling light's
+        // chromaticity through the twilight shift toward blue and back, bluest during the nautical
+        // twilight at their rural site; so the light on a level surface, the sun's and the sky's
+        // together with no moon, is bluest with the sun between 6 and 12 degrees down.
+        var (bluest, at) = (0f, 0f);
+        for (var minute = 0; minute <= 100; minute++)
+        {
+            var light = SceneLight.At(Clock(17.5f + minute / 60f, 0), Sky);
+            var level = light.Sun.Color * (light.Sun.Illuminance * MathF.Max(light.SunToward.Y, 0)) + light.SkyIlluminance;
+            var kelvin = Colorimetry.TemperatureOf(level);
+            if (kelvin > bluest)
+                (bluest, at) = (kelvin, float.RadiansToDegrees(MathF.Asin(light.SunToward.Y)));
+        }
+        Assert.InRange(at, -12, -6);
+    }
 }
