@@ -641,3 +641,9 @@ little, where the sources read the air of their sites on days they called clear,
 haze, higher and absorbing more; that is the sources' weather, which a binding gives the module by
 `Atmosphere.WithTurbidity` and the haze's own terms. Whether `Atmosphere.Earth`'s haze should stand
 nearer the sources' days is the owner's, as its ozone was.
+
+The module's session, its devlog. DEVLOG.md stands at the root, written by Tools'
+`scripts/devlog.py` from the submodule, `python3 -I modules/Tools/scripts/devlog.py . Sky`, the same
+script as Tools' own head, and reads as the head does, three days and twelve entries, the ten
+pictures of 2026-11-18 and items 3 and 5 under Done. The README links it from a top row under its
+title, and AGENTS.md's row for it names the command and when it runs.

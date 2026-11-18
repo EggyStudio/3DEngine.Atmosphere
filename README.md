@@ -1,5 +1,7 @@
 # Sky
 
+[DEVLOG.md](DEVLOG.md) holds what landed by day, with the pictures taken on the way.
+
 Sky is a library both engines, 3DEngine and BevyCSharp, take as a git submodule, for the sky's
 clock, the sun's and the sky's light in physical units, the atmosphere's parameters, the weather and
 the looks by the sun's height. Both engines light from its numbers while each draws its own sky. It
