@@ -181,7 +181,7 @@ float Brightness(float elapsed);                         // How bright the flash
 class Colorimetry                                        // Colors in linear sRGB, its primaries and D65's white, and the color temperatures of light, to and from a black body's
 float Luminance(Vector3 rgb);                            // The luminance of a color in linear sRGB, by BT.709's weights, so a color of luminance 1 carries a hue alone
 Vector3 FromTemperature(float kelvin);                   // The color of a black body at kelvin, from 1,667 to 25,000, in linear sRGB at a luminance of 1
-float TemperatureOf(Vector3 rgb);                        // The correlated color temperature of a color in linear sRGB, the black body's whose color is nearest it, by McCamy's cubic in CIE 1931's xy
+float TemperatureOf(Vector3 rgb);                        // The correlated color temperature of a color in linear sRGB, the black body's whose color is nearest it in CIE 1960's uv, 0 for no light, PositiveInfinity for a light bluer than any black body and 1,000 K for one redder than a black body at 1,000 K
 
 enum DayPhase                                            // Which part of the day the sun's height makes it
 Night = 0,                                               // The sun more than twelve degrees under the horizon, the sky dark

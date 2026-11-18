@@ -266,7 +266,7 @@ public class SceneLightTests
         // Ny-Alesund against lower latitudes, and Peyvandi and others (2016) give clear daylight's
         // interquartile range as 5,712 to 7,757 K, so the sun's and the sky's light together is
         // between 5,500 and 6,500 K from 40 degrees up. Under 40 the module's light is redder
-        // than that, 5,342 K at 20 degrees (dotnet test Sky.Tests), and is held at 5,300 K so
+        // than that, 5,333 K at 20 degrees (dotnet test Sky.Tests), and is held at 5,300 K so
         // neither height slips while what it lacks there is read.
         var r = float.DegreesToRadians(elevation);
         var sun = Sun.At(Atmosphere.Earth, elevation);

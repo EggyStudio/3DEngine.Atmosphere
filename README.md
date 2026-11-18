@@ -26,7 +26,7 @@ module.
 | `LookCycle` | A camera's look by the sun's height, the `LookSettings` kept at heights of the sun and worked out between the two about any other, its curve a `LookCurve` |
 
 Through the Earth's air, its own ozone and an ordinary clear day's haze, the sun 54 degrees high
-reaches the ground at 94,200 lux and 5,033 K and the sky lights a level surface with 20,100 lux
+reaches the ground at 94,200 lux and 5,021 K and the sky lights a level surface with 20,100 lux
 beside the sun's 76,200 (`dotnet test Sky.Tests`). The air takes the light in 12 bands of wavelength
 and turns it into color at the end.
 
@@ -84,7 +84,11 @@ It stands on these conventions.
 - Illuminance is in lux, luminance in candelas a square meter, a color temperature in kelvin and an
   exposure in EV100 by an incident meter's calibration of 250. The sun gives 133,800 lux outside the
   air, and an engine whose sun is another strength scales what the module returns by its sun's over
-  `Sun.OutsideIlluminance`.
+  `Sun.OutsideIlluminance`. A color temperature is the CIE's correlated one, the black body's
+  nearest the color in CIE 1960's uv, read by `Colorimetry.TemperatureOf`. A light bluer than any
+  black body, as the measured nautical twilight's is, reads as `float.PositiveInfinity`, so a
+  binding that shows the twilight's color reads its chromaticity instead. A light redder than a
+  black body at 1,000 K reads 1,000.
 - A `SkyLight` makes its table of the sky's light at an altitude the first time that altitude is
   read, two thirds of a second to four fifths a row, so a binding calls
   `SkyLight.PrepareGround` over the altitudes its camera keeps while the world loads, and reads

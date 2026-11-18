@@ -168,7 +168,7 @@ public class SkyLightTests
         // of ozone and an ordinary clear day's haze, held within 0.5% (dotnet test Sky.Tests).
         var sun = Sun.At(Atmosphere.Earth, 54);
         Assert.Equal(94_200f, sun.Illuminance, 94_200f * 0.005f);
-        Assert.Equal(5_033f, sun.Temperature, 5_033f * 0.005f);
+        Assert.Equal(5_021f, sun.Temperature, 5_021f * 0.005f);
         Assert.Equal(20_118f, Colorimetry.Luminance(Sky.Illuminance(SunAt(54))), 20_118f * 0.005f);
         Assert.Equal(4_501f, Colorimetry.Luminance(Sky.Luminance(Vector3.UnitY, SunAt(54))), 4_501f * 0.005f);
     }

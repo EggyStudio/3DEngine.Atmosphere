@@ -37,21 +37,89 @@ public static class Colorimetry
 
     /// <summary>
     /// The correlated color temperature of a color in linear sRGB, the black body's whose color is
-    /// nearest it, by McCamy's cubic in CIE 1931's xy.
+    /// nearest it in CIE 1960's uv, 0 for no light, <see cref="float.PositiveInfinity"/> for a
+    /// light bluer than any black body and 1,000 K for one redder than a black body at 1,000 K.
     /// </summary>
     /// <remarks>
-    /// A black body's color from <see cref="FromTemperature"/> reads back within 25 K from 2,000 to
-    /// 6,500 K and 130 K under at 10,000 (<c>ColorimetryTests</c>), the cubic drifting from the
-    /// locus toward the blue.
+    /// <para>
+    /// The nearest point of the Planckian locus, which the CIE defines the correlated color
+    /// temperature by, the locus made from Planck's law through the module's observer from 360 to
+    /// 830 nm a mired apart, from 1,000 mireds, 1,000 K, to none, the end a black body nears as it
+    /// grows infinitely hot, and read between two of its points along the segment that joins them.
+    /// The CIE's D50 and D65 and its daylight at 15,000 and 25,000 K read within 0.5% of their
+    /// published temperatures and its illuminant A within 1%, 2,829 K for 2,856, since the
+    /// module's observer, a fit to the CIE's, stands apart from it in the red
+    /// (<c>ColorimetryTests</c>).
+    /// </para>
+    /// <para>
+    /// The nautical twilight's light as measured lies beyond the locus's end, a chromaticity no
+    /// black body has, and the module's from some 12 degrees down, and either reads as infinite,
+    /// so a figure of it is given by its x and y instead.
+    /// </para>
     /// </remarks>
     public static float TemperatureOf(Vector3 rgb)
     {
         var xyz = ToXyz(rgb);
         var sum = xyz.X + xyz.Y + xyz.Z;
         if (sum <= 0) return 0;
-        var (x, y) = (xyz.X / sum, xyz.Y / sum);
-        var n = (x - 0.3320f) / (0.1858f - y);
-        return 449 * n * n * n + 3525 * n * n + 6823.3f * n + 5520.33f;
+        var (point, locus) = (Uv(xyz), Locus.Value);
+        // Every fourth point, then the points about the nearest of those, since the distance falls
+        // to one least along so smooth an arc.
+        var nearest = Nearest(point, locus, 0, locus.Length - 1, 4);
+        nearest = Nearest(point, locus, Math.Max(nearest - 4, 0), Math.Min(nearest + 4, locus.Length - 1), 1);
+        // The point's foot on the segments either side of the nearest of the locus's points.
+        var (mired, best) = ((float)nearest, Vector2.DistanceSquared(point, locus[nearest]));
+        foreach (var other in new[] { nearest - 1, nearest + 1 })
+        {
+            if (other < 0 || other >= locus.Length) continue;
+            var along = locus[other] - locus[nearest];
+            var t = Math.Clamp(Vector2.Dot(point - locus[nearest], along) / along.LengthSquared(), 0, 1);
+            var distance = Vector2.DistanceSquared(point, locus[nearest] + along * t);
+            if (distance < best)
+                (mired, best) = (nearest + (other - nearest) * t, distance);
+        }
+        return mired <= 0 ? float.PositiveInfinity : 1e6f / mired;
+    }
+
+    // The Planckian locus in CIE 1960's uv a mired apart, from an infinitely hot black body at
+    // index 0 to one at 1,000 K at index 1,000, its spectrum's shape at infinity the limit of
+    // Planck's law, the wavelength to the power of -4.
+    private static readonly Lazy<Vector2[]> Locus = new(() =>
+    {
+        const double SecondRadiation = 1.438777e-2;
+        var locus = new Vector2[1_001];
+        for (var mired = 0; mired < locus.Length; mired++)
+        {
+            var xyz = Vector3.Zero;
+            for (var nm = 360; nm <= 830; nm++)
+            {
+                var meters = nm * 1e-9;
+                var power = mired == 0 ? 1 / Math.Pow(nm, 4)
+                    : 1 / (Math.Pow(nm, 5) * double.ExpM1(SecondRadiation * mired / 1e6 / meters));
+                xyz += Spectrum.Observe(nm) * (float)(power * 1e20);
+            }
+            locus[mired] = Uv(xyz);
+        }
+        return locus;
+    });
+
+    private static int Nearest(Vector2 point, Vector2[] locus, int from, int to, int step)
+    {
+        var (nearest, best) = (from, float.MaxValue);
+        for (var i = from; i <= to; i += step)
+        {
+            var distance = Vector2.DistanceSquared(point, locus[i]);
+            if (distance < best)
+                (nearest, best) = (i, distance);
+        }
+        return nearest;
+    }
+
+    // CIE 1960's uv of a color in XYZ.
+    private static Vector2 Uv(Vector3 xyz)
+    {
+        var d = xyz.X + 15 * xyz.Y + 3 * xyz.Z;
+        return new Vector2(4 * xyz.X / d, 6 * xyz.Y / d);
     }
 
     // Linear sRGB to and from CIE 1931's XYZ, D65 white.

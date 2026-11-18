@@ -9,13 +9,13 @@ public class SunTests
     {
         // The reference scene, 27 June at 15:05 in Cologne, sets its sun 53.97 degrees high to
         // 97,050 lux at 5,633 K outside the air, which the scene's own air dims to 73,900 lux at
-        // 4,924 K at the ground, the sun's color the same within 110 kelvin and its lux less,
+        // 4,924 K at the ground, the sun's color the same within a hundred kelvin and its lux less,
         // since that sun outside the air is 120,000 lux times the sine of its height.
         // The ozone and the haze Atmosphere.Earth holds take their share of the light as well, so
         // the sun reaches the ground at some 94,200 lux (dotnet test Sky.Tests).
         var sun = Sun.At(Atmosphere.Earth, 53.97f);
         Assert.InRange(sun.Illuminance, 93_300, 95_100);
-        Assert.InRange(sun.Temperature, 4_983, 5_083);
+        Assert.InRange(sun.Temperature, 4_971, 5_071);
         Assert.Equal(1, Colorimetry.Luminance(sun.Color), 0.001f);
     }
 

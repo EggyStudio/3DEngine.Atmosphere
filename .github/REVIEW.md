@@ -925,3 +925,41 @@ scene's figures, the sun at 54 degrees, now 94,000 lux, sunny 16's level light, 
 through sunset, now 0.83 at least, and the turbidity rows. The dusk's zenith over the day's had a
 floor of 0.005 from no source, and it reads 0.0048, so it is lowered to 0.003, the comment saying
 the bounds are orders of magnitude rather than a source's.
+
+The module's session, `Colorimetry.TemperatureOf` read exactly. It finds the nearest point of the
+Planckian locus in CIE 1960's uv, the locus made from Planck's law through the module's observer
+from 360 to 830 nm a mired apart from 1,000 K to an infinitely hot black body, read between two of
+its points along the segment that joins them. A light bluer than any black body reads as
+`float.PositiveInfinity`, one redder than a black body at 1,000 K reads 1,000, and no light reads
+0, the README saying so. Robertson's method was not taken, since the exact reading costs 2.2
+microseconds a call and its locus under a millisecond once. Five tests failed first, the CIE's
+daylight at 15,000 and 25,000 K, which the cubic read low past its range, two chromaticities past
+the locus's end and a red light past its start, and pass now beside the CIE's A, D50 and D65.
+
+The CIE's illuminant A reads 2,829 K for its 2,856, so its row is held within 1% and the rest within
+0.5%. The method is not the cause. Through the CIE's own tabulated observer (CIE 018:2019, its
+dataset DOI 10.25039/CIE.DS.xvudnb9b) the same locus reads A, D50 and D65 within 2 K of their
+published figures, so the gap is Wyman, Sloan and Shirley's fit, which stands apart from the CIE's
+in the red, and every light the module makes goes through that fit. The locus is kept on the fit, so
+a black body's spectrum through the module reads back its own temperature. Taking the CIE's table
+as the module's observer is the mend I would propose, and it moves every color slightly. The table
+is under CC BY-SA 4.0, so carrying it in the library is the owner's word. `FromTemperature` still
+reads Kim and others' cubic fit to the CIE's locus, from 1,667 to 25,000 K, and its color reads back
+38 K apart at 2,000 K and within 25 from 3,000 to 10,000, where the test held 25 at 2,000 and now
+holds 40.
+
+Every figure the cubic gave is reread. The sun 54 degrees high is 5,021 K, which was 5,033, the
+level light there 5,640 K, which was 5,648, at 20 degrees 5,333, which was 5,342, at 30 5,464 and at
+40 5,559, the apparent sunset 10,780 K and the end of civil twilight 43,640 K, which the cubic read
+as 24,335. The sun outside the air is 5,920 K. The README, the reference scene's test, the sun's
+test and the daylight test's comment carry the new figures, and the daylight test's bounds hold.
+
+Two readings stay open. In the nautical twilight the measured light is bluer than the module's, x
+0.216 against 0.238 at 10 degrees down. The untried candidates are the ozone's column and height,
+300 Dobson units from 10 to 40 km, a single tent where the real layer peaks near 22 km, the ozone's
+cross-section taken at 233 K alone, the light scattered more than once, which Hillaire's
+approximation takes as alike every way, and the stratosphere's own aerosol, which the module has
+none of. Below 40 degrees the day is redder than measured daylight, 5,333 K at 20 degrees against a
+floor of 5,300 and a band from 5,500. Its untried candidates are the haze's albedo and asymmetry by
+wavelength, the orders of scattering the sky's table sums, and the rural evenings themselves, which
+read 6,600 K at 10 degrees but were not chosen clear.
