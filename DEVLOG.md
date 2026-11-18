@@ -76,6 +76,13 @@ haze that absorbs a fifth taking 4%, its phase and the ground's albedo nothing a
 to 6 degrees 1%, and the haze 2 km high and absorbing at a turbidity of 4 giving 447 lux against the
 442 of Krisciunas and Schaefer.
 
+![](.github/assets/readings/2026-11-18-resolution.webp)
+What a binding pays to follow a moving sun, 6 to 10 microseconds a call of SceneLight.At at every
+resolution, and what it pays when the air changes, SkyLight made in 10.9 ms at a quarter of its
+tables' rows to 456 at four times and its ground table in 95 to 220 ms by the error its spans are
+halved to, the noon's light the same at every one and the sunset's within 1% from half the tables'
+rows and a ground error of 0.01.
+
 ## 2026-11-08
 
 Done that day

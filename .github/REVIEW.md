@@ -647,3 +647,21 @@ The module's session, its devlog. DEVLOG.md stands at the root, written by Tools
 script as Tools' own head, and reads as the head does, three days and twelve entries, the ten
 pictures of 2026-11-18 and items 3 and 5 under Done. The README links it from a top row under its
 title, and AGENTS.md's row for it names the command and when it runs.
+
+The module's session, what a binding pays to follow a moving sun, read with nothing changed, at
+`.github/assets/readings/2026-11-18-resolution.webp`. A moving sun pays a call of `SceneLight.At`, 6
+to 10 microseconds at every resolution read, since a `SkyLight`'s tables hold the air alone and the
+sun's way is given to each call; the tables are made again only when the air changes. Making a
+`SkyLight` takes 10.9, 27.5, 37.4, 58.0, 98.2, 135.4 and 455.6 ms with its tables at a quarter, a
+half, three quarters, one, one and a half, two and four times their rows and angles, and its ground
+table 220, 215, 138, 113, 95 and 106 ms with its spans halved to an error of 0.0005, 0.001, 0.003,
+0.01, 0.03 and 0.1, in 361 to 115 rows, the means of six in a release build on 32 cores with the
+sizes scaled by an edit not kept. The noon's light on a level surface, 95,225 lux with the sun 54
+degrees high, holds within a thousandth of a percent at every one. The apparent sunset's, against
+the finest, is 1.43% over at a quarter of the tables, 0.45% under at a half and 0.23% over at
+today's one, and 0.01% under at today's error of 0.003, 0.14% at 0.01 and 1.54% at 0.03. So the
+smallest within 1% at noon and at sunset are the tables at half their rows and angles, 27.5 ms,
+and the ground's error at 0.01, 113 ms, together 0.69% under the finest at sunset; today's are
+within 0.23%. The ground table's cost moves little with its rows, its 111 rows a degree apart taking
+most of it, so halving the tables saves 30 ms of a build of some 200 and nothing a call. Whether to
+take the smaller tables is the review's; nothing is changed.
