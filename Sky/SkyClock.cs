@@ -45,7 +45,18 @@ public sealed class SkyClock
     public float DayOfYear { get; set; } = 79f;
 
     /// <summary>The latitude, in degrees north of the equator, 45 unless set.</summary>
-    public float Latitude { get; set; } = 45f;
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// The latitude set is past a pole, over 90 degrees either way, or not a number.
+    /// </exception>
+    public float Latitude
+    {
+        get => _latitude;
+        set => _latitude = float.IsNaN(value) || MathF.Abs(value) > 90f
+            ? throw new ArgumentOutOfRangeException(nameof(value), value, "A latitude runs from -90 to 90 degrees.")
+            : value;
+    }
+
+    private float _latitude = 45f;
 
     /// <summary>
     /// The tilt of the earth's axis, in degrees, earth's 23.44 unless set, none keeping every day

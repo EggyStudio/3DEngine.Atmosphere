@@ -118,9 +118,14 @@ public sealed record SceneLight(CelestialLight Sun, Vector3 SunToward, Celestial
     /// light.
     /// </para>
     /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="weather"/>'s cloud cover is not a number.
+    /// </exception>
     public SceneLight Under(WeatherConditions weather)
     {
         ArgumentNullException.ThrowIfNull(weather);
+        if (float.IsNaN(weather.CloudCover))
+            throw new ArgumentOutOfRangeException(nameof(weather), weather.CloudCover, "The cloud cover runs from 0 to 1.");
         var cover = Math.Clamp(weather.CloudCover, 0, 1);
         var sun = Sun.Color * (Sun.Illuminance * MathF.Max(SunToward.Y, 0));
         var moon = Moon.Color * (Moon.Illuminance * MathF.Max(MoonToward.Y, 0));

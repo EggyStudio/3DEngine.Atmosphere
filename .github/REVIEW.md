@@ -788,3 +788,14 @@ reads past it at 3.5 km with one row more. The README's binding block makes the 
 it read once at the ground, the host's copy with it, and the conventions say a binding makes the
 span its camera keeps while the world loads. The suite takes 12 s where it took 8, its tests making
 more rows.
+
+The module's session, the edges. A way of no length or not a number, the usual slip of a default
+vector, gave the sky's luminance and illuminance a NaN and made `GroundIlluminance` throw an
+`IndexOutOfRangeException` from inside its table; the four readers refuse it with an
+`ArgumentException` naming the parameter. A latitude past a pole or not a number gave a clock of
+nonsense ways and is refused as it is set, and a cloud cover not a number gave `SceneLight.Under` a
+NaN and is refused. A NaN given straight to arithmetic, as `Sun.DiscShare` takes a height, gives
+the NaN back, the caller's own. Ten tests hold them, of which the seven on the refusals failed
+first; the three on a clock at either pole, its ways finite and of unit length refracted or not,
+and on a clock and a weather stepped back, which give numbers, passed before and guard them. The
+suite holds 144.

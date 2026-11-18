@@ -99,10 +99,13 @@ public sealed class SkyLight
     /// sun and the sky give it times its albedo over pi, with the air between, so the lower half of
     /// the sky an engine lights by is the ground's under both.
     /// </remarks>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="view"/> or <paramref name="sunToward"/> has no length or is not a number.
+    /// </exception>
     public Vector3 Luminance(Vector3 view, Vector3 sunToward, float altitude = 0)
     {
-        view = Vector3.Normalize(view);
-        sunToward = Vector3.Normalize(sunToward);
+        view = Way(view, nameof(view));
+        sunToward = Way(sunToward, nameof(sunToward));
         var (toGround, toTop) = Air.Distances(altitude, view.Y);
         var distance = toGround ?? toTop;
         var cosAngle = Vector3.Dot(view, sunToward);
@@ -139,6 +142,9 @@ public sealed class SkyLight
     /// with the sun toward <paramref name="sunToward"/>, in linear sRGB whose luminance is the lux,
     /// the sun's own light apart.
     /// </summary>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="sunToward"/> has no length or is not a number.
+    /// </exception>
     public Vector3 Illuminance(Vector3 sunToward, float altitude = 0)
     {
         // The dome in bands of the cosine with the zenith, each the same solid angle, and around.
@@ -146,7 +152,7 @@ public sealed class SkyLight
         // stand at the turn of 0 the ways on one side are read and each counted twice, the way
         // at a turn and the one at the turn less it seeing the same sky.
         const int Bands = 24, Around = 48;
-        sunToward = Vector3.Normalize(sunToward);
+        sunToward = Way(sunToward, nameof(sunToward));
         var sun = new Vector3(MathF.Sqrt(MathF.Max(0, 1 - sunToward.Y * sunToward.Y)), sunToward.Y, 0);
         var sum = Vector3.Zero;
         for (int b = 0; b < Bands; b++)
@@ -180,10 +186,13 @@ public sealed class SkyLight
     /// since the sky lit so gives under 1.6e-7 lux at the ground, a five-thousandth of
     /// <see cref="Night.SkyIlluminance"/>.
     /// </remarks>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="lightToward"/> has no length or is not a number.
+    /// </exception>
     public Vector3 GroundIlluminance(Vector3 lightToward, float altitude = 0)
     {
         if (altitude > GroundAltitudes[^1]) return Illuminance(lightToward, altitude);
-        var elevation = float.RadiansToDegrees(MathF.Asin(Math.Clamp(Vector3.Normalize(lightToward).Y, -1, 1)));
+        var elevation = float.RadiansToDegrees(MathF.Asin(Math.Clamp(Way(lightToward, nameof(lightToward)).Y, -1, 1)));
         if (elevation < LowestGround) return Vector3.Zero;
         altitude = MathF.Max(altitude, 0);
         var row = Array.BinarySearch(GroundAltitudes, altitude);
@@ -377,6 +386,16 @@ public sealed class SkyLight
     }
 
     private static Vector3 Exp(Vector3 v) => new(MathF.Exp(v.X), MathF.Exp(v.Y), MathF.Exp(v.Z));
+
+    // A way given, of unit length, or the caller's mistake named by its parameter, since a way of
+    // no length or not a number normalizes to a NaN that lights a scene with nothing.
+    private static Vector3 Way(Vector3 way, string name)
+    {
+        var length = way.Length();
+        if (!float.IsFinite(length) || length < 1e-12f)
+            throw new ArgumentException($"The way {way} has no length or is not a number; give one with a direction.", name);
+        return way / length;
+    }
 
     // The logarithm of a light, held above 1e-30 so a way the light never reaches stays finite.
     private static Vector3 Log(Vector3 v) =>
