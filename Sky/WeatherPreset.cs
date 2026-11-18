@@ -1,8 +1,9 @@
 namespace Sky;
 
 /// <summary>
-/// A set of conditions the weather eases into (<see cref="WeatherState.Set(WeatherPreset, bool)"/>),
-/// each as <see cref="WeatherConditions.Of"/> gives it.
+/// A set of conditions the weather eases into
+/// (<see cref="WeatherState.Set(WeatherPreset, bool)"/>), each as
+/// <see cref="WeatherConditions.Of"/> gives it.
 /// </summary>
 public enum WeatherPreset
 {

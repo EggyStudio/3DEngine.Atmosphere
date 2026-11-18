@@ -152,8 +152,7 @@ public sealed class SkyLight
     }
 
     // Hillaire's light scattered twice or more at a height with the sun at a cosine with the
-    // zenith,
-    // gathered over ways spread evenly over the sphere, each marched in even steps.
+    // zenith, gathered over ways spread evenly over the sphere, each marched in even steps.
     private Vector3 Scattered(float altitude, float cosSunZenith)
     {
         var sunToward = new Vector3(MathF.Sqrt(MathF.Max(0, 1 - cosSunZenith * cosSunZenith)), cosSunZenith, 0);

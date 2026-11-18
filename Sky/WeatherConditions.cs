@@ -15,7 +15,9 @@ public sealed class WeatherConditions
     /// <summary>How much of the sky has cloud, from none at 0 to all at 1.</summary>
     public float CloudCover { get; set; }
 
-    /// <summary>How much of the cover is a flat deck rather than heaps, from heaps at 0 to a deck at 1.</summary>
+    /// <summary>
+    /// How much of the cover is a flat deck rather than heaps, from heaps at 0 to a deck at 1.
+    /// </summary>
     public float Stratus { get; set; }
 
     /// <summary>The clouds' base above the ground, in meters.</summary>
@@ -24,7 +26,9 @@ public sealed class WeatherConditions
     /// <summary>The clouds' top, in meters.</summary>
     public float CloudTop { get; set; } = 4000f;
 
-    /// <summary>How dense the clouds are against the density an engine draws them at, 1 as they are.</summary>
+    /// <summary>
+    /// How dense the clouds are against the density an engine draws them at, 1 as they are.
+    /// </summary>
     public float CloudDensity { get; set; } = 1f;
 
     /// <summary>How hard it rains, from none at 0 to a downpour at 1.</summary>
@@ -33,7 +37,9 @@ public sealed class WeatherConditions
     /// <summary>How hard it snows, from none at 0 to a blizzard at 1.</summary>
     public float Snow { get; set; }
 
-    /// <summary>How thick the fog is, from the camera's own fog at 0 to some eighty meters seen at 1.</summary>
+    /// <summary>
+    /// How thick the fog is, from the camera's own fog at 0 to some eighty meters seen at 1.
+    /// </summary>
     public float Fog { get; set; }
 
     /// <summary>How many strikes of lightning a minute.</summary>
@@ -42,19 +48,28 @@ public sealed class WeatherConditions
     /// <summary>How fast the wind blows, in meters a second.</summary>
     public float WindSpeed { get; set; } = 2f;
 
-    /// <summary>Where the wind comes from, in degrees clockwise from north, a north wind at 0 blowing south.</summary>
+    /// <summary>
+    /// Where the wind comes from, in degrees clockwise from north, a north wind at 0 blowing south.
+    /// </summary>
     public float WindFrom { get; set; }
 
-    /// <summary>How much the wind gusts, from steady at 0 to its speed swinging by more than half at 1.</summary>
+    /// <summary>
+    /// How much the wind gusts, from steady at 0 to its speed swinging by more than half at 1.
+    /// </summary>
     public float Gusts { get; set; } = 0.15f;
 
-    /// <summary>The air's temperature, in degrees Celsius, under which rain falls as snow.</summary>
+    /// <summary>
+    /// The air's temperature, in degrees Celsius, under which rain falls as snow.
+    /// </summary>
     public float Temperature { get; set; } = 18f;
 
     /// <summary>A copy, to change without changing these.</summary>
     public WeatherConditions Copy() => Lerp(this, this, 0f);
 
-    /// <summary>The weather part of the way from one set of conditions to another, each number that far between the two.</summary>
+    /// <summary>
+    /// The weather part of the way from one set of conditions to another, each number that far
+    /// between the two.
+    /// </summary>
     /// <param name="from">The conditions at none of the way.</param>
     /// <param name="to">The conditions at all of it.</param>
     /// <param name="share">How far, from 0 to 1, held there.</param>

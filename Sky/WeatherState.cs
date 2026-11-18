@@ -13,8 +13,8 @@ namespace Sky;
 /// <see cref="Set(WeatherPreset, bool)"/> gives it a preset to ease toward or to take at once. With
 /// <see cref="Forecast"/> on, the target is written every step from the clock's day and hour, a
 /// storminess rising and falling over <see cref="SystemsPerDay"/> weather systems a day by
-/// <see cref="Climate"/>, between clear skies and thunderstorms, rain falling as snow below a degree,
-/// and a mist on calm mornings, the same for the same <see cref="Seed"/>.
+/// <see cref="Climate"/>, between clear skies and thunderstorms, rain falling as snow below a
+/// degree, and a mist on calm mornings, the same for the same <see cref="Seed"/>.
 /// </para>
 /// <para>
 /// <see cref="Wind"/> is the wind's velocity this moment, its speed swinging with the conditions'
@@ -34,28 +34,41 @@ public sealed class WeatherState
     /// <summary>The conditions being eased toward.</summary>
     public WeatherConditions Target { get; private set; } = WeatherConditions.Of(WeatherPreset.Clear);
 
-    /// <summary>How many seconds of the game's clock the conditions take to come half the way to the target, 30 unless set.</summary>
+    /// <summary>
+    /// How many seconds of the game's clock the conditions take to come half the way to the target,
+    /// 30 unless set.
+    /// </summary>
     public float HalfLife { get; set; } = 30f;
 
-    /// <summary>Whether a forecast writes the target from the clock every step, off unless set.</summary>
+    /// <summary>
+    /// Whether a forecast writes the target from the clock every step, off unless set.
+    /// </summary>
     public bool Forecast { get; set; }
 
-    /// <summary>What weather the forecast brings, <see cref="WeatherClimate.Temperate"/> unless set.</summary>
+    /// <summary>
+    /// What weather the forecast brings, <see cref="WeatherClimate.Temperate"/> unless set.
+    /// </summary>
     public WeatherClimate Climate { get; set; } = WeatherClimate.Temperate;
 
     /// <summary>How many weather systems pass a day in the forecast, 1.5 unless set.</summary>
     public float SystemsPerDay { get; set; } = 1.5f;
 
-    /// <summary>The seed the forecast is made from, so two worlds' weathers differ, 0 unless set.</summary>
+    /// <summary>
+    /// The seed the forecast is made from, so two worlds' weathers differ, 0 unless set.
+    /// </summary>
     public uint Seed { get; set; }
 
-    /// <summary>The clock the forecast reads the day and the hour from, or none to keep its own.</summary>
+    /// <summary>
+    /// The clock the forecast reads the day and the hour from, or none to keep its own.
+    /// </summary>
     public SkyClock? Clock { get; set; }
 
     /// <summary>The wind's velocity now, in meters a second, gusts and all.</summary>
     public Vector3 Wind { get; private set; }
 
-    /// <summary>How far the wind has carried what it carries since the state began, in meters.</summary>
+    /// <summary>
+    /// How far the wind has carried what it carries since the state began, in meters.
+    /// </summary>
     public Vector3 Carried { get; private set; }
 
     /// <summary>How wet the ground is, from dry at 0 to soaked at 1.</summary>
@@ -64,7 +77,8 @@ public sealed class WeatherState
     /// <summary>How much of the ground lies under snow, from none at 0 to all at 1.</summary>
     public float SnowCover { get; private set; }
 
-    // The state's own time, which the gusts follow, and its own day and hour where no clock is given.
+    // The state's own time, which the gusts follow, and its own day and hour where no clock is
+    // given.
     private double _seconds;
     private float _ownDay = 79f;
     private float _ownHour = 12f;

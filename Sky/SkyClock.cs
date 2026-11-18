@@ -30,16 +30,24 @@ public sealed class SkyClock
     /// <summary>The local solar time, from midnight at 0 to 24, noon unless set.</summary>
     public float Hour { get; set; } = 12f;
 
-    /// <summary>The day of the year, from 0 on the first of January to 365, the March equinox's, 79, unless set.</summary>
+    /// <summary>
+    /// The day of the year, from 0 on the first of January to 365, the March equinox's, 79, unless
+    /// set.
+    /// </summary>
     public float DayOfYear { get; set; } = 79f;
 
     /// <summary>The latitude, in degrees north of the equator, 45 unless set.</summary>
     public float Latitude { get; set; } = 45f;
 
-    /// <summary>The tilt of the earth's axis, in degrees, earth's 23.44 unless set, none keeping every day the equinox.</summary>
+    /// <summary>
+    /// The tilt of the earth's axis, in degrees, earth's 23.44 unless set, none keeping every day
+    /// the equinox.
+    /// </summary>
     public float AxialTilt { get; set; } = 23.44f;
 
-    /// <summary>The moon's age on day 0 of the year, the days since a new moon, 0 unless set.</summary>
+    /// <summary>
+    /// The moon's age on day 0 of the year, the days since a new moon, 0 unless set.
+    /// </summary>
     public float MoonAgeAtStart { get; set; }
 
     /// <summary>Moves the clock on by hours, the day of the year with it.</summary>
@@ -52,13 +60,17 @@ public sealed class SkyClock
         DayOfYear = ((DayOfYear + days) % 365f + 365f) % 365f;
     }
 
-    /// <summary>The moon's age now, the days since the last new moon, from 0 to a synodic month.</summary>
+    /// <summary>
+    /// The moon's age now, the days since the last new moon, from 0 to a synodic month.
+    /// </summary>
     public float MoonAge => Wrap(MoonAgeAtStart + DayOfYear + (Hour / 24f), SynodicMonth);
 
     /// <summary>The moon's phase, from 0 at a new moon through 0.5 when full back to 1.</summary>
     public float MoonPhase => MoonAge / SynodicMonth;
 
-    /// <summary>The share of the moon's face the sun lights as seen from here, from none new to all full.</summary>
+    /// <summary>
+    /// The share of the moon's face the sun lights as seen from here, from none new to all full.
+    /// </summary>
     public float MoonLit => (1f - MathF.Cos(MoonPhase * 2f * MathF.PI)) / 2f;
 
     /// <summary>The way toward the sun.</summary>
@@ -83,7 +95,9 @@ public sealed class SkyClock
         }
     }
 
-    /// <summary>How far the stars have turned about the pole, the local sidereal time, in radians.</summary>
+    /// <summary>
+    /// How far the stars have turned about the pole, the local sidereal time, in radians.
+    /// </summary>
     /// <remarks>
     /// The sun's hour angle, which the hour gives, and its right ascension, so the sun stands where
     /// the hour puts it and every star turns with it a little faster, a full turn a sidereal day.

@@ -12,7 +12,9 @@ namespace Sky;
 /// </remarks>
 public static class Moon
 {
-    /// <summary>How wide the moon's disc looks from the earth, in degrees, its mean of 0.518.</summary>
+    /// <summary>
+    /// How wide the moon's disc looks from the earth, in degrees, its mean of 0.518.
+    /// </summary>
     public const float AngularDiameter = 0.518f;
 
     /// <summary>The solid angle of the moon's disc, in steradians, 6.4e-5.</summary>
@@ -45,7 +47,9 @@ public static class Moon
     /// </remarks>
     public static float EarthshineLuminance(float phaseAngle) => EarthshineShare * LitLuminance(0) * (1f - LitShare(phaseAngle));
 
-    /// <summary>The share of the full moon's luminance the moon's dark part shows by a full earth's light.</summary>
+    /// <summary>
+    /// The share of the full moon's luminance the moon's dark part shows by a full earth's light.
+    /// </summary>
     public const float EarthshineShare = 8e-5f;
 
     /// <summary>
@@ -97,11 +101,11 @@ public static class Night
     /// <remarks>
     /// <para>
     /// A simple profile of the band in galactic coordinates. In the galactic plane it holds 100 S10
-    /// toward the anticenter and 1,000 toward the center, an S10 being a tenth-magnitude star in each
-    /// square degree, 8.3e-7 candelas a square meter, the integrated starlight of the order Leinert
-    /// and others' reference of the night sky's brightness (1998) gives along the plane, so the band's
-    /// brightest stretch toward Sagittarius is near 8.3e-4 and nearly four times the moonless sky.
-    /// Away from the plane it falls to a third each 8 degrees of galactic latitude.
+    /// toward the anticenter and 1,000 toward the center, an S10 being a tenth-magnitude star in
+    /// each square degree, 8.3e-7 candelas a square meter, the integrated starlight of the order
+    /// Leinert and others' reference of the night sky's brightness (1998) gives along the plane, so
+    /// the band's brightest stretch toward Sagittarius is near 8.3e-4 and nearly four times the
+    /// moonless sky. Away from the plane it falls to a third each 8 degrees of galactic latitude.
     /// </para>
     /// <para>
     /// The galactic coordinates take the north galactic pole at 192.859 degrees of right ascension
@@ -122,7 +126,10 @@ public static class Night
         return plane * S10 * MathF.Exp(-MathF.Abs(b) / Radians(8f));
     }
 
-    /// <summary>The luminance in candelas a square meter of a tenth-magnitude star in each square degree, the unit S10 the Milky Way's light is given in.</summary>
+    /// <summary>
+    /// The luminance in candelas a square meter of a tenth-magnitude star in each square degree,
+    /// the unit S10 the Milky Way's light is given in.
+    /// </summary>
     public static float S10 => Stars.Illuminance(10f) / MathF.Pow(MathF.PI / 180f, 2);
 
     private static float Radians(float degrees) => degrees * MathF.PI / 180f;

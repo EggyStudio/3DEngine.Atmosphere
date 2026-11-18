@@ -24,7 +24,9 @@ namespace Sky;
 /// </remarks>
 public static class Stars
 {
-    /// <summary>The illuminance in lux of a star of magnitude 0 on a surface facing it, outside the air.</summary>
+    /// <summary>
+    /// The illuminance in lux of a star of magnitude 0 on a surface facing it, outside the air.
+    /// </summary>
     public const float ZeroIlluminance = 2.538e-6f;
 
     /// <summary>The catalog's stars in its order, by right ascension, read once.</summary>
@@ -32,20 +34,30 @@ public static class Stars
 
     private static readonly Lazy<Star[]> Read = new(Load);
 
-    /// <summary>The illuminance in lux of a star of <paramref name="magnitude"/> on a surface facing it, outside the air.</summary>
+    /// <summary>
+    /// The illuminance in lux of a star of <paramref name="magnitude"/> on a surface facing it,
+    /// outside the air.
+    /// </summary>
     public static float Illuminance(float magnitude) => ZeroIlluminance * MathF.Pow(10f, -0.4f * magnitude);
 
     /// <summary>
     /// The luminance in candelas a square meter of a star of <paramref name="magnitude"/> spread
-    /// over <paramref name="solidAngle"/> steradians, as a pixel it falls in shows it, outside the air.
+    /// over <paramref name="solidAngle"/> steradians, as a pixel it falls in shows it, outside the
+    /// air.
     /// </summary>
     public static float Luminance(float magnitude, float solidAngle) => Illuminance(magnitude) / solidAngle;
 
-    /// <summary>The temperature in kelvin of a star of B-V color index <paramref name="colorIndex"/>, by Ballesteros's formula.</summary>
+    /// <summary>
+    /// The temperature in kelvin of a star of B-V color index <paramref name="colorIndex"/>, by
+    /// Ballesteros's formula.
+    /// </summary>
     public static float Temperature(float colorIndex) =>
         4_600f * ((1f / (0.92f * colorIndex + 1.7f)) + (1f / (0.92f * colorIndex + 0.62f)));
 
-    /// <summary>The color in linear sRGB at a luminance of 1 of a star of B-V color index <paramref name="colorIndex"/>.</summary>
+    /// <summary>
+    /// The color in linear sRGB at a luminance of 1 of a star of B-V color index
+    /// <paramref name="colorIndex"/>.
+    /// </summary>
     public static Vector3 Color(float colorIndex) => Colorimetry.FromTemperature(Temperature(colorIndex));
 
     // The catalog's lines, its head's lines of comment left out, each a right ascension in hours,

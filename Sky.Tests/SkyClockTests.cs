@@ -3,7 +3,10 @@ using Xunit;
 
 namespace Sky.Tests;
 
-/// <summary>Where <see cref="SkyClock"/> puts the sun, the moon and the stars, against the spherical astronomy it follows.</summary>
+/// <summary>
+/// Where <see cref="SkyClock"/> puts the sun, the moon and the stars, against the spherical
+/// astronomy it follows.
+/// </summary>
 public sealed class SkyClockTests
 {
     [Fact]

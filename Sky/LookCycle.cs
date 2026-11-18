@@ -6,10 +6,10 @@ namespace Sky;
 /// </summary>
 /// <remarks>
 /// <para>
-/// Keyed by the sun's height above the horizon rather than by the hour, so the same cycle serves any
-/// latitude and season, and the golden hour falls where the sun is low whenever that is. Below the
-/// lowest key the lowest look holds and above the highest the highest, and between two the look is
-/// <see cref="LookSettings.Lerp"/>'s, the numbers moving evenly with the sun's height.
+/// Keyed by the sun's height above the horizon rather than by the hour, so the same cycle serves
+/// any latitude and season, and the golden hour falls where the sun is low whenever that is. Below
+/// the lowest key the lowest look holds and above the highest the highest, and between two the look
+/// is <see cref="LookSettings.Lerp"/>'s, the numbers moving evenly with the sun's height.
 /// </para>
 /// <para>
 /// The program reads the cycle as its day turns and gives the camera the look through its engine's
@@ -31,10 +31,14 @@ public sealed class LookCycle
     public IReadOnlyList<(float Degrees, LookSettings Look)> Keys => _keys.Select(key => (key.Key, key.Value)).ToList();
 
     /// <summary>Keeps a look at a height of the sun, replacing one kept there.</summary>
-    /// <param name="degrees">How high the sun stands above the horizon, below it under zero.</param>
+    /// <param name="degrees">
+    /// How high the sun stands above the horizon, below it under zero.
+    /// </param>
     /// <param name="look">The look there.</param>
     /// <returns>The cycle, for the next key.</returns>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="degrees"/> is not a number.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="degrees"/> is not a number.
+    /// </exception>
     public LookCycle Add(float degrees, LookSettings look)
     {
         ArgumentNullException.ThrowIfNull(look);
@@ -44,7 +48,9 @@ public sealed class LookCycle
     }
 
     /// <summary>The look at a height of the sun, between the two kept about it.</summary>
-    /// <param name="degrees">How high the sun stands above the horizon, below it under zero.</param>
+    /// <param name="degrees">
+    /// How high the sun stands above the horizon, below it under zero.
+    /// </param>
     /// <exception cref="InvalidOperationException">The cycle keeps no look.</exception>
     public LookSettings At(float degrees)
     {
@@ -65,11 +71,12 @@ public sealed class LookCycle
     /// night.
     /// </summary>
     /// <remarks>
-    /// Keyed at 30 degrees and above, the vivid look itself; at 8, the late afternoon warming; at 2,
-    /// the sunset, its saturation and contrast highest and its tint warmest; at minus 6, the end of
-    /// the civil twilight, the blue hour's tint; and at minus 18, the night, its saturation brought
-    /// down to none added and its tint cool, since the eye sees little color in the dark. Every key shares the vivid look's curve and
-    /// exposure, so the picture moves evenly from one to the next.
+    /// Keyed at 30 degrees and above, the vivid look itself; at 8, the late afternoon warming; at
+    /// 2, the sunset, its saturation and contrast highest and its tint warmest; at minus 6, the end
+    /// of the civil twilight, the blue hour's tint; and at minus 18, the night, its saturation
+    /// brought down to none added and its tint cool, since the eye sees little color in the dark.
+    /// Every key shares the vivid look's curve and exposure, so the picture moves evenly from one
+    /// to the next.
     /// </remarks>
     public static LookCycle Day()
     {

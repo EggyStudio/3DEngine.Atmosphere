@@ -1,9 +1,14 @@
 namespace Sky;
 
-/// <summary>What weather a <see cref="WeatherState"/>'s forecast brings, how stormy and how cold. See <see cref="WeatherState.Climate"/>.</summary>
+/// <summary>
+/// What weather a <see cref="WeatherState"/>'s forecast brings, how stormy and how cold. See
+/// <see cref="WeatherState.Climate"/>.
+/// </summary>
 public enum WeatherClimate
 {
-    /// <summary>Fair spells and rainy ones in turn, cold enough in winter for snow now and then.</summary>
+    /// <summary>
+    /// Fair spells and rainy ones in turn, cold enough in winter for snow now and then.
+    /// </summary>
     Temperate = 0,
 
     /// <summary>Often cloudy and wet off a sea, mild all year.</summary>

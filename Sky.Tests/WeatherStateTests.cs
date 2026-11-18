@@ -2,7 +2,10 @@ using Xunit;
 
 namespace Sky.Tests;
 
-/// <summary>The engine's weather (<see cref="WeatherState"/>), its presets, its easing, its forecast, its wind and its ground.</summary>
+/// <summary>
+/// The engine's weather (<see cref="WeatherState"/>), its presets, its easing, its forecast, its
+/// wind and its ground.
+/// </summary>
 public sealed class WeatherStateTests
 {
     [Fact]
