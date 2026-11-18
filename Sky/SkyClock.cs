@@ -73,6 +73,17 @@ public sealed class SkyClock
     /// </summary>
     public float MoonLit => (1f - MathF.Cos(MoonPhase * 2f * MathF.PI)) / 2f;
 
+    /// <summary>
+    /// The moon's phase angle in degrees, the angle at the moon between the sun and the earth,
+    /// 180 when new, 90 at each quarter and 0 when full, which <see cref="Moon.At"/> takes.
+    /// </summary>
+    /// <remarks>
+    /// 180 less the moon's elongation from the sun, the moon's nearness against the sun's distance
+    /// left out, which moves the angle by under a sixth of a degree, so the share of the face it
+    /// lights by <see cref="Moon.LitShare"/> is <see cref="MoonLit"/>.
+    /// </remarks>
+    public float MoonPhaseAngle => MathF.Abs(180f - (MoonPhase * 360f));
+
     /// <summary>The way toward the sun.</summary>
     public Vector3 SunDirection => Toward(SunLongitude);
 

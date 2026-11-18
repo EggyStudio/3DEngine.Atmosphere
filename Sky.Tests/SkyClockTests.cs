@@ -96,4 +96,22 @@ public sealed class SkyClockTests
             Assert.Equal(phase, clock.Phase);
         }
     }
+
+    [Fact]
+    public void The_Moons_Phase_Angle_Is_180_Degrees_New_90_At_Each_Quarter_And_0_Full()
+    {
+        // The angle at the moon between the sun and the earth, 180 less the elongation, which
+        // Moon.At takes, its lit share the clock's own MoonLit at every age.
+        var clock = new SkyClock { DayOfYear = 0, Hour = 0 };
+        foreach (var (age, angle) in new[] { (0f, 180f), (0.25f, 90f), (0.5f, 0f), (0.75f, 90f) })
+        {
+            clock.MoonAgeAtStart = age * SkyClock.SynodicMonth;
+            Assert.Equal(angle, clock.MoonPhaseAngle, 0.01f);
+        }
+        for (var age = 0f; age < SkyClock.SynodicMonth; age += 0.7f)
+        {
+            clock.MoonAgeAtStart = age;
+            Assert.Equal(clock.MoonLit, Moon.LitShare(clock.MoonPhaseAngle), 1e-4f);
+        }
+    }
 }
