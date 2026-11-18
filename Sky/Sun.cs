@@ -105,7 +105,7 @@ public static class Sun
     internal static float ShareAbove(float elevation, float angularDiameter)
     {
         // The ends by comparison before the arithmetic, since acos and the division by pi round
-        // apart on some processors, arm64's giving 0.99999994 for a disc wholly up.
+        // apart on some processors.
         var radius = angularDiameter / 2;
         if (elevation >= radius) return 1;
         if (elevation <= -radius) return 0;
