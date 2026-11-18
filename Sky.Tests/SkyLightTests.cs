@@ -69,4 +69,32 @@ public class SkyLightTests
             (before, last) = (slope, lux);
         }
     }
+
+    [Fact]
+    public void The_Ground_Table_Holds_Within_A_Hundredth_Of_The_Sum_From_20_Degrees_Down_To_The_Zenith()
+    {
+        // Read between the table's rows at heights none of them stands at, from the deep
+        // twilight to the zenith, each channel within 1% of itself or of the sum's lux, whichever
+        // is larger. A dim channel is held to the lux, since in the deep twilight the sum's blue, a
+        // thousandth of the night sky's light, wavers from one tenth of a degree to the next, its
+        // logarithm's slope moving from -0.139 to -0.068 a fortieth of a degree at 12.8 degrees
+        // down, which no table read between its rows follows (dotnet test Sky.Tests).
+        for (var elevation = -19.9f; elevation <= 90; elevation += 0.9f)
+        {
+            var (table, sum) = (Sky.GroundIlluminance(SunAt(elevation)), Sky.Illuminance(SunAt(elevation)));
+            var lux = Colorimetry.Luminance(sum);
+            for (var c = 0; c < 3; c++)
+                Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * MathF.Max(sum[c], lux), $"at {elevation} degrees the table gives {table} for {sum}");
+        }
+    }
+
+    [Fact]
+    public void Below_20_Degrees_Down_The_Ground_Table_Gives_None_Where_The_Sum_Is_Under_A_Thousandth_Of_The_Night()
+    {
+        foreach (var elevation in new[] { -20.5f, -30, -60, -90 })
+        {
+            Assert.Equal(Vector3.Zero, Sky.GroundIlluminance(SunAt(elevation)));
+            Assert.True(Colorimetry.Luminance(Sky.Illuminance(SunAt(elevation))) < Night.SkyIlluminance * 1e-3f);
+        }
+    }
 }

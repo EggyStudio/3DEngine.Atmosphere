@@ -18,9 +18,10 @@ namespace Sky;
 /// </para>
 /// <para>
 /// An engine with one directional light aims it along <see cref="KeyToward"/>, the sun's way or the
-/// moon's, whichever lights a surface facing it more, and lights the rest by the sky. Working the
-/// sky's light out takes a few hundredths of a second, so an engine calls this as its clock moves
-/// by a step rather than every frame.
+/// moon's, whichever lights a surface facing it more, and lights the rest by the sky. At the
+/// ground the sky's light is read from <see cref="SkyLight.GroundIlluminance"/>'s table, so a call
+/// takes microseconds once the table is made; at another altitude it is summed over the dome,
+/// which takes hundredths of a second.
 /// </para>
 /// </remarks>
 /// <param name="Sun">
@@ -56,9 +57,9 @@ public sealed record SceneLight(CelestialLight Sun, Vector3 SunToward, Celestial
         var phaseAngle = clock.MoonPhaseAngle;
         var moon = Scaled(Sky.Moon.At(sky.Air, clock.MoonAltitude, phaseAngle, altitude), Sky.Moon.DiscShare(clock.MoonAltitude));
         var moonOverSun = Sky.Moon.OutsideIlluminance(phaseAngle) / Sky.Sun.OutsideIlluminance;
-        var skyLight = sky.Illuminance(sunToward, altitude)
-            + sky.Illuminance(moonToward, altitude) * moonOverSun
-            + new Vector3(Night.SkyIlluminance);
+        // At the ground from the sky's table, in microseconds; above it summed over the dome.
+        Vector3 Lit(Vector3 toward) => altitude == 0 ? sky.GroundIlluminance(toward) : sky.Illuminance(toward, altitude);
+        var skyLight = Lit(sunToward) + Lit(moonToward) * moonOverSun + new Vector3(Night.SkyIlluminance);
         return new SceneLight(sun, sunToward, moon, moonToward, skyLight);
     }
 

@@ -82,4 +82,20 @@ public class SceneLightTests
             last = lux;
         }
     }
+
+    [Fact]
+    public void The_Scenes_Sky_From_The_Table_Holds_Within_A_Hundredth_Of_The_Sum_Day_And_Night()
+    {
+        // At the ground the sky's light is read from the table, and a hair above it summed over
+        // the dome, so the two agree within 1% through the day, the twilight and the night, the
+        // moon full and lighting the sky as well.
+        for (var hour = 0f; hour < 24; hour += 0.7f)
+        {
+            var clock = Clock(hour, SkyClock.SynodicMonth / 2);
+            var (table, sum) = (SceneLight.At(clock, Sky).SkyIlluminance, SceneLight.At(clock, Sky, 0.01f).SkyIlluminance);
+            var lux = Colorimetry.Luminance(sum);
+            for (var c = 0; c < 3; c++)
+                Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * MathF.Max(sum[c], lux), $"at {hour} the table gives {table} for {sum}");
+        }
+    }
 }

@@ -12,7 +12,7 @@ module.
 |---|---|
 | `Atmosphere` | The air as data, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with their heights, the ground's albedo, and the transmittance along a way through it. `Atmosphere.Earth` is the Earth of Unity's HDRP, and `WithTurbidity` sets its haze |
 | `Sun` | The sun's light outside the air, 128,000 lux at 5,772 K, and `Sun.At`, its lux, color and color temperature at the ground for its height over the horizon, with its disc's size, its luminance and the share of it above the horizon, and `Sun.Through` for a light of another strength or color |
-| `SkyLight` | The sky's luminance along a way and its illuminance on a level surface, the sun's light scattered once and more than once, in candelas a square meter and lux |
+| `SkyLight` | The sky's luminance along a way and its illuminance on a level surface, the sun's light scattered once and more than once, in candelas a square meter and lux, with the illuminance at the ground read from a table in microseconds |
 | `SceneLight` | The light a scene takes at an hour of a `SkyClock`, the sun's and the moon's at the ground by the share of their discs above the horizon, the sky's lit by each and the night's own on a level surface, the key light's way, and the EV100 an incident meter gives for all of it |
 | `Moon` and `Night` | The moon's light by its phase and height, its disc's size and luminance and the earthshine on its dark part, and a moonless sky's luminance and illuminance with the Milky Way's band over it |
 | `Stars` and `Star` | The Bright Star Catalogue's 9,096 stars, their places, magnitudes and colors, and a star's illuminance and luminance by its magnitude |

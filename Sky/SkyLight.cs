@@ -44,6 +44,18 @@ public sealed class SkyLight
     // The logarithm of the light scattered more than once.
     private readonly Vector3[] _scattered = new Vector3[ScatterHeights * ScatterAngles];
 
+    // The ground's table starts with a row a degree from LowestGround to the zenith, and a span
+    // is halved while the light at its middle and the table's reading there differ by more than
+    // GroundError of the larger of the channel and the lux, down to a 64th of a degree. The light
+    // 7 to 9 degrees down bends sharply as the earth's shadow overhead passes the top of the air,
+    // where the molecules that scatter the most blue lie, and the halving finds that bend.
+    private const float LowestGround = -20, GroundError = 0.003f;
+    private const int GroundHalvings = 6;
+
+    // The ground's table, the light's heights in degrees rising and the logarithm of the sky's
+    // light on a level surface at each.
+    private readonly Lazy<(float[] Heights, Vector3[] Light)> _ground;
+
     /// <summary>
     /// Makes the sky of <paramref name="air"/>, its tables made at once over the processor's cores,
     /// a row of heights to a core, the light scattered more than once read from the
@@ -52,6 +64,7 @@ public sealed class SkyLight
     public SkyLight(Atmosphere air)
     {
         Air = air;
+        _ground = new Lazy<(float[], Vector3[])>(GroundTable);
         Parallel.For(0, TransmittanceHeights, h =>
         {
             for (int a = 0; a < TransmittanceAngles; a++)
@@ -127,6 +140,31 @@ public sealed class SkyLight
     }
 
     /// <summary>
+    /// The illuminance in lux the sky gives a level surface at the ground with the light that
+    /// lights it toward <paramref name="lightToward"/>, as <see cref="Illuminance"/> gives it
+    /// within 1%, read from a table in microseconds where the sum takes hundredths of a second.
+    /// </summary>
+    /// <remarks>
+    /// The sky's light on a level surface depends only on how high the light stands, so a table by
+    /// the light's height holds it, a row a degree and more where the light's logarithm bends, read
+    /// between them by the logarithm. It is made once, at its first reading, across the
+    /// processor's cores. With the light 20 degrees down or lower it gives none, since the sky lit
+    /// so gives under 2e-7 lux, a three-thousandth of <see cref="Night.SkyIlluminance"/>.
+    /// </remarks>
+    public Vector3 GroundIlluminance(Vector3 lightToward)
+    {
+        var elevation = float.RadiansToDegrees(MathF.Asin(Math.Clamp(Vector3.Normalize(lightToward).Y, -1, 1)));
+        if (elevation < LowestGround) return Vector3.Zero;
+        var (heights, light) = _ground.Value;
+        var i = Array.BinarySearch(heights, elevation);
+        if (i >= 0) return Exp(light[i]);
+        var above = Math.Min(~i, heights.Length - 1);
+        var below = above - 1;
+        var t = (elevation - heights[below]) / (heights[above] - heights[below]);
+        return Exp(Vector3.Lerp(light[below], light[above], t));
+    }
+
+    /// <summary>
     /// The share of the light that crosses the air from <paramref name="altitude"/> toward a way of
     /// cosine <paramref name="cosZenith"/> with the zenith, from the table.
     /// </summary>
@@ -147,6 +185,44 @@ public sealed class SkyLight
         var row = Math.Clamp(altitude / Air.Top, 0, 1) * (ScatterHeights - 1);
         var column = (Math.Clamp(cosSunZenith, -1, 1) + 1) / 2 * (ScatterAngles - 1);
         return Exp(Bilinear(_scattered, ScatterAngles, row, column));
+    }
+
+    // The ground's table, its rows a degree apart first, then each span between two of them
+    // halved as it needs, the two halves of a span made at once.
+    private (float[] Heights, Vector3[] Light) GroundTable()
+    {
+        var spans = (int)(90 - LowestGround);
+        var ends = new Vector3[spans + 1];
+        Parallel.For(0, spans + 1, i => ends[i] = GroundLog(LowestGround + i));
+        var rows = new List<(float Height, Vector3 Light)>[spans];
+        Parallel.For(0, spans, i => rows[i] = Halve(LowestGround + i, ends[i], LowestGround + i + 1, ends[i + 1], GroundHalvings));
+        (float Height, Vector3 Light)[] all = [.. rows.SelectMany(r => r), (90f, ends[spans])];
+        return (all.Select(r => r.Height).ToArray(), all.Select(r => r.Light).ToArray());
+    }
+
+    // The rows of a span from one height up to the next, the higher end left to the next span.
+    private List<(float Height, Vector3 Light)> Halve(float from, Vector3 low, float to, Vector3 high, int halvings)
+    {
+        var middle = (from + to) / 2;
+        var light = GroundLog(middle);
+        var (read, sum) = (Exp(Vector3.Lerp(low, high, 0.5f)), Exp(light));
+        var lux = Colorimetry.Luminance(sum);
+        var off = Vector3.Abs(read - sum) - Vector3.Max(sum, new Vector3(lux)) * GroundError;
+        if (halvings == 0 || MathF.Max(off.X, MathF.Max(off.Y, off.Z)) <= 0)
+            return [(from, low)];
+        var halves = new List<(float Height, Vector3 Light)>[2];
+        Parallel.Invoke(
+            () => halves[0] = Halve(from, low, middle, light, halvings - 1),
+            () => halves[1] = Halve(middle, light, to, high, halvings - 1));
+        return [.. halves[0], .. halves[1]];
+    }
+
+    // The logarithm of the sky's light on a level surface at the ground with the light at a
+    // height in degrees.
+    private Vector3 GroundLog(float elevation)
+    {
+        var r = float.DegreesToRadians(elevation);
+        return Log(Illuminance(new Vector3(MathF.Cos(r), MathF.Sin(r), 0)));
     }
 
     // The transmittance table's height at a row, crowded near the ground.

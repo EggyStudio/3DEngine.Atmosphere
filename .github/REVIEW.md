@@ -291,3 +291,22 @@ of its illuminance by the cosine of the light's zenith at the ground, made with 
 `SceneLight.At` reads in microseconds, an altitude other than the ground's summed as it is. That
 commit is proposed next, before part 4, with a test that the table's reading holds within 1% of
 the sum at every height of the sun.
+
+The module's session, the ground's table. `SkyLight.GroundIlluminance` reads the sky's light on a
+level surface at the ground from a table by the height of the light that lights it, and
+`SceneLight.At` reads it at the ground, a call taking 10 microseconds where it took 14 ms. The
+table starts with a row a degree from 20 degrees down to the zenith and halves a span while the
+light at its middle and the table's reading there differ by more than 0.3% of the larger of the
+channel and the lux, 189 rows in all, crowding to a 32nd of a degree 8.2 degrees down. There the
+sum's blue bends sharply as the earth's shadow overhead passes the top of the air, its logarithm's
+slope doubling within a quarter degree, which a finer transmittance table sharpens rather than
+removes, so the bend is the model's; a table of even rows an eighth of a degree apart missed it by
+3.3%. Under 20 degrees down it gives none, the sum being under 2e-7 lux there. Two tests hold it
+within 1% of the sum, each channel against the larger of itself and the lux, at heights between
+the rows from 19.9 degrees down to the zenith and through a day and a night of the scene with a full
+moon; a channel is held to the lux where it is dim, since the sum's blue in the deep twilight, a
+thousandth of the night sky's light, wavers by a few percent from one tenth of a degree to the
+next. The table is made at its first reading, 206 ms on 32 cores and 797 ms on 4 in a warm process,
+once a `SkyLight`, and making a `SkyLight` stays at 36 ms; the suite takes 5 s where it took 1. The
+sum itself could halve its time by the mirror of the sky about the light's vertical plane, which is
+left for a commit of its own.
