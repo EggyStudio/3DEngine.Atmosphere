@@ -86,8 +86,8 @@ public sealed class LookSettings
     public float Contrast { get; set; } = 1f;
 
     /// <summary>
-    /// Whether the picture shown is dithered by half a level, as Bevy's tonemapper does, so a
-    /// gradient does not band, on unless set.
+    /// Whether the picture shown is dithered by half a level, so a gradient does not band, on
+    /// unless set.
     /// </summary>
     public bool Dither { get; set; } = true;
 

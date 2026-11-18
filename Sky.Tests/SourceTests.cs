@@ -52,4 +52,29 @@ public sealed partial class SourceTests
 
         Assert.True(over.Count == 0, $"{over.Count} comment lines past {Width} columns:\n" + string.Join("\n", over));
     }
+
+    // The engines the module was written beside, and the framework the second stands on, which
+    // the library's sources and its public members' summaries name nowhere, so a stranger's
+    // engine reads no other engine's in them.
+    [GeneratedRegex(@"3DEngine|BevyCSharp|\bBevy\b", RegexOptions.IgnoreCase)]
+    private static partial Regex EngineName();
+
+    [Fact]
+    public void The_Librarys_Sources_Name_No_Engine()
+    {
+        var root = Root;
+        var named = new List<string>();
+        foreach (var file in Directory.EnumerateFiles(Path.Combine(root, "Sky"), "*.cs", SearchOption.AllDirectories))
+        {
+            var relative = Path.GetRelativePath(root, file);
+            if (relative.Split(Path.DirectorySeparatorChar).Any(p => p is "bin" or "obj"))
+                continue;
+            var lines = File.ReadAllLines(file);
+            for (var i = 0; i < lines.Length; i++)
+                if (EngineName().IsMatch(lines[i]))
+                    named.Add($"{relative}:{i + 1}");
+        }
+
+        Assert.True(named.Count == 0, $"{named.Count} lines name an engine:\n" + string.Join("\n", named));
+    }
 }
