@@ -799,3 +799,32 @@ the NaN back, the caller's own. Ten tests hold them, of which the seven on the r
 first; the three on a clock at either pole, its ways finite and of unit length refracted or not,
 and on a clock and a weather stepped back, which give numbers, passed before and guard them. The
 suite holds 144.
+
+The module's session, daylight by the sun's height, read through `Atmosphere.Earth`, at
+`.github/assets/readings/2026-11-18-daylight-by-height.webp`.
+
+| The sun's height | The sun facing it | IES clear sky | The sky on a level surface | All of it |
+|---|---|---|---|---|
+| 5 degrees | 7,901 lux, 2,653 K | 11,457 lux | 3,865 lux, 6,308 K | 4,553 lux, 5,354 K |
+| 10 | 28,194 lux, 3,491 K | 38,045 | 7,106 lux, 6,701 K | 12,001 lux, 4,957 K |
+| 20 | 57,948 lux, 4,290 K | 69,001 | 11,886 lux, 7,118 K | 31,706 lux, 5,082 K |
+| 30 | 74,111 lux, 4,659 K | 83,773 | 15,100 lux, 7,294 K | 52,156 lux, 5,231 K |
+| 54 | 91,138 lux, 5,025 K | 98,351 | 19,336 lux, 7,522 K | 93,068 lux, 5,415 K |
+| 90 | 97,207 lux, 5,152 K | 103,349 | 20,895 lux, 7,686 K | 118,102 lux, 5,487 K |
+
+The sun's light facing it is 0.69 of the IES clear sky's, 127.5 klux times e to the -0.21 over
+the sine of its height (IES RP-21, 1984), at 5 degrees and 0.94 at the zenith, an ordinary day's
+beside a clear one's, so the light holds no fault. Its color does. Daylight in the middle of the
+day, the sun above 20 degrees, stands near 6,500 K at a clear noon as measured at Ny-Alesund against
+lower latitudes, and Peyvandi and others (2016) give clear daylight's interquartile range as 5,712
+to 7,757 K, where the module's day is 5,082 to 5,487 K. A test of 5,500 to 6,500 K at 20, 30, 54 and
+90 degrees fails at every one and is held out of this commit until the mend is chosen. The cause is
+the three wavelengths the air is read at. The molecules' scattering at 680, 550 and 440 nm stands
+for the sRGB primaries, whose dominant wavelengths are near 611, 549 and 464 nm, and read there the
+day is 100 to 220 K bluer, 5,301 K at 20 degrees and 5,533 at 54; the sun outside the air, a black
+body at its effective 5,772 K, would give some 90 K more at 5,900; the haze, alike in every channel
+where an aerosol takes more of the blue, and the ozone read at the same three wavelengths, carry the
+rest. The thorough mend is the light at a dozen or so wavelengths, turned into the three channels at
+the end, which moves every figure the engines read and the reference scene's match; the smaller one
+reads the molecules at the primaries' wavelengths, which takes 54 and 90 degrees into the band and
+leaves 20 and 30 under it. Which is the review's and the owner's.

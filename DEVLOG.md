@@ -98,6 +98,13 @@ bluest in the nautical twilight under both hazes, 13,589 K at 10.5 degrees down 
 clear day's and 7,532 K at 7 down under the haze as it was, and with no ozone 6,894 K at most, so
 the ozone's absorption makes the blue and the deeper haze multiplies it.
 
+![](.github/assets/readings/2026-11-18-daylight-by-height.webp)
+The sun's light facing it through Atmosphere.Earth by its height, 0.69 of the IES clear sky's at 5
+degrees to 0.94 at the zenith as an ordinary day's beside a clear one, and the color of the day's
+light on a level surface, 4,960 to 5,490 K from 10 degrees up, under the 5,500 to 6,500 K of
+daylight in the middle of the day, the molecules read at the sRGB primaries' wavelengths raising it
+by 100 to 220 K.
+
 ## 2026-11-08
 
 Done that day
