@@ -73,10 +73,12 @@ public sealed class SkyTables
 public sealed class SkyLaneTables
 {
     private readonly SkyLane _lane;
+    private readonly Spectrum _bands;
+    private readonly int _index;
 
     internal SkyLaneTables(SkyLane lane, Spectrum bands, int index)
     {
-        _lane = lane;
+        (_lane, _bands, _index) = (lane, bands, index);
         var air = lane.Air;
         Sun = lane.SunLight;
         RayleighScattering = air.RayleighScattering;
@@ -95,6 +97,13 @@ public sealed class SkyLaneTables
     /// The sun's light outside the air in the lane's three bands, watts a square meter a nanometer.
     /// </summary>
     public Vector3 Sun { get; }
+
+    /// <summary>
+    /// The moon's light outside the air in the lane's three bands at a phase angle of
+    /// <paramref name="phaseAngle"/> degrees, the sun's reflected by the lunar disc, which lights
+    /// the sky in place of <see cref="Sun"/>.
+    /// </summary>
+    public Vector3 Moon(float phaseAngle) => _bands.Lane(_index, Sky.Moon.Outside(phaseAngle));
 
     /// <summary>The molecules' scattering a meter at sea level in each band.</summary>
     public Vector3 RayleighScattering { get; }

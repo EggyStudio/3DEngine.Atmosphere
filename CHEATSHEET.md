@@ -82,6 +82,7 @@ ReadOnlyMemory<float> Transmittance { get; }             // The share of the lig
 int ScatterHeights { get; }                              // The scattering table's rows, its altitudes, 32
 int ScatterAngles { get; }                               // The scattering table's columns, the sun's zenith cosines, 128
 ReadOnlyMemory<float> Scattered { get; }                 // The natural logarithm of the light scattered more than once a steradian a meter of the scattering coefficient, per unit of the sun's light outside the air, held at no less than the logarithm of 1e-30, rows and columns mapped as Transmittance's with the sun's cosine in place of the way's
+Vector3 Moon(float phaseAngle);                          // The moon's light outside the air in the lane's three bands at a phase angle of phaseAngle degrees, the sun's reflected by the lunar disc, which lights the sky in place of Sun
 (ReadOnlyMemory<float> Heights, ReadOnlyMemory<float> LogLight) Ground(int row);  // The ground's table at the altitude of GroundAltitudes's row, made where it was not yet: the heights in degrees of the light over the horizon the row holds, rising, and the natural logarithm of the sky's light on a level surface at each in the lane's three bands, read between two heights in its logarithm
 
 record SceneLight                                        // The light a scene takes at an hour of the sky's clock, the sun's and the moon's at the ground, the sky's on a level surface and the exposure an incident meter gives for all of it, in lux and EV100

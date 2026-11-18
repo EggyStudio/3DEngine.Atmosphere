@@ -173,7 +173,9 @@ table holds three floats a cell, one a band, row after row. For each lane, the l
   under `LowestGround`.
 
 The sky's luminance in linear sRGB, candelas a square meter, is the sum over the lanes of each
-lane's `ToLinearSrgb`, nine floats row by row, times its light. The sun's disc is apart, as
+lane's `ToLinearSrgb`, nine floats row by row, times its light. The sky the moon lights is the same
+march toward the moon with each lane's `Moon(phaseAngle)` in place of `Sun`, the ground's table
+term multiplied by `Moon` over `Sun` band by band, and is added to the sun's. The sun's disc is apart, as
 `Sun.DiscLuminance` gives it, and the ground's other rows give `SkyLight.GroundIlluminance` at those
 altitudes.
 

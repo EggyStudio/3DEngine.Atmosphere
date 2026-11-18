@@ -139,6 +139,8 @@ reflected EV100 15.06 against the incident 15.44.
 
 Commits that day
 
+- `2de0383` A made sky gives its tables, the air in its bands and the matrix to color as a read-only
+  view, so an engine draws the same sky on a GPU from the README alone.
 - `8bc7e04` The tests share one made sky for each air in place of making their own, so the suite
   takes about a third less time.
 - `a8b0391` The drawing exposes each hour again by a reflected reading of the sky itself, so the

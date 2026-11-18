@@ -32,20 +32,42 @@ public class SkyTablesTests
         }
     }
 
-    // The README's march, step by step, from the public view alone.
-    private static Vector3 Read(SkyTables tables, Vector3 v, Vector3 s, float h)
+    [Theory]
+    [InlineData(60f, 0f)]
+    [InlineData(15f, 60f)]
+    [InlineData(-2f, 0f)]
+    public void A_Reader_Of_The_Tables_By_The_Readme_Gives_The_Moonlit_Skys_Luminance_Within_Half_A_Percent(float moonHeight, float phaseAngle)
+    {
+        var sky = Skies.Earth;
+        var r = float.DegreesToRadians(moonHeight);
+        var moon = new Vector3(MathF.Cos(r), MathF.Sin(r), 0);
+        foreach (var (height, turn) in new[] { (90f, 0f), (30f, 150f), (5f, 10f), (-10f, 200f) })
+        {
+            var (e, t) = (float.DegreesToRadians(height), float.DegreesToRadians(turn));
+            var view = new Vector3(MathF.Cos(e) * MathF.Cos(t), MathF.Sin(e), MathF.Cos(e) * MathF.Sin(t));
+            var expected = sky.LuminanceBy(Moon.Outside(phaseAngle), view, moon);
+            var read = Read(sky.Tables, view, moon, 0, lane => lane.Moon(phaseAngle));
+            for (var c = 0; c < 3; c++)
+                Assert.True(MathF.Abs(read[c] - expected[c]) <= 0.005f * MathF.Abs(expected[c]) + 1e-15f,
+                    $"the moon {moonHeight} degrees up at a phase angle of {phaseAngle}, the way {height} up, reads {read} for {expected}");
+        }
+    }
+
+    // The README's march, step by step, from the public view alone, lit by the sun or, where a
+    // light is given, by that light in each lane's bands in place of the sun's.
+    private static Vector3 Read(SkyTables tables, Vector3 v, Vector3 s, float h, Func<SkyLaneTables, Vector3>? by = null)
     {
         var sum = Vector3.Zero;
         foreach (var lane in tables.Lanes)
         {
-            var light = Lane(tables, lane, v, s, h);
+            var light = Lane(tables, lane, v, s, h, by?.Invoke(lane) ?? lane.Sun);
             var m = lane.ToLinearSrgb.Span;
             sum += new Vector3(m[0] * light.X + m[1] * light.Y + m[2] * light.Z, m[3] * light.X + m[4] * light.Y + m[5] * light.Z, m[6] * light.X + m[7] * light.Y + m[8] * light.Z);
         }
         return sum;
     }
 
-    private static Vector3 Lane(SkyTables t, SkyLaneTables lane, Vector3 v, Vector3 s, float h)
+    private static Vector3 Lane(SkyTables t, SkyLaneTables lane, Vector3 v, Vector3 s, float h, Vector3 outside)
     {
         double R = t.PlanetRadius, r = R + Math.Max(h, 0), m = v.Y;
         var inward = r * r * (m * m - 1) + R * R;
@@ -100,7 +122,7 @@ public class SkyTablesTests
                 sky = through * Exp(Vector3.Lerp(Log(k), Log(above), Math.Clamp(f, 0, 1))) * lane.GroundAlbedo / MathF.PI;
             }
         }
-        return light * lane.Sun + sky;
+        return light * outside + sky * outside / lane.Sun;
     }
 
     private static Vector3 Table(ReadOnlySpan<float> table, int rows, int columns, float top, float altitude, float cosine)
