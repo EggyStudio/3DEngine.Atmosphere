@@ -102,14 +102,21 @@ public sealed class SkyLight
     // The sky's light on a level surface lit by a light of outside in each band outside the air in
     // place of the sun's, as the moon's, the sky's arithmetic being the same in each band for any
     // strength of the light that lights it.
-    internal Vector3 GroundIlluminanceBy(float[] outside, Vector3 lightToward, float altitude)
+    internal Vector3 GroundIlluminanceBy(float[] outside, Vector3 lightToward, float altitude) =>
+        CombineBy(outside, lane => lane.GroundIlluminance(lightToward, altitude));
+
+    // The sky's luminance along view lit by a light of outside in each band in place of the sun's.
+    internal Vector3 LuminanceBy(float[] outside, Vector3 view, Vector3 lightToward, float altitude = 0) =>
+        CombineBy(outside, lane => lane.Luminance(view, lightToward, altitude));
+
+    private Vector3 CombineBy(float[] outside, Func<SkyLane, Vector3> read)
     {
         var sum = Vector3.Zero;
         for (var lane = 0; lane < _lanes.Length; lane++)
         {
             var (light, sun) = (_bands.Lane(lane, outside), _bands.LaneSun(lane));
             var share = new Vector3(Over(light.X, sun.X), Over(light.Y, sun.Y), Over(light.Z, sun.Z));
-            sum += _bands.ToLinearSrgb(lane, _lanes[lane].GroundIlluminance(lightToward, altitude) * share);
+            sum += _bands.ToLinearSrgb(lane, read(_lanes[lane]) * share);
         }
         return sum;
 

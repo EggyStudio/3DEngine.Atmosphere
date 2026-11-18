@@ -122,9 +122,12 @@ host.SetFogExtinction(Haze.Extinction(sky.Air, weather.Current));
 The ambient luminance is the sky's illuminance over pi, the luminance of a sky alike over its
 dome that lights a level surface as this one does. An engine that draws its own sky reads
 `SkyLight.Luminance` along each way, the sun's disc from `Sun.DiscLuminance`, the moon's from
-`Moon`, and the stars from `Stars.Catalog` placed by `SkyClock.TowardSky`. An engine that draws its
-sky in a pass of its own on the GPU reads `Atmosphere`'s terms into it, and one whose renderer holds
-an atmosphere and clouds of its own feeds them from the clock and the weather.
+`Moon`, and the stars from `Stars.Catalog` placed by `SkyClock.TowardSky`. The tests draw the sky
+so on the CPU with no engine, `Sky.Tests/SkyPicture.cs`, a fisheye and a panorama of each scene
+written where `SKY_PICTURES` names a folder, as a reference a binding's own sky is set against. An
+engine that draws its sky in a pass of its own on the GPU reads `Atmosphere`'s terms into it, and
+one whose renderer holds an atmosphere and clouds of its own feeds them from the clock and the
+weather.
 
 ## Building and testing
 

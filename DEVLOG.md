@@ -118,8 +118,17 @@ K before and 0.236 at 4,392 after by the lunar disc's reflectance, the moonless 
 7.1e-4 lux white before, x 0.313, and a dark sky's B-V of 0.8 after, x 0.338, and the level light
 from sunset into the dark, its lux the same within 6% and the moonlit night redder after.
 
+![](.github/assets/readings/2026-11-18-sky-drawn.webp)
+The sky the module draws alone on the CPU from its own numbers, a fisheye and a panorama each of
+noon, mid-morning, sunset, the end of civil twilight, the nautical twilight, a night under a full
+moon and a moonless night, at 50 degrees north, each exposed at the EV100 the scene's incident meter
+gives, full at 1.2 times 2 to the EV100 candelas a square meter, and encoded by sRGB's curve with no
+tone curve.
+
 Commits that day
 
+- `cd363e3` A moonless night's own glow takes the color of a dark sky's measured B-V where it was
+  white, with a sheet of the night before the light was read by wavelength and after.
 - `9ff088e` The observer gains a lobe in the red and its other amplitudes fitted again, so the
   standard illuminants read within 5 K of their published temperatures, and the Tools pin moves to
   its head.

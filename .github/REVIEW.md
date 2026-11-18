@@ -1039,3 +1039,41 @@ Tools moves to `1e1ec63` by pin.py, which printed that Tools moved from `4e922ea
 commits, no fact new or changed, CHEATSHEET.md written again and DEVLOG.md written again. The
 cheatsheet gains one line, `Night.SkyColor`. The devlog now leaves out two old commits, `102482c` and
 `a2005ac`, whose sentences write cheat sheet as two words and so fail the line check.
+
+The module's session, the module drawing its own sky. `Sky.Tests/SkyPicture.cs` draws the dome on
+the CPU from the module alone, each pixel `SkyLight.Luminance` lit by the sun, the sky lit by the
+moon's light band by band through a new internal reading beside the ground's, the night's glow in
+its color, the Milky Way's light, and the sun, the moon and the catalog's stars as points, their
+illuminance at the ground spread over the pixel each falls in, every disc being under a pixel here.
+Under the horizon the ground is the reader's, a level of the air's albedo, with the night's glow
+sent back from it. The exposure is ISO 12232's saturation-based one, a pixel full at 1.2 times 2 to
+the EV100 candelas a square meter, at the EV100 `SceneLight`'s incident meter gives the scene, each
+channel past it held full, and the encoding is sRGB's curve of IEC 61966-2-1, no tone curve. A
+fisheye of the whole dome and a panorama from 10 degrees under the horizon to the zenith are drawn of
+noon, mid-morning, sunset, the end of civil twilight, the nautical twilight, a night under a full
+moon and a moonless one at 50 degrees north, and `dotnet test Sky.Tests` with `SKY_PICTURES` naming
+a folder writes them there as PNG. The sheet is `.github/assets/readings/2026-11-18-sky-drawn.webp`.
+The test failed first, to build, and holds the noon fisheye's middle pixel to the reader's zenith
+luminance through the same exposure and curve within a count of 255 in each channel.
+
+What the pictures show. Noon's zenith is 7,278 candelas a square meter at 9,349 K, a grey blue,
+since the sun 63 degrees high stands near it and an ordinary clear day's haze whitens it; the same
+noon at a turbidity of 1.11 reads 34,000 K. The sunset's and the twilight's skies are metered to a
+middle gray by the level light, so the sky toward the set sun is held full, and the nights are
+metered the same way, so the moonless night shows its glow near full and the Milky Way across it,
+as a metered long exposure would. The mid-morning scene's sun is 46 degrees high, the June
+solstice's 9 o'clock at 50 degrees north.
+
+What a binding draws that the picture lacks. Clouds, the weather's cover and its layer, which the
+module gives as figures and no shape. The horizon's ground, terrain and what stands on it, where the
+picture has a level of one albedo. The haze along the ground between the eye and far things, which
+`Haze` gives and the picture, having nothing far, does not use. The sun's and the moon's discs as
+discs, the sun's limb darkened and the moon's terminator by its phase, where the picture's pixel is
+wider than either. Refraction, which `SkyClock.Refracted` gives and the picture leaves off, drawing
+true heights. The glare an eye or a lens adds about the sun, an exposure that adapts over time, and
+the tone curve a renderer chooses, each of which the picture leaves out so its pixels stay the
+numbers.
+
+Tools moves to `1452dbe` by pin.py, which printed that Tools moved from `1e1ec63` to `1452dbe` by 1
+commit, no fact new or changed, CHEATSHEET.md written again the same as it stood, and DEVLOG.md
+written again.
