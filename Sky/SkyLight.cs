@@ -193,6 +193,39 @@ public sealed class SkyLight
         return Exp(Vector3.Lerp(GroundRead(lower, elevation), GroundRead(upper, elevation), t));
     }
 
+    /// <summary>
+    /// Makes the ground table's rows about the altitudes from <paramref name="lowest"/> to
+    /// <paramref name="highest"/> meters, so a reading in that span afterward makes none, a fifth
+    /// of a second to most of a second a row by the processor's cores.
+    /// </summary>
+    /// <remarks>
+    /// A binding calls it while it loads, off its frame, over the altitudes its camera keeps, since
+    /// a row made at a first reading stalls the frame that reads it. Above 10 km no row is made,
+    /// the sum being read there.
+    /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Either altitude is not a number, or <paramref name="highest"/> is under
+    /// <paramref name="lowest"/>.
+    /// </exception>
+    public void PrepareGround(float lowest, float highest)
+    {
+        if (float.IsNaN(lowest) || float.IsNaN(highest) || highest < lowest)
+            throw new ArgumentOutOfRangeException(
+                nameof(highest), "The span of altitudes runs from a number up to one no lower.");
+        var top = GroundAltitudes[^1];
+        var (low, high) = (Math.Clamp(lowest, 0, top), Math.Clamp(highest, 0, top));
+        var first = Array.BinarySearch(GroundAltitudes, low) is var a && a >= 0 ? a : ~a - 1;
+        var last = Array.BinarySearch(GroundAltitudes, high) is var b && b >= 0 ? b : ~b;
+        for (var row = first; row <= last; row++)
+            _ = _ground[row].Value;
+    }
+
+    /// <summary>
+    /// How many of the ground table's 13 rows are made, which <see cref="PrepareGround"/> and a
+    /// first reading near an altitude make.
+    /// </summary>
+    public int GroundRowsMade => _ground.Count(row => row.IsValueCreated);
+
     // The logarithm of the sky's light a row of the ground's table gives with the light at a
     // height, read between the row's heights as a straight line.
     private Vector3 GroundRead(int row, float elevation)

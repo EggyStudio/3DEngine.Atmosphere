@@ -32,7 +32,7 @@ public class BindingTests
         // The README's block from here to the end marker, word for word.
         // Once, as the world loads and off the frame, the air, its sky and the sky's ground table.
         var sky = new SkyLight(Atmosphere.Earth);
-        sky.GroundIlluminance(Vector3.UnitY);
+        sky.PrepareGround(0, 2_000);
         var clock = new SkyClock { Latitude = 51, DayOfYear = 172, Hour = 15 };
         var weather = new WeatherState { Clock = clock, Forecast = true };
 

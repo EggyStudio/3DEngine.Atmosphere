@@ -84,6 +84,10 @@ It stands on these conventions.
   exposure in EV100 by an incident meter's calibration of 250. The sun gives 128,000 lux outside the
   air, and an engine whose sun is another strength scales what the module returns by its sun's over
   `Sun.OutsideIlluminance`.
+- A `SkyLight` makes its table of the sky's light at an altitude the first time that altitude is
+  read, a fifth of a second to most of a second a row, so a binding calls
+  `SkyLight.PrepareGround` over the altitudes its camera keeps while the world loads, and reads
+  the light in microseconds after.
 - A `SkyLight` does not change once made and is read from any thread, as a `LightningFlash` is.
   A `SkyClock`, a `WeatherState` and a `Thunderstorm` change as they advance and belong to one
   caller.
@@ -95,7 +99,7 @@ clock, in a file that references the assembly `3DEngine.Sky` and opens the names
 ```csharp
 // Once, as the world loads and off the frame, the air, its sky and the sky's ground table.
 var sky = new SkyLight(Atmosphere.Earth);
-sky.GroundIlluminance(Vector3.UnitY);
+sky.PrepareGround(0, 2_000);
 var clock = new SkyClock { Latitude = 51, DayOfYear = 172, Hour = 15 };
 var weather = new WeatherState { Clock = clock, Forecast = true };
 

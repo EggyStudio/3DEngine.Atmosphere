@@ -779,3 +779,12 @@ test, which failed to build first, holds each channel within 1% of the sum at 13
 missed by 1.1% at 9 km 12.6 degrees down and at 4,321 m 19.9 degrees down, so the rows stand closer.
 Tools stands at `0b0b902` with its two facts beside the five, no tracked text naming an engine and
 the README opening with its link row, both holding on their first run.
+
+The module's session, the ground table's rows ahead of time. `SkyLight.PrepareGround` makes the
+table's rows about a span of altitudes, so a reading in it afterward makes none, and
+`SkyLight.GroundRowsMade` counts the rows made. The test, which failed to build first, makes the
+span from the ground to 3 km, its 6 rows, reads at 23 altitudes in it with the count unchanged and
+reads past it at 3.5 km with one row more. The README's binding block makes the span to 2 km where
+it read once at the ground, the host's copy with it, and the conventions say a binding makes the
+span its camera keeps while the world loads. The suite takes 12 s where it took 8, its tests making
+more rows.

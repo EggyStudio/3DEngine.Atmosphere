@@ -208,4 +208,22 @@ public class SkyLightTests
                 Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * sum[c], $"at {altitude} m and {elevation} degrees the table gives {table} for {sum}");
         }
     }
+
+    [Fact]
+    public void A_Span_Of_Altitudes_Made_Ahead_Is_Read_Without_Making_A_Row()
+    {
+        // A binding makes the rows for the altitudes its camera keeps while it loads, so reading
+        // anywhere in that span afterward makes nothing, and a reading past it makes the rows about
+        // its own altitude.
+        var sky = new SkyLight(Atmosphere.Earth);
+        Assert.Equal(0, sky.GroundRowsMade);
+        sky.PrepareGround(0, 3_000);
+        var made = sky.GroundRowsMade;
+        Assert.Equal(6, made);
+        for (var altitude = 0f; altitude <= 3_000; altitude += 137)
+            _ = sky.GroundIlluminance(SunAt(20), altitude);
+        Assert.Equal(made, sky.GroundRowsMade);
+        _ = sky.GroundIlluminance(SunAt(20), 3_500);
+        Assert.Equal(made + 1, sky.GroundRowsMade);
+    }
 }
