@@ -131,8 +131,7 @@ public sealed record Atmosphere
     /// <summary>
     /// The share of the light that crosses the air from <paramref name="altitude"/> meters toward a
     /// way whose cosine with the zenith there is <paramref name="cosZenith"/>, out to the top of
-    /// the
-    /// air, at each wavelength, or nothing where the way meets the ground.
+    /// the air, at each wavelength, or nothing where the way meets the ground.
     /// </summary>
     /// <remarks>
     /// The planet is round, so a way below the level of the eye still leaves the air where it

@@ -13,8 +13,7 @@ public class AtmosphereTests
     public void The_Optical_Depth_Straight_Up_Is_Each_Layers_Coefficient_Times_Its_Depth()
     {
         // Each exponential layer holds its sea level's coefficient over its scale height, cut at
-        // the
-        // top, and the ozone's layer its middle's over half its width.
+        // the top, and the ozone's layer its middle's over half its width.
         var rayleigh = Earth.RayleighScattering * Earth.RayleighScaleHeight * (1 - MathF.Exp(-Earth.Top / Earth.RayleighScaleHeight));
         var aerosol = Earth.AerosolExtinction * Earth.AerosolScaleHeight * (1 - MathF.Exp(-Earth.Top / Earth.AerosolScaleHeight));
         var expected = rayleigh + new Vector3(aerosol) + Earth.OzoneAbsorption * Earth.OzoneWidth / 2;

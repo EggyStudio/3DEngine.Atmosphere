@@ -9,9 +9,9 @@ public class SunTests
     {
         // The reference scene, 27 June at 15:05 in Cologne, sets its sun 53.97 degrees high to
         // 97,050 lux at 5,633 K outside the air, which HDRP's Earth dims to 73,900 lux at 4,924 K
-        // at
-        // the ground, the sun's color the same within a hundred kelvin and its lux three quarters
-        // of this, since that sun outside the air is 120,000 lux times the sine of its height.
+        // at the ground, the sun's color the same within a hundred kelvin and its lux three
+        // quarters of this, since that sun outside the air is 120,000 lux times the sine of its
+        // height.
         var sun = Sun.At(Atmosphere.Earth, 53.97f);
         Assert.InRange(sun.Illuminance, 108_900, 111_100);
         Assert.InRange(sun.Temperature, 4_976, 5_076);
