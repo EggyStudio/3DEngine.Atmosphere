@@ -48,7 +48,7 @@ SkyLight(Atmosphere air);                                // Makes the sky of air
 Atmosphere Air { get; }                                  // The air the sky is made of
 Vector3 Luminance(Vector3 view, Vector3 sunToward, float altitude = 0f);  // The sky's luminance in candelas a square meter along view from altitude meters, with the sun toward sunToward, both with +Y up, in linear sRGB whose luminance is the sky's
 Vector3 Illuminance(Vector3 sunToward, float altitude = 0f);  // The illuminance in lux the sky gives a level surface at altitude meters, with the sun toward sunToward, in linear sRGB whose luminance is the lux, the sun's own light apart
-Vector3 GroundIlluminance(Vector3 lightToward);          // The illuminance in lux the sky gives a level surface at the ground with the light that lights it toward lightToward, as Illuminance gives it within 1%, read from a table in microseconds where the sum takes hundredths of a second
+Vector3 GroundIlluminance(Vector3 lightToward, float altitude = 0f);  // The illuminance in lux the sky gives a level surface altitude meters above the ground with the light that lights it toward lightToward, as Illuminance gives it within 1%, read from a table in microseconds where the sum takes hundredths of a second
 
 record SceneLight                                        // The light a scene takes at an hour of the sky's clock, the sun's and the moon's at the ground, the sky's on a level surface and the exposure an incident meter gives for all of it, in lux and EV100
 SceneLight(CelestialLight Sun, Vector3 SunToward, CelestialLight Moon, Vector3 MoonToward, Vector3 SkyIlluminance);

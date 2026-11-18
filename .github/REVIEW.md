@@ -767,3 +767,15 @@ are 0.017, 0.029, 0.045, 0.056 and 0.079, each near 14.75 degrees down from a tu
 growing with the haze, and a turbidity of 10 gives 0.096, so the 128 angles hold to the haziest
 air a binding would set. With no fault the test failed on none and stays as the guard the review
 named; the second is begun.
+
+The module's session, the sky's light away from the ground. `SkyLight.GroundIlluminance` takes an
+altitude, and its table holds a row of heights at 13 altitudes, 500 m apart to 2 km and a kilometer
+apart to 10 km, each made at its first reading, the light between two rows read by its logarithm
+and above 10 km the sum. `SceneLight.At` reads it at every altitude, so a camera that flies or
+stands on a mountain reads the sky's light in 8.4 microseconds where the sum takes 1.9 ms, the
+first reading near an altitude building the rows about it at 100 to 230 ms a row on 32 cores. The
+test, which failed to build first, holds each channel within 1% of the sum at 137, 1,800, 4,321 and
+9,000 m from the deep twilight to the zenith; with rows at 0, 0.5, 1, 2, 3.5, 5, 7.5 and 10 km it
+missed by 1.1% at 9 km 12.6 degrees down and at 4,321 m 19.9 degrees down, so the rows stand closer.
+Tools stands at `0b0b902` with its two facts beside the five, no tracked text naming an engine and
+the README opening with its link row, both holding on their first run.

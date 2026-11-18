@@ -190,4 +190,22 @@ public class SkyLightTests
             (before, last) = (slope, lux);
         }
     }
+
+    [Theory]
+    [InlineData(137f)]
+    [InlineData(1_800f)]
+    [InlineData(4_321f)]
+    [InlineData(9_000f)]
+    public void The_Ground_Table_Holds_Within_A_Hundredth_Of_The_Sum_Up_To_10_Kilometers(float altitude)
+    {
+        // A camera that flies or stands on a mountain reads the table at its altitude, so at
+        // altitudes between any of its rows, from the deep twilight to the zenith, each channel is
+        // within 1% of the sum over the dome there.
+        for (var elevation = -19.9f; elevation <= 90; elevation += 7.3f)
+        {
+            var (table, sum) = (Sky.GroundIlluminance(SunAt(elevation), altitude), Sky.Illuminance(SunAt(elevation), altitude));
+            for (var c = 0; c < 3; c++)
+                Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * sum[c], $"at {altitude} m and {elevation} degrees the table gives {table} for {sum}");
+        }
+    }
 }

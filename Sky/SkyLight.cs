@@ -55,9 +55,14 @@ public sealed class SkyLight
     private const float LowestGround = -24, GroundError = 0.003f;
     private const int GroundHalvings = 6;
 
-    // The ground's table, the light's heights in degrees rising and the logarithm of the sky's
-    // light on a level surface at each.
-    private readonly Lazy<(float[] Heights, Vector3[] Light)> _ground;
+    // The altitudes in meters the ground's table holds a row of heights at, the light between two
+    // read as a straight line in its logarithm, and above the highest summed over the dome.
+    private static readonly float[] GroundAltitudes = [0, 500, 1_000, 1_500, 2_000, 3_000, 4_000, 5_000, 6_000, 7_000, 8_000, 9_000, 10_000];
+
+    // The ground's table, a row at each of those altitudes made at its first reading, each the
+    // light's heights in degrees rising and the logarithm of the sky's light on a level surface at
+    // each.
+    private readonly Lazy<(float[] Heights, Vector3[] Light)>[] _ground;
 
     /// <summary>
     /// Makes the sky of <paramref name="air"/>, its tables made at once over the processor's cores,
@@ -67,7 +72,7 @@ public sealed class SkyLight
     public SkyLight(Atmosphere air)
     {
         Air = air;
-        _ground = new Lazy<(float[], Vector3[])>(GroundTable);
+        _ground = [.. GroundAltitudes.Select(altitude => new Lazy<(float[], Vector3[])>(() => GroundTable(altitude)))];
         Parallel.For(0, TransmittanceHeights, h =>
         {
             for (int a = 0; a < TransmittanceAngles; a++)
@@ -158,30 +163,47 @@ public sealed class SkyLight
     }
 
     /// <summary>
-    /// The illuminance in lux the sky gives a level surface at the ground with the light that
-    /// lights it toward <paramref name="lightToward"/>, as <see cref="Illuminance"/> gives it
-    /// within 1%, read from a table in microseconds where the sum takes hundredths of a second. The
-    /// first reading builds the table, a fifth of a second to most of a second by the processor's
-    /// cores, so a binding reads it once while it loads, off its frame.
+    /// The illuminance in lux the sky gives a level surface <paramref name="altitude"/> meters
+    /// above the ground with the light that lights it toward <paramref name="lightToward"/>, as
+    /// <see cref="Illuminance"/> gives it within 1%, read from a table in microseconds where the
+    /// sum takes hundredths of a second. The first reading at an altitude builds the table's rows
+    /// about it, a fifth of a second to most of a second each by the processor's cores, so a
+    /// binding reads it at the altitudes its camera keeps while it loads, off its frame.
     /// </summary>
     /// <remarks>
-    /// The sky's light on a level surface depends only on how high the light stands, so a table by
-    /// the light's height holds it, a row a degree and more where the light's logarithm bends, read
-    /// between them by the logarithm. It is made once, at its first reading, across the
-    /// processor's cores. With the light 24 degrees down or lower it gives none, since the sky lit
-    /// so gives under 1.6e-7 lux, a five-thousandth of <see cref="Night.SkyIlluminance"/>.
+    /// The sky's light on a level surface depends only on how high the light stands and how high
+    /// the surface is, so a table holds it in rows at altitudes from the ground to 10 km, 500 m
+    /// apart to 2 km and a kilometer apart above, each by the light's height, a row a degree and
+    /// more where the light's logarithm bends, the light between rows and between heights read by
+    /// its logarithm. Each row is made once, at its first reading, across the processor's cores,
+    /// and above 10 km the sum is read. With the light 24 degrees down or lower it gives none,
+    /// since the sky lit so gives under 1.6e-7 lux at the ground, a five-thousandth of
+    /// <see cref="Night.SkyIlluminance"/>.
     /// </remarks>
-    public Vector3 GroundIlluminance(Vector3 lightToward)
+    public Vector3 GroundIlluminance(Vector3 lightToward, float altitude = 0)
     {
+        if (altitude > GroundAltitudes[^1]) return Illuminance(lightToward, altitude);
         var elevation = float.RadiansToDegrees(MathF.Asin(Math.Clamp(Vector3.Normalize(lightToward).Y, -1, 1)));
         if (elevation < LowestGround) return Vector3.Zero;
-        var (heights, light) = _ground.Value;
+        altitude = MathF.Max(altitude, 0);
+        var row = Array.BinarySearch(GroundAltitudes, altitude);
+        if (row >= 0) return Exp(GroundRead(row, elevation));
+        var (lower, upper) = (~row - 1, ~row);
+        var t = (altitude - GroundAltitudes[lower]) / (GroundAltitudes[upper] - GroundAltitudes[lower]);
+        return Exp(Vector3.Lerp(GroundRead(lower, elevation), GroundRead(upper, elevation), t));
+    }
+
+    // The logarithm of the sky's light a row of the ground's table gives with the light at a
+    // height, read between the row's heights as a straight line.
+    private Vector3 GroundRead(int row, float elevation)
+    {
+        var (heights, light) = _ground[row].Value;
         var i = Array.BinarySearch(heights, elevation);
-        if (i >= 0) return Exp(light[i]);
+        if (i >= 0) return light[i];
         var above = Math.Min(~i, heights.Length - 1);
         var below = above - 1;
         var t = (elevation - heights[below]) / (heights[above] - heights[below]);
-        return Exp(Vector3.Lerp(light[below], light[above], t));
+        return Vector3.Lerp(light[below], light[above], t);
     }
 
     /// <summary>
@@ -209,22 +231,22 @@ public sealed class SkyLight
 
     // The ground's table, its rows a degree apart first, then each span between two of them
     // halved as it needs, the two halves of a span made at once.
-    private (float[] Heights, Vector3[] Light) GroundTable()
+    private (float[] Heights, Vector3[] Light) GroundTable(float altitude)
     {
         var spans = (int)(90 - LowestGround);
         var ends = new Vector3[spans + 1];
-        Parallel.For(0, spans + 1, i => ends[i] = GroundLog(LowestGround + i));
+        Parallel.For(0, spans + 1, i => ends[i] = GroundLog(LowestGround + i, altitude));
         var rows = new List<(float Height, Vector3 Light)>[spans];
-        Parallel.For(0, spans, i => rows[i] = Halve(LowestGround + i, ends[i], LowestGround + i + 1, ends[i + 1], GroundHalvings));
+        Parallel.For(0, spans, i => rows[i] = Halve(LowestGround + i, ends[i], LowestGround + i + 1, ends[i + 1], GroundHalvings, altitude));
         (float Height, Vector3 Light)[] all = [.. rows.SelectMany(r => r), (90f, ends[spans])];
         return (all.Select(r => r.Height).ToArray(), all.Select(r => r.Light).ToArray());
     }
 
     // The rows of a span from one height up to the next, the higher end left to the next span.
-    private List<(float Height, Vector3 Light)> Halve(float from, Vector3 low, float to, Vector3 high, int halvings)
+    private List<(float Height, Vector3 Light)> Halve(float from, Vector3 low, float to, Vector3 high, int halvings, float altitude)
     {
         var middle = (from + to) / 2;
-        var light = GroundLog(middle);
+        var light = GroundLog(middle, altitude);
         var (read, sum) = (Exp(Vector3.Lerp(low, high, 0.5f)), Exp(light));
         var lux = Colorimetry.Luminance(sum);
         var off = Vector3.Abs(read - sum) - Vector3.Max(sum, new Vector3(lux)) * GroundError;
@@ -232,17 +254,17 @@ public sealed class SkyLight
             return [(from, low)];
         var halves = new List<(float Height, Vector3 Light)>[2];
         Parallel.Invoke(
-            () => halves[0] = Halve(from, low, middle, light, halvings - 1),
-            () => halves[1] = Halve(middle, light, to, high, halvings - 1));
+            () => halves[0] = Halve(from, low, middle, light, halvings - 1, altitude),
+            () => halves[1] = Halve(middle, light, to, high, halvings - 1, altitude));
         return [.. halves[0], .. halves[1]];
     }
 
     // The logarithm of the sky's light on a level surface at the ground with the light at a
     // height in degrees.
-    private Vector3 GroundLog(float elevation)
+    private Vector3 GroundLog(float elevation, float altitude)
     {
         var r = float.DegreesToRadians(elevation);
-        return Log(Illuminance(new Vector3(MathF.Cos(r), MathF.Sin(r), 0)));
+        return Log(Illuminance(new Vector3(MathF.Cos(r), MathF.Sin(r), 0), altitude));
     }
 
     // The scattering table's height at a row, crowded near the ground as the transmittance's.
