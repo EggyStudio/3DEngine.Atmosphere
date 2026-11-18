@@ -54,15 +54,21 @@ public class SunTests
     [Fact]
     public void The_Share_Of_A_Disc_Above_The_Horizon_Goes_From_None_To_All_As_Its_Edge_Rises()
     {
+        // The ends are exact on every processor, a disc whose lower edge is at the horizon or
+        // above wholly up and one whose upper edge is at it or below wholly down; the shares
+        // between stand on acos and a square root and are held to 1e-4.
         var radius = Sun.AngularDiameter / 2;
-        Assert.Equal(0, Sun.DiscShare(-radius - 0.01f));
-        Assert.Equal(0.5f, Sun.DiscShare(0), 1e-4f);
-        Assert.Equal(1, Sun.DiscShare(radius + 0.01f));
+        foreach (var (discShare, half) in new (Func<float, float>, float)[] { (Sun.DiscShare, radius), (Moon.DiscShare, Moon.AngularDiameter / 2) })
+        {
+            Assert.Equal(0, discShare(-half - 0.01f));
+            Assert.Equal(0, discShare(-half));
+            Assert.Equal(1, discShare(half));
+            Assert.Equal(1, discShare(half + 0.01f));
+            Assert.Equal(0.5f, discShare(0), 1e-4f);
+        }
         // A segment of a circle whose chord stands half the radius above the middle, a share of
         // 0.804.
         Assert.Equal(0.804f, Sun.DiscShare(radius / 2), 0.001f);
-        Assert.Equal(0.5f, Moon.DiscShare(0), 1e-4f);
-        Assert.Equal(0, Moon.DiscShare(-Moon.AngularDiameter / 2 - 0.01f));
         var share = 0f;
         for (var elevation = -radius; elevation <= radius; elevation += 0.01f)
         {

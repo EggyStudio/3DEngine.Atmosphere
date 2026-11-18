@@ -114,7 +114,13 @@ its model here from the first commit rather than moving it later.
 
 ## Verdicts
 
-None yet.
+1. **The disc's share is not exactly one on arm64.** Run 44341456796 of `1fc8aca` at 16:57 on
+    2026-11-18 is red on macos-15 alone, Ubuntu and Windows green.
+    `SunTests.The_Share_Of_A_Disc_Above_The_Horizon_Goes_From_None_To_All_As_Its_Edge_Rises` expects
+    1 and reads 0.99999994, the share's arithmetic rounding apart there. The mend is the function's,
+    a disc wholly above the horizon giving 1 and one wholly below giving 0 by a comparison before
+    the arithmetic, in the sun's and the moon's share alike, with the test's ends kept exact and the
+    values between held to a stated tolerance. `9a096f0` waits unpushed and goes out with the mend.
 
 ## Decisions
 

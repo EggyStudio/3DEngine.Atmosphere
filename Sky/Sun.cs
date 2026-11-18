@@ -104,7 +104,12 @@ public static class Sun
     /// </summary>
     internal static float ShareAbove(float elevation, float angularDiameter)
     {
-        var x = Math.Clamp(elevation / (angularDiameter / 2), -1, 1);
+        // The ends by comparison before the arithmetic, since acos and the division by pi round
+        // apart on some processors, arm64's giving 0.99999994 for a disc wholly up.
+        var radius = angularDiameter / 2;
+        if (elevation >= radius) return 1;
+        if (elevation <= -radius) return 0;
+        var x = elevation / radius;
         return (MathF.Acos(-x) + x * MathF.Sqrt(1 - x * x)) / MathF.PI;
     }
 }
