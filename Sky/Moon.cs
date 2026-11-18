@@ -7,8 +7,10 @@ namespace Sky;
 /// The moon's illuminance outside the air follows Krisciunas and Schaefer's fit of the moon's
 /// brightness by its phase angle, the angle at the moon between the sun and the eye, 0 when full
 /// and 180 when new, which falls faster than the lit share of the disc since the moon's rough
-/// surface throws shadows that the full moon alone shows none of. Its light is the sun's reflected,
-/// in the sun's color, the slight redness the moon's albedo gives it left out.
+/// surface throws shadows that the full moon alone shows none of. Its light is the sun's reflected
+/// wavelength by wavelength by the lunar disc's reflectance in Kieffer and Stone's ROLO model
+/// (2005), which rises from 0.09 at 400 nm to 0.15 at 700, so the moon is redder than the sun. The
+/// further reddening ROLO finds away from the full moon is left out.
 /// </remarks>
 public static class Moon
 {
@@ -74,8 +76,39 @@ public static class Moon
     /// moon <paramref name="elevation"/> degrees over the horizon there at a phase angle of
     /// <paramref name="phaseAngle"/> degrees.
     /// </summary>
-    public static CelestialLight At(Atmosphere air, float elevation, float phaseAngle, float altitude = 0) =>
-        Sun.Through(air, Sun.Outside / Sun.OutsideIlluminance * OutsideIlluminance(phaseAngle), elevation, altitude);
+    /// <remarks>
+    /// The air takes the moon's light band by band, so the moon's light at the ground is its light
+    /// outside the air in each band through the air, rather than <see cref="Sun.Through"/> of its
+    /// color, which takes a light of the sun's spectrum.
+    /// </remarks>
+    public static CelestialLight At(Atmosphere air, float elevation, float phaseAngle, float altitude = 0)
+    {
+        ArgumentNullException.ThrowIfNull(air);
+        return Sun.Of(air.Through(Outside(phaseAngle), altitude, MathF.Sin(float.DegreesToRadians(elevation))));
+    }
+
+    // The line in its logarithm the lunar disc's reflectance follows through ROLO's constant term,
+    // its 15 bands from 405 to 775 nm in Kieffer and Stone's Table 4 (version 311g), the oxygen
+    // band at 763.7 nm left out, within 0.038 rms, the band-to-band excursions the paper corrects
+    // against a soil's spectrum.
+    internal static float Reflectance(float nm) => MathF.Exp(-2.147f + 0.1634f * (nm - 550) / 100);
+
+    // The moon's light outside the air in each of the module's bands, watts a square meter a
+    // nanometer, its lux the moon's at its phase angle.
+    internal static float[] Outside(float phaseAngle)
+    {
+        var lux = OutsideIlluminance(phaseAngle);
+        return [.. Shape.Value.Select(light => light * lux)];
+    }
+
+    // The sun's light times the disc's reflectance in each band, at a lux of 1.
+    private static readonly Lazy<float[]> Shape = new(() =>
+    {
+        var spectrum = Spectrum.Light;
+        var light = Enumerable.Range(0, spectrum.Count).Select(b => spectrum.SunLight[b] * spectrum.Mean(b, Reflectance)).ToArray();
+        var lux = Colorimetry.Luminance(spectrum.ToLinearSrgb(light));
+        return [.. light.Select(band => band / lux)];
+    });
 }
 
 /// <summary>

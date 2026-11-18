@@ -234,7 +234,7 @@ Polar = 4,                                               // Cold all year, its s
 
 class LookCycle                                          // A look that changes with the sun's height, a timecycle of looks kept at heights of the sun, the look at any height worked out between the two kept about it
 LookCycle();                                             // A cycle with no looks kept, which Add fills
-IReadOnlyList<(float, LookSettings)> Keys { get; }       // The looks kept, by the sun's height in degrees, lowest first
+IReadOnlyList<(float Degrees, LookSettings Look)> Keys { get; }  // The looks kept, by the sun's height in degrees, lowest first
 LookCycle Add(float degrees, LookSettings look);         // Keeps a look at a height of the sun, replacing one kept there
 LookSettings At(float degrees);                          // The look at a height of the sun, between the two kept about it
 LookCycle Day();                                         // A day's cycle on Vivid, the vivid look by day, warmer and deeper as the sun goes down to the horizon, bluer and calmer through the twilight, and cool at night
@@ -250,7 +250,7 @@ float CurveWhite { get; set; }                           // How sharply Numbered
 float CurveLower { get; set; }                           // The power Numbered raises the dark end by, 1.2 unless set, higher darkening the shadows
 float CurveUpper { get; set; }                           // The power Numbered raises the bright end by, 1.5 unless set, higher darkening the highlights
 float Saturation { get; set; }                           // How far each color is moved from the gray of its luminance in linear light, after the curve, 1 unless set and 0 gray
-(float, float, float) Tint { get; set; }                 // What each channel is multiplied by after the saturation, linear, white unless set
+(float R, float G, float B) Tint { get; set; }           // What each channel is multiplied by after the saturation, linear, white unless set
 float Contrast { get; set; }                             // How far each level shown is pushed from the middle once encoded for the screen, 1 unless set
 bool Dither { get; set; }                                // Whether the picture shown is dithered by half a level, so a gradient does not band, on unless set
 LookSettings Lerp(LookSettings from, LookSettings to, float share);  // A look part of the way from one to another, each number that far between the two, for a look that changes as a day goes (LookCycle)

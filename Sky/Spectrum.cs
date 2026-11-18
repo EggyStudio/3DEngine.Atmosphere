@@ -105,7 +105,13 @@ internal sealed class Spectrum
     /// <summary>
     /// The sun's light outside the air in a lane's three bands, a band past the last none.
     /// </summary>
-    public Vector3 LaneSun(int lane) => Lane(lane, b => SunLight[b]);
+    public Vector3 LaneSun(int lane) => Lane(lane, SunLight);
+
+    /// <summary>
+    /// A light given in each band, <paramref name="light"/>, in a lane's three bands, a band past
+    /// the last none.
+    /// </summary>
+    public Vector3 Lane(int lane, float[] light) => Lane(lane, b => light[b]);
 
     /// <summary>
     /// A light given in a lane's three bands, in linear sRGB whose luminance is its lux.

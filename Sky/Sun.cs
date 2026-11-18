@@ -95,7 +95,14 @@ public static class Sun
     /// </remarks>
     public static CelestialLight Through(Atmosphere air, Vector3 outside, float elevation, float altitude = 0)
     {
-        var through = outside * air.Transmittance(altitude, MathF.Sin(float.DegreesToRadians(elevation)));
+        ArgumentNullException.ThrowIfNull(air);
+        return Of(outside * air.Transmittance(altitude, MathF.Sin(float.DegreesToRadians(elevation))));
+    }
+
+    // A light come through the air, in linear sRGB whose luminance is its lux, as its lux, its
+    // color at a luminance of 1 and that color's temperature.
+    internal static CelestialLight Of(Vector3 through)
+    {
         var lux = Colorimetry.Luminance(through);
         return lux <= 0 ? new CelestialLight(0, Vector3.Zero, 0) : new CelestialLight(lux, through / lux, Colorimetry.TemperatureOf(through));
     }

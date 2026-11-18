@@ -963,3 +963,24 @@ none of. Below 40 degrees the day is redder than measured daylight, 5,333 K at 2
 floor of 5,300 and a band from 5,500. Its untried candidates are the haze's albedo and asymmetry by
 wavelength, the orders of scattering the sky's table sums, and the rural evenings themselves, which
 read 6,600 K at 10 degrees but were not chosen clear.
+
+The module's session, S4, the moon's light by wavelength. The moon's light outside the air is the
+sun's in each band times the lunar disc's reflectance, the line the constant term of Kieffer and
+Stone's ROLO model (2005, Table 4, version 311g) follows in its logarithm over its 15 bands from 405
+to 775 nm, the oxygen band at 763.7 left out, 0.091 at 400 nm, 0.117 at 550 and 0.149 at 700, within
+0.038 rms of the bands, their excursions the paper itself corrects against a soil's spectrum. It is
+scaled to Krisciunas and Schaefer's lux by the phase as before. `Moon.At` takes it through the air
+band by band, and the moonlit sky in `SceneLight` is the sky's arithmetic with the moon's light in
+place of the sun's in each band, where it was the sunlit sky scaled by the moon's lux. The moon
+outside the air is 4,936 K against the sun's 5,920, 4,406 K overhead at the ground against the sun's
+5,166, and 3,026 against 3,378 at 10 degrees; the air lets through 0.3% more of its light overhead
+than of the sun's and 1.6% more at 10 degrees. The moonlit sky is 0.992 of the sunlit by the lux
+ratio and 1,600 to 2,400 K redder, and a full moon overhead lights a level surface with 0.288 lux
+at 4,791 K. Three tests failed first, to build, and two of them then missed bounds I had guessed,
+the moonlit sky's share above 1 and the moon 500 K under the sun at 10 degrees, which the physics
+puts at 0.992 and 352 K and the tests now hold. They hold the disc's reflectance through the bands
+within 1%, the moon's share through the air against the sun's and its redness at 10, 30 and 90
+degrees, and the moonlit sky's share and redness. The further reddening ROLO
+finds away from the full moon is left out, and no measured moonlight's color by a source I could cite
+was found to hold it against. Tools moves to `dc117ac`, and the cheatsheet written again changes two
+lines, `LookCycle.Keys` and `LookSettings.Tint`, whose tuples now carry their elements' names.

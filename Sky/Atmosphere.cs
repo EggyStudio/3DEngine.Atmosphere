@@ -164,6 +164,18 @@ public sealed record Atmosphere
     internal Vector3 AerosolsAt(float altitude) =>
         (LaneAerosol ?? new Vector3(AerosolExtinction)) * MathF.Exp(-MathF.Max(altitude, 0) / AerosolScaleHeight);
 
+    // A light given outside the air in each of the module's bands, through the air from altitude
+    // toward a way whose cosine with the zenith is cosZenith, in linear sRGB whose luminance is its
+    // lux, the air taking each band as its own.
+    internal Vector3 Through(float[] outside, float altitude, float cosZenith)
+    {
+        var (spectrum, lanes) = (Spectrum.Light, Lanes());
+        var through = Vector3.Zero;
+        for (var lane = 0; lane < lanes.Length; lane++)
+            through += spectrum.ToLinearSrgb(lane, spectrum.Lane(lane, outside) * lanes[lane].Transmittance(altitude, cosZenith));
+        return through;
+    }
+
     // The air read in each lane of the module's bands, made once an air and kept by the air
     // itself rather than by its value, so an air made from this one with another term never reads
     // this one's lanes.
@@ -212,11 +224,7 @@ public sealed record Atmosphere
         {
             // The sun's light by band through the air, over the sun's light outside it, in each
             // channel.
-            var (spectrum, lanes) = (Spectrum.Light, Lanes());
-            var through = Vector3.Zero;
-            for (var lane = 0; lane < lanes.Length; lane++)
-                through += spectrum.ToLinearSrgb(lane, spectrum.LaneSun(lane) * lanes[lane].Transmittance(altitude, cosZenith));
-            return through / Sun.Outside;
+            return Through(Spectrum.Light.SunLight, altitude, cosZenith) / Sun.Outside;
         }
         var (toGround, toTop) = Distances(altitude, cosZenith);
         if (toGround is not null) return Vector3.Zero;

@@ -12,8 +12,8 @@ namespace Sky;
 /// Day, twilight and night are one sum, so no rule hands the light from one to the next. The sun's
 /// and the moon's light come through the air (<see cref="Sun.At"/> and <see cref="Moon.At"/>), each
 /// times the share of its disc above the horizon; the sky's is <see cref="SkyLight.Illuminance"/>
-/// lit by the sun and again by the moon, scaled by the moon's light against the sun's, so the
-/// twilight's air goes dark as the earth's shadow climbs it; and under all of it lies the dark
+/// lit by the sun and again by the moon, the moon's light band by band in place of the sun's, so
+/// the twilight's air goes dark as the earth's shadow climbs it; and under all of it lies the dark
 /// site's sky of <see cref="Night.SkyIlluminance"/>, taken as white.
 /// </para>
 /// <para>
@@ -56,10 +56,9 @@ public sealed record SceneLight(CelestialLight Sun, Vector3 SunToward, Celestial
         var sun = Scaled(Sky.Sun.At(sky.Air, clock.SunAltitude, altitude), Sky.Sun.DiscShare(clock.SunAltitude));
         var phaseAngle = clock.MoonPhaseAngle;
         var moon = Scaled(Sky.Moon.At(sky.Air, clock.MoonAltitude, phaseAngle, altitude), Sky.Moon.DiscShare(clock.MoonAltitude));
-        var moonOverSun = Sky.Moon.OutsideIlluminance(phaseAngle) / Sky.Sun.OutsideIlluminance;
         // From the sky's table to 10 km up, in microseconds; above it summed over the dome.
         Vector3 Lit(Vector3 toward) => sky.GroundIlluminance(toward, altitude);
-        var skyLight = Lit(sunToward) + Lit(moonToward) * moonOverSun + new Vector3(Night.SkyIlluminance);
+        var skyLight = Lit(sunToward) + sky.GroundIlluminanceBy(Sky.Moon.Outside(phaseAngle), moonToward, altitude) + new Vector3(Night.SkyIlluminance);
         return new SceneLight(sun, sunToward, moon, moonToward, skyLight);
     }
 

@@ -99,6 +99,23 @@ public sealed class SkyLight
     public Vector3 GroundIlluminance(Vector3 lightToward, float altitude = 0) =>
         Combine(lane => lane.GroundIlluminance(lightToward, altitude));
 
+    // The sky's light on a level surface lit by a light of outside in each band outside the air in
+    // place of the sun's, as the moon's, the sky's arithmetic being the same in each band for any
+    // strength of the light that lights it.
+    internal Vector3 GroundIlluminanceBy(float[] outside, Vector3 lightToward, float altitude)
+    {
+        var sum = Vector3.Zero;
+        for (var lane = 0; lane < _lanes.Length; lane++)
+        {
+            var (light, sun) = (_bands.Lane(lane, outside), _bands.LaneSun(lane));
+            var share = new Vector3(Over(light.X, sun.X), Over(light.Y, sun.Y), Over(light.Z, sun.Z));
+            sum += _bands.ToLinearSrgb(lane, _lanes[lane].GroundIlluminance(lightToward, altitude) * share);
+        }
+        return sum;
+
+        static float Over(float light, float sun) => sun > 0 ? light / sun : 0;
+    }
+
     /// <summary>
     /// Makes the ground table's rows about the altitudes from <paramref name="lowest"/> to
     /// <paramref name="highest"/> meters, so a reading in that span afterward makes none, a fifth

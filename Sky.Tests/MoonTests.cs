@@ -14,12 +14,51 @@ public class MoonTests
     }
 
     [Fact]
-    public void The_Moon_Dims_Through_The_Air_As_The_Sun_Does()
+    public void The_Moons_Light_Outside_The_Air_Is_The_Suns_Times_The_Discs_Reflectance()
     {
-        var moon = Moon.At(Atmosphere.Earth, 30, 0);
-        var sun = Sun.At(Atmosphere.Earth, 30);
-        Assert.Equal(sun.Illuminance / Sun.OutsideIlluminance, moon.Illuminance / Moon.OutsideIlluminance(0), 0.0001f);
-        Assert.Equal(sun.Temperature, moon.Temperature, 1f);
+        // Kieffer and Stone's ROLO model (2005) gives the lunar disc's reflectance in its bands, a
+        // line in its logarithm from 0.09 at 400 nm to 0.15 at 700, so the moon's light in each
+        // band is the sun's times that line, scaled to the moon's illuminance by its phase.
+        var spectrum = Spectrum.Light;
+        foreach (var phaseAngle in new[] { 0f, 60f })
+        {
+            var moon = Moon.Outside(phaseAngle);
+            Assert.Equal(Moon.OutsideIlluminance(phaseAngle), Colorimetry.Luminance(spectrum.ToLinearSrgb(moon)), Moon.OutsideIlluminance(phaseAngle) * 1e-4f);
+            var (red, blue) = (spectrum.Count - 2, 2);
+            var expected = MathF.Exp(0.1634f * (spectrum.Centers[red] - spectrum.Centers[blue]) / 100);
+            Assert.Equal(expected, moon[red] / spectrum.SunLight[red] / (moon[blue] / spectrum.SunLight[blue]), expected * 0.01f);
+        }
+    }
+
+    [Theory]
+    [InlineData(10f)]
+    [InlineData(30f)]
+    [InlineData(90f)]
+    public void The_Moon_Dims_Through_The_Air_As_The_Sun_Does_And_Is_Redder(float elevation)
+    {
+        // The air takes the moon's light band by band as it takes the sun's, so its share differs
+        // from the sun's by the moon's redder light alone, which the air lets through more of, 1.6%
+        // more at 10 degrees and 0.3% overhead, and the moon stays the redder, 3,026 K against the
+        // sun's 3,378 at 10 degrees and 4,406 against 5,166 overhead (dotnet test Sky.Tests).
+        var moon = Moon.At(Atmosphere.Earth, elevation, 0);
+        var sun = Sun.At(Atmosphere.Earth, elevation);
+        var (moonShare, sunShare) = (moon.Illuminance / Moon.OutsideIlluminance(0), sun.Illuminance / Sun.OutsideIlluminance);
+        Assert.InRange(moonShare / sunShare, 1, 1.03f);
+        Assert.True(moon.Temperature < sun.Temperature - 300, $"at {elevation} degrees the moon is {moon.Temperature} K and the sun {sun.Temperature}");
+    }
+
+    [Fact]
+    public void The_Moonlit_Sky_Is_The_Sunlit_Skys_Times_The_Moons_Light_Over_The_Suns_And_Redder()
+    {
+        // The sky's light lies in the blue bands, where the moon's light is the less against the
+        // sun's, so the moonlit sky is 0.992 of the sunlit sky's by the moon's lux over the sun's
+        // and 6,971 K where the sunlit is 9,020, the light 29 degrees high (dotnet test Sky.Tests).
+        var sky = new SkyLight(Atmosphere.Earth);
+        var toward = new System.Numerics.Vector3(MathF.Cos(0.5f), MathF.Sin(0.5f), 0);
+        var (sunlit, moonlit) = (sky.GroundIlluminance(toward), sky.GroundIlluminanceBy(Moon.Outside(0), toward, 0));
+        var share = Colorimetry.Luminance(moonlit) / Colorimetry.Luminance(sunlit) / (Moon.OutsideIlluminance(0) / Sun.OutsideIlluminance);
+        Assert.InRange(share, 0.98f, 1);
+        Assert.True(Colorimetry.TemperatureOf(moonlit) < Colorimetry.TemperatureOf(sunlit) - 1_000);
     }
 
     [Fact]
