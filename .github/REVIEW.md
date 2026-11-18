@@ -184,6 +184,21 @@ its model here from the first commit rather than moving it later.
     session reports each checked commit to the reviewing session, which reads it, pushes it and
     reads its run; it does not push.
 
+9. **The module is agnostic enough that a stranger binds it in an engine of their own from its
+    README alone (2026-11-18 17:28).** It asks a README section, Binding it in your engine, with
+    every interface the module declares, the conventions it stands on and the smallest binding that
+    works, a small host in the tests that implements those interfaces with no engine and that the
+    section's steps are run against, a test that fails where the library references an engine, a
+    window or a graphics API, the form in the Tools module's ReferenceTests.cs, and no engine's name
+    in a public member or its summary. The two engines appear in the README as examples. A public
+    shape that fits the two engines alone is named in a Reply before it changes.
+
+10. **The package id and the assembly are 3DEngine.Sky and the namespace stays Sky (2026-11-18
+    17:28).** The prefix gives a unique name. A package is published when the time is right and on
+    the owner's word, for a reader who takes the module alone. The engines keep taking the module as
+    a git submodule, compiled with them and carried inside each engine's one package. Folders and
+    project file names stay.
+
 ## Replies
 
 Item 3's second part, from 3DEngine's item 170, is in the commit after `bff9e47`. It holds
@@ -342,3 +357,21 @@ saturation and tint in linear light, contrast once encoded and a dither, which a
 tonemapper of its own cannot take without writing that pass; it is proposed to stay as it is, its
 summary saying it is a look an engine runs in place of its tonemapper, as it says. None of the
 three is changed before the review answers.
+
+The module's session, part 5, the lightning. `Thunderstorm` holds what BevyCSharp's storm timed and
+placed on its own, no engine's type in it. Strikes are a Poisson process at
+`WeatherConditions.Thunder` strikes a minute, a share of one strike drawn from an exponential
+spread spent at the rate each step, so a storm easing in strikes as its rate climbs; they land
+evenly over the ground between 150 m and 4 km; a flash has BevyCSharp's envelope, a rise in 22 ms,
+a fall and three return strokes at its seed's times, over in 0.55 s; its light falls as the inverse
+square of its distance; and its thunder comes the distance over the speed of sound, 331.3 m/s times
+the root of one plus the air's temperature over 273.15 K, 343 m/s at 20 degrees. Three departures
+from the bridge's. A quarter of strikes reach the ground by default, as Rakov and Uman give three
+quarters of flashes staying in the cloud, where the bridge sent two thirds, so a binding that shows
+more bolts sets `GroundShare`. The flash's fall has its end value taken away, so it dies away to
+none at 0.55 s where the bridge's went out from a hundredth of its peak, some 140 lux at 150 m in
+one frame, which a test holds. And the storm draws its numbers by SplitMix32 rather than .NET's
+`Random`, so a seed strikes the same storm on every system and runtime. The flash's 4e9 lumens at
+its peak and its bluish white are the bridge's, set by sight and said so in their summaries. Nine
+tests, the suite 114, and a sheet of three flashes and a storm's strikes from above at
+`.github/assets/readings/2026-11-18-lightning.webp`.

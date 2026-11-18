@@ -31,6 +31,13 @@ on a level surface with the sun 54 degrees high by the cloud cover after Kasten 
 sun's direct light going to none and the sky's climbing to 42,000 lux at a cover of 0.8 before all
 of it falls to a quarter of the clear day's, 24,200 lux, two stops down.
 
+![](.github/assets/readings/2026-11-18-lightning.webp)
+On the left a flash's brightness by the time since it began for three seeds, a rise in 22 ms, a fall
+and three return strokes that brighten it again, dying away to none at 0.55 s; on the right where
+600 strikes of one storm land seen from above, evenly over the ground from 150 m to 4 km, 161 of
+them to the ground and the rest flashing in the cloud, the thunder of the farthest heard 11.7 s
+after its flash.
+
 ## 2026-11-08
 
 Done that day
