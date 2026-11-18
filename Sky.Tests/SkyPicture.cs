@@ -24,6 +24,10 @@ namespace Sky.Tests;
 /// 61966-2-1, a line of 12.92 under 0.0031308 and 1.055 times the 2.4th root less 0.055 above it,
 /// with no tone curve.
 /// </para>
+/// <para>
+/// Where asked, a small red ring marks the sun's place while it is above the horizon, so a reader
+/// can check a glow against it; the ring is no light of the sky's.
+/// </para>
 /// </remarks>
 public sealed class SkyPicture
 {
@@ -56,7 +60,7 @@ public sealed class SkyPicture
     /// the height over the horizon falling evenly with the distance from the middle, north up and
     /// east to the left as the sky is seen from under it.
     /// </summary>
-    public static SkyPicture Fisheye(SkyLight sky, SkyClock clock, float exposure, int size)
+    public static SkyPicture Fisheye(SkyLight sky, SkyClock clock, float exposure, int size, bool markSun = false)
     {
         var picture = new SkyPicture(size, size);
         var radius = size / 2f;
@@ -78,7 +82,7 @@ public sealed class SkyPicture
             var turn = MathF.Atan2(way.X, -way.Z);
             var off = zenith / (MathF.PI / 2) * radius;
             return ((int)(radius - off * MathF.Sin(turn)), (int)(radius - off * MathF.Cos(turn)));
-        });
+        }, markSun);
         return picture;
     }
 
@@ -86,7 +90,7 @@ public sealed class SkyPicture
     /// The sky all the way round from 10 degrees under the horizon to the zenith, north at both
     /// ends and south in the middle, each pixel the same angle across and up.
     /// </summary>
-    public static SkyPicture Panorama(SkyLight sky, SkyClock clock, float exposure, int width, int height)
+    public static SkyPicture Panorama(SkyLight sky, SkyClock clock, float exposure, int width, int height, bool markSun = false)
     {
         var picture = new SkyPicture(width, height);
         var (across, up) = (2 * MathF.PI / width, float.DegreesToRadians(100) / height);
@@ -103,7 +107,7 @@ public sealed class SkyPicture
             if (turn < 0) turn += 2 * MathF.PI;
             var row = (int)((float.DegreesToRadians(90) - elevation) / up);
             return row >= height ? null : ((int)(turn / across) % width, row);
-        });
+        }, markSun);
         return picture;
     }
 
@@ -137,7 +141,7 @@ public sealed class SkyPicture
 
     // Each pixel's way and solid angle from its column and row, or none outside the picture, and
     // the pixel a way falls in, or none, for the points.
-    private void Draw(SkyLight sky, SkyClock clock, float exposure, Func<int, int, (Vector3 Way, float Solid)?> pixel, Func<Vector3, (int Column, int Row)?> place)
+    private void Draw(SkyLight sky, SkyClock clock, float exposure, Func<int, int, (Vector3 Way, float Solid)?> pixel, Func<Vector3, (int Column, int Row)?> place, bool markSun)
     {
         var air = sky.Air;
         var (sunToward, moonToward) = (clock.SunDirection, clock.MoonDirection);
@@ -189,6 +193,17 @@ public sealed class SkyPicture
             if (solid[i] > 0)
                 for (var c = 0; c < 3; c++)
                     _pixels[i * 3 + c] = (byte)MathF.Round(Encode(Math.Clamp(light[i][c] / full, 0, 1)) * 255);
+        if (markSun && sunToward.Y > 0 && place(sunToward) is { } at)
+        {
+            var ring = Math.Max(6, Width / 60);
+            for (var step = 0; step < 16 * ring; step++)
+            {
+                var angle = step * 2 * MathF.PI / (16 * ring);
+                var (column, row) = (at.Column + (int)MathF.Round(ring * MathF.Cos(angle)), at.Row + (int)MathF.Round(ring * MathF.Sin(angle)));
+                if (column >= 0 && row >= 0 && column < Width && row < Height)
+                    (_pixels[(row * Width + column) * 3], _pixels[(row * Width + column) * 3 + 1], _pixels[(row * Width + column) * 3 + 2]) = (230, 20, 40);
+            }
+        }
     }
 
     // The share of a light's lux the air lets through from the top of the air to the ground along

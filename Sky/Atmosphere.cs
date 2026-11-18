@@ -17,11 +17,20 @@ namespace Sky;
 /// a coefficient multiplies is a color of the frame.
 /// </para>
 /// <para>
-/// <see cref="Earth"/> holds the Earth's air, its molecules' scattering Bruneton and Neyret's
-/// precomputed atmospheric scattering of 2008 gives, its ozone a column of 300 Dobson units in a
-/// layer from 10 to 40 km (<see cref="OzoneAbsorption"/>), a vertical optical depth of 0.028 in
-/// green, which turns the twilight's zenith blue, and its haze an ordinary clear day's
-/// (<see cref="AerosolExtinction"/>), a turbidity of 2.40.
+/// <see cref="Earth"/> holds the Earth's air as Hillaire's scalable sky and atmosphere rendering
+/// technique of 2020 sets it in its Table 1, after Bruneton's precomputed atmospheric scattering of
+/// 2017: the planet 6,360 km in radius, the molecules' scattering at 680, 550 and 440 nm, a haze
+/// that scatters 3.996e-6 of the light a meter at the ground and absorbs 4.40e-6 over a scale
+/// height of 1,200 m with an asymmetry of 0.8, alike at every wavelength, an ozone column of 300
+/// Dobson units from 10 to 40 km, and a ground of albedo 0.3. Its haze is a clear day's, a
+/// turbidity of 1.09 and 178 km visibility, under which the day's sky is a deep blue with a tight
+/// halo about the sun.
+/// </para>
+/// <para>
+/// <see cref="ContinentalAverage"/> holds the same air with an ordinary day's haze in place of the
+/// clear day's, the continental average aerosol of Hess, Koepke and Schult's OPAC (1998), a
+/// turbidity of 2.39 and 44 km visibility, its sunset and its civil twilight within 1.55 times the
+/// published figures where the clear day's stand within twice them.
 /// </para>
 /// </remarks>
 public sealed record Atmosphere
@@ -32,18 +41,36 @@ public sealed record Atmosphere
     }
 
     /// <summary>
-    /// The Earth's air on an ordinary clear day, its ozone a column of 300 Dobson units.
+    /// The Earth's air on a clear day, its ozone a column of 300 Dobson units, as Hillaire (2020)
+    /// sets it.
     /// </summary>
     public static Atmosphere Earth { get; } = new();
 
-    /// <summary>The planet's radius in meters, 6,378,100 for the Earth at the equator.</summary>
-    public float PlanetRadius { get; init; } = 6_378_100;
+    /// <summary>
+    /// The Earth's air on an ordinary day, its haze OPAC's continental average aerosol at a
+    /// relative humidity of 80%, a turbidity of 2.39 and 44 km visibility.
+    /// </summary>
+    /// <remarks>
+    /// Hess, Koepke and Schult's OPAC (1998) gives the continental average 0.075 of the light a
+    /// kilometer at the ground at 550 nm in a layer an optical depth of 0.151 deep, which one
+    /// exponential of a 2,013 m scale height holds both of, scattering 0.925 of what it takes with
+    /// an asymmetry of 0.703 and falling with wavelength by an Angstrom exponent of 1.42 from 500
+    /// to 800 nm. Its ground is a darker one's than the clear day's, 0.12, 0.10 and 0.09.
+    /// </remarks>
+    public static Atmosphere ContinentalAverage { get; } = new()
+    {
+        AerosolExtinction = 7.5e-5f, AerosolAngstrom = 1.42f, AerosolAlbedo = new Vector3(0.925f), AerosolScaleHeight = 2_013,
+        AerosolAnisotropy = 0.703f, GroundAlbedo = new Vector3(0.12f, 0.10f, 0.09f),
+    };
+
+    /// <summary>The planet's radius in meters, 6,360,000 for the Earth.</summary>
+    public float PlanetRadius { get; init; } = 6_360_000;
 
     /// <summary>
     /// How much of the light the molecules scatter a meter at sea level, at 680, 550 and 440
     /// nanometers, which they take nothing of otherwise.
     /// </summary>
-    public Vector3 RayleighScattering { get; init; } = new(5.8e-6f, 13.5e-6f, 33.1e-6f);
+    public Vector3 RayleighScattering { get; init; } = new(5.802e-6f, 13.558e-6f, 33.1e-6f);
 
     /// <summary>
     /// The height in meters over which the molecules thin to a share of 1/e, 8,000 for the Earth.
@@ -56,20 +83,16 @@ public sealed record Atmosphere
     /// </summary>
     /// <remarks>
     /// <see cref="Turbidity"/> reads the air's haze from it and <see cref="WithTurbidity"/> sets it
-    /// from one. Unless set, the haze with the four terms below it is the continental average
-    /// aerosol of Hess, Koepke and Schult's OPAC (1998) at a relative humidity of 80%, 0.075 of the
-    /// light a kilometer at the ground at 550 nm in a layer an optical depth of 0.151 deep, which
-    /// one exponential of a 2,013 m scale height holds both of, scattering 0.925 of what it takes
-    /// with an asymmetry of 0.703 and falling with wavelength by an Angstrom exponent of 1.42 from
-    /// 500 to 800 nm, an ordinary clear day's of 44 km visibility.
+    /// from one. Unless set it is the clear day's of <see cref="Earth"/>, 3.996e-6 scattered and
+    /// 4.40e-6 absorbed, 8.396e-6 in all.
     /// </remarks>
-    public float AerosolExtinction { get; init; } = 7.5e-5f;
+    public float AerosolExtinction { get; init; } = 8.396e-6f;
 
     /// <summary>
     /// How steeply the aerosols' extinction falls with wavelength, the power of 550 nm over the
-    /// wavelength it goes as, 1.42 unless set.
+    /// wavelength it goes as, 0 unless set, the clear day's haze taking every wavelength alike.
     /// </summary>
-    public float AerosolAngstrom { get; init; } = 1.42f;
+    public float AerosolAngstrom { get; init; } = 0;
 
     // The aerosols' extinction at sea level in each of a lane's three bands, set in a lane alone.
     internal Vector3? LaneAerosol { get; init; }
@@ -78,18 +101,18 @@ public sealed record Atmosphere
     /// The share of the light the aerosols take out that they scatter, the rest absorbed, at each
     /// wavelength.
     /// </summary>
-    public Vector3 AerosolAlbedo { get; init; } = new(0.925f);
+    public Vector3 AerosolAlbedo { get; init; } = new(3.996f / 8.396f);
 
     /// <summary>
-    /// The height in meters over which the aerosols thin to a share of 1/e, 2,013 for the Earth.
+    /// The height in meters over which the aerosols thin to a share of 1/e, 1,200 for the Earth.
     /// </summary>
-    public float AerosolScaleHeight { get; init; } = 2_013;
+    public float AerosolScaleHeight { get; init; } = 1_200;
 
     /// <summary>
     /// How strongly the aerosols scatter forward, from -1 for all of the light back the way it came
     /// to 1 for all of it on, as Cornette and Shanks's phase function takes it.
     /// </summary>
-    public float AerosolAnisotropy { get; init; } = 0.703f;
+    public float AerosolAnisotropy { get; init; } = 0.8f;
 
     /// <summary>
     /// How much of the light the ozone absorbs a meter in the middle of its layer, at each
@@ -109,7 +132,7 @@ public sealed record Atmosphere
     /// <summary>
     /// The share of the light the ground returns at each wavelength, scattered evenly.
     /// </summary>
-    public Vector3 GroundAlbedo { get; init; } = new(0.12f, 0.10f, 0.09f);
+    public Vector3 GroundAlbedo { get; init; } = new(0.3f);
 
     /// <summary>
     /// The height in meters past which the air is taken to end, where its thickest layer has
@@ -125,8 +148,9 @@ public sealed record Atmosphere
 
     /// <summary>
     /// The air's haze, the optical depth of the molecules and the aerosols over that of the
-    /// molecules alone straight up at 550 nanometers, 1 for air with no aerosols in it and about
-    /// 1.1 for the Earth here.
+    /// molecules alone straight up at 550 nanometers, 1 for air with no aerosols in it, 1.09 for
+    /// <see cref="Earth"/>'s clear day and 2.39 for <see cref="ContinentalAverage"/>'s ordinary
+    /// one.
     /// </summary>
     public float Turbidity => 1 + AerosolExtinction * AerosolScaleHeight / (RayleighScattering.Y * RayleighScaleHeight);
 

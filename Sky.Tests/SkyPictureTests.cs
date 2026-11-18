@@ -33,8 +33,8 @@ public class SkyPictureTests
     public void The_Pictures_Are_Written_Where_SKY_PICTURES_Names_A_Folder()
     {
         // dotnet test Sky.Tests with SKY_PICTURES set to a folder writes the fisheye and the
-        // panorama of each scene there as PNG, with scenes.csv naming each by its sun's height
-        // and its exposure, for a sheet to set them on.
+        // panorama of each scene there as PNG, the sun's place ringed, with scenes.csv naming each
+        // by its sun's height and its exposure, for a sheet to set them on.
         var folder = Environment.GetEnvironmentVariable("SKY_PICTURES");
         if (string.IsNullOrEmpty(folder)) return;
         Directory.CreateDirectory(folder);
@@ -43,8 +43,8 @@ public class SkyPictureTests
         foreach (var (name, clock) in SkyPicture.Scenes())
         {
             var exposure = SceneLight.At(clock, Sky).Exposure;
-            SkyPicture.Fisheye(Sky, clock, exposure, 400).WritePng(Path.Combine(folder, $"{name}-fisheye.png"));
-            SkyPicture.Panorama(Sky, clock, exposure, 1080, 330).WritePng(Path.Combine(folder, $"{name}-panorama.png"));
+            SkyPicture.Fisheye(Sky, clock, exposure, 400, markSun: true).WritePng(Path.Combine(folder, $"{name}-fisheye.png"));
+            SkyPicture.Panorama(Sky, clock, exposure, 1080, 330, markSun: true).WritePng(Path.Combine(folder, $"{name}-panorama.png"));
             list.WriteLine(FormattableString.Invariant($"{name},{clock.SunAltitude:F2},{clock.MoonAltitude:F2},{exposure:F2}"));
         }
     }

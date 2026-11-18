@@ -5,17 +5,21 @@ namespace Sky.Tests;
 public class SunTests
 {
     [Fact]
-    public void The_Sun_At_54_Degrees_Reaches_The_Ground_At_94000_Lux_And_5000_Kelvin()
+    public void The_Sun_At_54_Degrees_Reaches_The_Ground_At_112000_Lux_And_5300_Kelvin()
     {
         // The reference scene, 27 June at 15:05 in Cologne, sets its sun 53.97 degrees high to
         // 97,050 lux at 5,633 K outside the air, which the scene's own air dims to 73,900 lux at
-        // 4,924 K at the ground, the sun's color the same within a hundred kelvin and its lux less,
-        // since that sun outside the air is 120,000 lux times the sine of its height.
-        // The ozone and the haze Atmosphere.Earth holds take their share of the light as well, so
-        // the sun reaches the ground at some 94,200 lux (dotnet test Sky.Tests).
+        // 4,924 K at the ground, an ordinary day's, which ContinentalAverage holds within a
+        // hundred kelvin, its lux less since that sun outside the air is 120,000 lux times the sine
+        // of its height. Through the Earth's clear day the sun reaches the ground at some 111,700
+        // lux and 5,291 K and through the ordinary day's at 94,100 and 5,021 (dotnet test
+        // Sky.Tests).
+        var ordinary = Sun.At(Atmosphere.ContinentalAverage, 53.97f);
+        Assert.InRange(ordinary.Illuminance, 93_200, 95_000);
+        Assert.InRange(ordinary.Temperature, 4_971, 5_071);
         var sun = Sun.At(Atmosphere.Earth, 53.97f);
-        Assert.InRange(sun.Illuminance, 93_300, 95_100);
-        Assert.InRange(sun.Temperature, 4_971, 5_071);
+        Assert.InRange(sun.Illuminance, 110_800, 112_600);
+        Assert.InRange(sun.Temperature, 5_241, 5_341);
         Assert.Equal(1, Colorimetry.Luminance(sun.Color), 0.001f);
     }
 
@@ -45,11 +49,12 @@ public class SunTests
     {
         // The sun's mean diameter seen from the earth is 32 minutes of arc, and its disc at the
         // ground under a high sun is about 1.6e9 candelas a square meter in very clear air, 1.3e9
-        // through an ordinary clear day's haze.
+        // through an ordinary day's haze.
         Assert.Equal(0.533f, Sun.AngularDiameter, 0.001f);
         Assert.InRange(Sun.SolidAngle, 6.75e-5f, 6.85e-5f);
+        Assert.InRange(Colorimetry.Luminance(Sun.DiscLuminance(Atmosphere.ContinentalAverage, 53.97f)), 1.25e9f, 1.45e9f);
         var disc = Colorimetry.Luminance(Sun.DiscLuminance(Atmosphere.Earth, 53.97f));
-        Assert.InRange(disc, 1.25e9f, 1.45e9f);
+        Assert.InRange(disc, 1.55e9f, 1.75e9f);
         Assert.Equal(Sun.At(Atmosphere.Earth, 53.97f).Illuminance / Sun.SolidAngle, disc, disc * 1e-4f);
     }
 

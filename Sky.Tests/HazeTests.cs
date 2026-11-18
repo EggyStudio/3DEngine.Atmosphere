@@ -9,15 +9,16 @@ namespace Sky.Tests;
 /// </summary>
 public class HazeTests
 {
-    private static readonly Atmosphere Air = Atmosphere.Earth;
+    private static readonly Atmosphere Air = Atmosphere.ContinentalAverage;
 
     [Fact]
     public void Clear_Air_Is_Seen_Through_For_44_Kilometers_And_Hazes_A_Five_Hundredth_At_25_Meters()
     {
         // Koschmieder's visibility is 3.912 over the extinction at 550 nm, the distance at which
-        // a black thing's contrast falls to 2%. An ordinary clear day's air at the ground takes
-        // 13.5e-6 a meter in green by the molecules' scattering and 75e-6 by the aerosols'
-        // extinction, 8.85e-5 in all.
+        // a black thing's contrast falls to 2%. An ordinary day's air at the ground takes
+        // 13.558e-6 a meter in green by the molecules' scattering and 75e-6 by the aerosols'
+        // extinction, 8.86e-5 in all, and the Earth's clear day's 2.20e-5, 178 km.
+        Assert.InRange(Haze.Visibility(Atmosphere.Earth), 177_500, 178_900);
         Assert.InRange(Haze.Visibility(Air), 43_800, 44_600);
         var near = Haze.Share(Air, 25);
         var far = Haze.Share(Air, 1_000);

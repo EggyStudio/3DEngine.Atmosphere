@@ -37,9 +37,9 @@ public class MoonTests
     public void The_Moon_Dims_Through_The_Air_As_The_Sun_Does_And_Is_Redder(float elevation)
     {
         // The air takes the moon's light band by band as it takes the sun's, so its share differs
-        // from the sun's by the moon's redder light alone, which the air lets through more of, 1.6%
-        // more at 10 degrees and 0.3% overhead, and the moon stays the redder, 3,024 K against the
-        // sun's 3,379 at 10 degrees and 4,405 against 5,168 overhead (dotnet test Sky.Tests).
+        // from the sun's by the moon's redder light alone, which the air lets through more of, 1.0%
+        // more at 10 degrees and 0.2% overhead, and the moon stays the redder, 3,501 K against the
+        // sun's 3,963 at 10 degrees and 4,574 against 5,398 overhead (dotnet test Sky.Tests).
         var moon = Moon.At(Atmosphere.Earth, elevation, 0);
         var sun = Sun.At(Atmosphere.Earth, elevation);
         var (moonShare, sunShare) = (moon.Illuminance / Moon.OutsideIlluminance(0), sun.Illuminance / Sun.OutsideIlluminance);
@@ -51,8 +51,9 @@ public class MoonTests
     public void The_Moonlit_Sky_Is_The_Sunlit_Skys_Times_The_Moons_Light_Over_The_Suns_And_Redder()
     {
         // The sky's light lies in the blue bands, where the moon's light is the less against the
-        // sun's, so the moonlit sky is 0.992 of the sunlit sky's by the moon's lux over the sun's
-        // and 6,972 K where the sunlit is 9,030, the light 29 degrees high (dotnet test Sky.Tests).
+        // sun's, so the moonlit sky is 0.982 of the sunlit sky's by the moon's lux over the sun's
+        // and 13,346 K where the sunlit is 26,272, the light 29 degrees high (dotnet test
+        // Sky.Tests).
         var sky = new SkyLight(Atmosphere.Earth);
         var toward = new System.Numerics.Vector3(MathF.Cos(0.5f), MathF.Sin(0.5f), 0);
         var (sunlit, moonlit) = (sky.GroundIlluminance(toward), sky.GroundIlluminanceBy(Moon.Outside(0), toward, 0));

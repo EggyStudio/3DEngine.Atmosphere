@@ -13,31 +13,40 @@ public class SkyLightTests
     [Fact]
     public void The_Clear_Sky_Is_Blue_Overhead_And_Brighter_Toward_The_Horizon()
     {
+        // The clear day's zenith is 1,921 candelas a square meter with its blue three and a half
+        // times its red, and its horizon six times as bright; an ordinary day's haze makes the
+        // zenith 4,506 and the horizon 1.3 times that (dotnet test Sky.Tests).
         var sun = SunAt(54);
-        var zenith = Sky.Luminance(Vector3.UnitY, sun);
-        Assert.True(zenith.Z > zenith.Y && zenith.Y > zenith.X, $"zenith {zenith}");
-        Assert.InRange(Colorimetry.Luminance(zenith), 3_000, 5_500);
-        var horizon = Sky.Luminance(new Vector3(-1, 0.02f, 0), sun);
-        // An ordinary clear day's haze makes the horizon 1.3 times as bright as the zenith.
-        Assert.True(Colorimetry.Luminance(horizon) > 1.2f * Colorimetry.Luminance(zenith), $"horizon {horizon}, zenith {zenith}");
+        foreach (var (sky, blue, horizonOver) in new[] { (Sky, 3f, 5f), (new SkyLight(Atmosphere.ContinentalAverage), 1.5f, 1.2f) })
+        {
+            var zenith = sky.Luminance(Vector3.UnitY, sun);
+            Assert.True(zenith.Z > blue * zenith.X && zenith.Y > zenith.X, $"zenith {zenith}");
+            var horizon = sky.Luminance(new Vector3(-1, 0.02f, 0), sun);
+            Assert.True(Colorimetry.Luminance(horizon) > horizonOver * Colorimetry.Luminance(zenith), $"horizon {horizon}, zenith {zenith}");
+        }
+        Assert.InRange(Colorimetry.Luminance(new SkyLight(Atmosphere.ContinentalAverage).Luminance(Vector3.UnitY, sun)), 3_000, 5_500);
     }
 
     [Fact]
-    public void The_Sky_Lights_A_Level_Surface_With_A_Quarter_Of_What_The_Sun_Does()
+    public void The_Sky_Lights_A_Level_Surface_With_A_Tenth_Of_What_The_Sun_Does()
     {
-        // 20,100 lux at 54 degrees against the sun's 76,200 on the level, an ordinary clear day's
-        // haze scattering a share of the sun's light into the sky.
+        // 9,200 lux at 54 degrees against the sun's 90,400 on the level through the clear day's
+        // air, and through an ordinary day's haze, which scatters more of the sun's light into the
+        // sky, 20,100 against 76,200, a quarter.
         var sun = Sun.At(Atmosphere.Earth, 54);
         var level = sun.Illuminance * MathF.Sin(float.DegreesToRadians(54));
         var sky = Colorimetry.Luminance(Sky.Illuminance(SunAt(54)));
-        Assert.InRange(level, 75_500, 77_000);
-        Assert.InRange(sky, 19_700, 20_500);
+        Assert.InRange(level, 89_500, 91_200);
+        Assert.InRange(sky, 9_000, 9_400);
+        var ordinary = Sun.At(Atmosphere.ContinentalAverage, 54).Illuminance * MathF.Sin(float.DegreesToRadians(54));
+        Assert.InRange(ordinary, 75_400, 76_900);
+        Assert.InRange(Colorimetry.Luminance(new SkyLight(Atmosphere.ContinentalAverage).Illuminance(SunAt(54))), 19_700, 20_500);
     }
 
     [Fact]
     public void The_Sky_Darkens_Past_Sunset()
     {
-        // The zenith with the sun 3 degrees down is some 22 candelas a square meter against 4,500
+        // The zenith with the sun 3 degrees down is some 23 candelas a square meter against 1,921
         // with it 54 degrees up, and with it 18 down a ten millionth of the dusk's (dotnet test
         // Sky.Tests), the bounds below no source's but the orders of magnitude between them.
         var day = Colorimetry.Luminance(Sky.Luminance(Vector3.UnitY, SunAt(54)));
@@ -165,12 +174,12 @@ public class SkyLightTests
     {
         // The sun 54 degrees high at the ground, the sky's light on a level surface and its
         // luminance at the zenith, through the air carried to 111 km with the Earth's real column
-        // of ozone and an ordinary clear day's haze, held within 0.5% (dotnet test Sky.Tests).
+        // of ozone and a clear day's haze, held within 0.5% (dotnet test Sky.Tests).
         var sun = Sun.At(Atmosphere.Earth, 54);
-        Assert.Equal(94_200f, sun.Illuminance, 94_200f * 0.005f);
-        Assert.Equal(5_023f, sun.Temperature, 5_023f * 0.005f);
-        Assert.Equal(20_118f, Colorimetry.Luminance(Sky.Illuminance(SunAt(54))), 20_118f * 0.005f);
-        Assert.Equal(4_501f, Colorimetry.Luminance(Sky.Luminance(Vector3.UnitY, SunAt(54))), 4_501f * 0.005f);
+        Assert.Equal(111_690f, sun.Illuminance, 111_690f * 0.005f);
+        Assert.Equal(5_292f, sun.Temperature, 5_292f * 0.005f);
+        Assert.Equal(9_186f, Colorimetry.Luminance(Sky.Illuminance(SunAt(54))), 9_186f * 0.005f);
+        Assert.Equal(1_921f, Colorimetry.Luminance(Sky.Luminance(Vector3.UnitY, SunAt(54))), 1_921f * 0.005f);
     }
 
     [Theory]

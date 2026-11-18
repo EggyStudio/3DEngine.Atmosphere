@@ -11,21 +11,22 @@ list is written by `Cheatsheet.Write` from the built library, and this text by h
 ```csharp
 record Atmosphere                                        // The air around a planet as a sky is drawn and lit from it, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with the heights each thins over, and the ground's albedo, in meters and per meter at sea level
 Atmosphere();                                            // The Earth's air, each term as Earth holds it until set
-Atmosphere Earth { get; }                                // The Earth's air on an ordinary clear day, its ozone a column of 300 Dobson units
-float PlanetRadius { get; init; }                        // The planet's radius in meters, 6,378,100 for the Earth at the equator
+Atmosphere Earth { get; }                                // The Earth's air on a clear day, its ozone a column of 300 Dobson units, as Hillaire (2020) sets it
+Atmosphere ContinentalAverage { get; }                   // The Earth's air on an ordinary day, its haze OPAC's continental average aerosol at a relative humidity of 80%, a turbidity of 2.39 and 44 km visibility
+float PlanetRadius { get; init; }                        // The planet's radius in meters, 6,360,000 for the Earth
 Vector3 RayleighScattering { get; init; }                // How much of the light the molecules scatter a meter at sea level, at 680, 550 and 440 nanometers, which they take nothing of otherwise
 float RayleighScaleHeight { get; init; }                 // The height in meters over which the molecules thin to a share of 1/e, 8,000 for the Earth
 float AerosolExtinction { get; init; }                   // How much of the light the aerosols take out a meter at sea level, scattered or absorbed, alike at every wavelength
-float AerosolAngstrom { get; init; }                     // How steeply the aerosols' extinction falls with wavelength, the power of 550 nm over the wavelength it goes as, 1.42 unless set
+float AerosolAngstrom { get; init; }                     // How steeply the aerosols' extinction falls with wavelength, the power of 550 nm over the wavelength it goes as, 0 unless set, the clear day's haze taking every wavelength alike
 Vector3 AerosolAlbedo { get; init; }                     // The share of the light the aerosols take out that they scatter, the rest absorbed, at each wavelength
-float AerosolScaleHeight { get; init; }                  // The height in meters over which the aerosols thin to a share of 1/e, 2,013 for the Earth
+float AerosolScaleHeight { get; init; }                  // The height in meters over which the aerosols thin to a share of 1/e, 1,200 for the Earth
 float AerosolAnisotropy { get; init; }                   // How strongly the aerosols scatter forward, from -1 for all of the light back the way it came to 1 for all of it on, as Cornette and Shanks's phase function takes it
 Vector3 OzoneAbsorption { get; init; }                   // How much of the light the ozone absorbs a meter in the middle of its layer, at each wavelength, unless set the absorption Bruneton's precomputed atmospheric scattering of 2017 gives a column of 300 Dobson units
 float OzoneBottom { get; init; }                         // The height in meters the ozone's layer starts at, 10 km unless set
 float OzoneWidth { get; init; }                          // The ozone layer's depth in meters, densest halfway up it, 30 km unless set
 Vector3 GroundAlbedo { get; init; }                      // The share of the light the ground returns at each wavelength, scattered evenly
 float Top { get; }                                       // The height in meters past which the air is taken to end, where its thickest layer has thinned to a millionth or the ozone's layer ends, whichever is higher, 111 km for Earth
-float Turbidity { get; }                                 // The air's haze, the optical depth of the molecules and the aerosols over that of the molecules alone straight up at 550 nanometers, 1 for air with no aerosols in it and about 1.1 for the Earth here
+float Turbidity { get; }                                 // The air's haze, the optical depth of the molecules and the aerosols over that of the molecules alone straight up at 550 nanometers, 1 for air with no aerosols in it, 1.09 for Earth's clear day and 2.39 for ContinentalAverage's ordinary one
 Atmosphere WithTurbidity(float turbidity);               // This air with the aerosols' extinction set so its Turbidity is turbidity, 1 at least
 Vector3 RayleighAt(float altitude);                      // How much of the light the molecules scatter a meter at altitude meters, at each wavelength
 float AerosolAt(float altitude);                         // How much of the light the aerosols take out a meter at altitude meters
@@ -114,10 +115,10 @@ WeatherConditions Of(WeatherPreset preset);              // The conditions a pre
 class Haze                                               // The air near the ground between the eye and what it sees, clear and in fog, as the share of a thing's light that comes through a distance and the share the air hides, in linear sRGB, and as the visibility in meters
 float Contrast = 3.912f;                                 // The optical depth at which a black thing's contrast against the horizon falls to 2%, the eye's threshold, 3.912, by which Koschmieder's law turns an extinction into a visibility
 float FogVisibility = 80f;                               // The visibility in meters of the thickest fog, at Fog 1
-float Visibility(Atmosphere air, WeatherConditions? weather = null);  // How far a black thing can be told from the horizon through air at the ground in weather's fog, in meters, 44 km in the Earth's clear air and 80 m in the thickest fog
+float Visibility(Atmosphere air, WeatherConditions? weather = null);  // How far a black thing can be told from the horizon through air at the ground in weather's fog, in meters, 178 km in the Earth's clear air, 44 km in an ordinary day's and 80 m in the thickest fog
 Vector3 Extinction(Atmosphere air, WeatherConditions? weather = null);  // The share of a thing's light the air at the ground takes in a meter, in each channel, the clear air's with weather's fog added alike in all three
 Vector3 Transmittance(Atmosphere air, float distance, WeatherConditions? weather = null);  // The share of a thing's light that comes through distance meters of air along the ground in weather's fog, in each channel
-Vector3 Share(Atmosphere air, float distance, WeatherConditions? weather = null);  // The share of a thing's light the air hides over distance meters along the ground in weather's fog, in each channel, which the air's own light fills, 0.0022 at 25 meters and 0.085 at a kilometer in the Earth's clear air, in green
+Vector3 Share(Atmosphere air, float distance, WeatherConditions? weather = null);  // The share of a thing's light the air hides over distance meters along the ground in weather's fog, in each channel, which the air's own light fills, in green 0.00055 at 25 meters and 0.022 at a kilometer in the Earth's clear air and 0.0022 and 0.085 in an ordinary day's
 
 class Moon                                               // The moon's light outside the air by its phase and where it reaches the ground through it
 float AngularDiameter = 0.518f;                          // How wide the moon's disc looks from the earth, in degrees, its mean of 0.518

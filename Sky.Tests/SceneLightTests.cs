@@ -28,10 +28,10 @@ public class SceneLightTests
     public void Full_Sun_At_54_Degrees_Is_Exposed_As_The_Sunny_16_Rule_Within_A_Stop()
     {
         // The sunny 16 rule, f/16 at a hundredth of a second at ISO 100 in full sun, is an EV100
-        // of log2(256 / 0.01), 14.64. The sun 54 degrees high gives 76,200 lux on a level surface
-        // and the sky 20,100.
+        // of log2(256 / 0.01), 14.64. The sun 54 degrees high gives 90,400 lux on a level surface
+        // and the sky 9,200.
         var light = SceneLight.At(Clock(12 - 36 / 15f, 0), Sky);
-        Assert.InRange(light.LevelIlluminance, 95_500, 97_200);
+        Assert.InRange(light.LevelIlluminance, 98_700, 100_400);
         Assert.InRange(light.Exposure, 14.64f - 1, 14.64f + 1);
         Assert.False(light.MoonIsKey);
     }
@@ -161,19 +161,20 @@ public class SceneLightTests
     }
 
     [Theory]
-    [InlineData(1.11f, 749f, 5.86f)]
-    [InlineData(2f, 626f, 4.92f)]
-    [InlineData(2.398f, 590f, 4.64f)]
-    [InlineData(3f, 545f, 4.29f)]
-    [InlineData(4f, 485f, 3.82f)]
+    [InlineData(1.11f, 751f, 5.93f)]
+    [InlineData(2f, 627f, 4.98f)]
+    [InlineData(2.392f, 591f, 4.71f)]
+    [InlineData(3f, 546f, 4.35f)]
+    [InlineData(4f, 486f, 3.86f)]
     public void The_Sunset_And_The_End_Of_Civil_Twilight_By_The_Airs_Turbidity(float turbidity, float sunset, float civil)
     {
         // Against the Lux article's 400 lux at sunset and 3.4 at the end of civil twilight, and
         // the 442 at sunset of Krisciunas and Schaefer (1991) after Brown (1952), the sunset the
-        // apparent one and the twilight's six degrees the sun's true height. Every turbidity gives
-        // twice the sources' light at most, and from the Earth's own 2.40, an ordinary clear day's,
-        // 1.55 times at most, each row as it reads within 2% (dotnet test Sky.Tests).
-        var air = MathF.Abs(turbidity - Atmosphere.Earth.Turbidity) < 0.01f ? Atmosphere.Earth : Atmosphere.Earth.WithTurbidity(turbidity);
+        // apparent one and the twilight's six degrees the sun's true height. Every turbidity of the
+        // ordinary day's haze gives twice the sources' light at most, and from its own 2.39 1.55
+        // times at most, each row as it reads within 2% (dotnet test Sky.Tests).
+        var ordinary = Atmosphere.ContinentalAverage;
+        var air = MathF.Abs(turbidity - ordinary.Turbidity) < 0.01f ? ordinary : ordinary.WithTurbidity(turbidity);
         var sky = new SkyLight(air);
         var (atSunset, atCivil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
         Assert.Equal(sunset, atSunset, sunset * 0.02f);
@@ -190,7 +191,8 @@ public class SceneLightTests
         var (sunset, civil) = (float.MaxValue, float.MaxValue);
         foreach (var turbidity in new[] { 1.11f, 2, 3, 4 })
         {
-            var air = MathF.Abs(turbidity - Atmosphere.Earth.Turbidity) < 0.01f ? Atmosphere.Earth : Atmosphere.Earth.WithTurbidity(turbidity);
+            var ordinary = Atmosphere.ContinentalAverage;
+            var air = MathF.Abs(turbidity - ordinary.Turbidity) < 0.01f ? ordinary : ordinary.WithTurbidity(turbidity);
             var sky = new SkyLight(air);
             var (atSunset, atCivil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
             Assert.True(atSunset < sunset && atCivil < civil, $"at a turbidity of {turbidity} the light is {atSunset} and {atCivil}");
@@ -199,16 +201,30 @@ public class SceneLightTests
     }
 
     [Fact]
-    public void The_Earths_Own_Air_Lights_The_Sunset_And_The_End_Of_Civil_Twilight_Within_1_55_Times_The_Sources()
+    public void The_Ordinary_Days_Air_Lights_The_Sunset_And_The_End_Of_Civil_Twilight_Within_1_55_Times_The_Sources()
     {
-        // Atmosphere.Earth is an ordinary clear day's air, so its apparent sunset is within 1.55
+        // ContinentalAverage is an ordinary day's air, so its apparent sunset is within 1.55
         // times the Lux article's 400 lux and Krisciunas and Schaefer's 442 after Brown, and its
         // end of civil twilight within 1.55 times the Lux article's 3.4.
-        var sky = new SkyLight(Atmosphere.Earth);
-        var (sunset, civil) = (Level(Atmosphere.Earth, sky, ApparentSunset), Level(Atmosphere.Earth, sky, -6));
+        var air = Atmosphere.ContinentalAverage;
+        var sky = new SkyLight(air);
+        var (sunset, civil) = (Level(air, sky, ApparentSunset), Level(air, sky, -6));
         foreach (var source in new[] { 400f, 442f })
             Assert.InRange(sunset / source, 1, 1.55f);
         Assert.InRange(civil / 3.4f, 1, 1.55f);
+    }
+
+    [Fact]
+    public void The_Earths_Clear_Air_Lights_The_Sunset_And_The_End_Of_Civil_Twilight_Within_Twice_The_Sources()
+    {
+        // The Earth's clear day lets more of the light through to the dusk than the day the
+        // sources measured under, 748 lux at the apparent sunset and 5.94 at the end of civil
+        // twilight, 1.87 and 1.75 times the Lux article's (dotnet test Sky.Tests), within the
+        // twice the sources every turbidity is held to.
+        var (sunset, civil) = (Level(Atmosphere.Earth, Sky, ApparentSunset), Level(Atmosphere.Earth, Sky, -6));
+        foreach (var source in new[] { 400f, 442f })
+            Assert.InRange(sunset / source, 1, 2);
+        Assert.InRange(civil / 3.4f, 1, 2);
     }
 
     [Fact]
@@ -255,22 +271,21 @@ public class SceneLightTests
     }
 
     [Theory]
-    [InlineData(20f, 5_300f)]
-    [InlineData(30f, 5_300f)]
-    [InlineData(40f, 5_500f)]
-    [InlineData(54f, 5_500f)]
-    [InlineData(90f, 5_500f)]
-    public void Daylight_From_40_Degrees_Up_Is_Between_5500_And_6500_Kelvin(float elevation, float lowest)
+    [InlineData(20f)]
+    [InlineData(30f)]
+    [InlineData(40f)]
+    [InlineData(54f)]
+    [InlineData(90f)]
+    public void Daylight_From_20_Degrees_Up_Is_Between_5500_And_6500_Kelvin(float elevation)
     {
         // The global light on a level surface stands near 6,500 K at a clear noon as measured at
         // Ny-Alesund against lower latitudes, and Peyvandi and others (2016) give clear daylight's
         // interquartile range as 5,712 to 7,757 K, so the sun's and the sky's light together is
-        // between 5,500 and 6,500 K from 40 degrees up. Under 40 the module's light is redder
-        // than that, 5,332 K at 20 degrees (dotnet test Sky.Tests), and is held at 5,300 K so
-        // neither height slips while what it lacks there is read.
+        // between 5,500 and 6,500 K from 20 degrees up, 5,553 K at 20 degrees and 5,845 overhead
+        // through the Earth's clear air (dotnet test Sky.Tests).
         var r = float.DegreesToRadians(elevation);
         var sun = Sun.At(Atmosphere.Earth, elevation);
         var level = sun.Color * (sun.Illuminance * MathF.Sin(r)) + Sky.GroundIlluminance(new System.Numerics.Vector3(MathF.Cos(r), MathF.Sin(r), 0));
-        Assert.InRange(Colorimetry.TemperatureOf(level), lowest, 6_500);
+        Assert.InRange(Colorimetry.TemperatureOf(level), 5_500, 6_500);
     }
 }

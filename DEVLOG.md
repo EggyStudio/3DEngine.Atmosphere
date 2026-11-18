@@ -125,8 +125,17 @@ moon and a moonless night, at 50 degrees north, each exposed at the EV100 the sc
 gives, full at 1.2 times 2 to the EV100 candelas a square meter, and encoded by sRGB's curve with no
 tone curve.
 
+![](.github/assets/readings/2026-11-18-sky-clear.webp)
+The sky the module draws through the Earth's air as Hillaire's 2020 paper sets it, a clear day of
+178 km visibility, the noon sky a deep blue with a tight halo about the ringed sun, its zenith 2,193
+candelas a square meter at 59,600 K where the ordinary day's was 7,278 at 9,349, each scene at its
+own metered EV100 and sRGB's curve.
+
 Commits that day
 
+- `1f090f8` The tests draw the sky from the module alone, a fisheye and a panorama of each hour
+  exposed by the scene's EV100 and encoded by sRGB's curve, the noon picture held to the luminance
+  the reader gives.
 - `cd363e3` A moonless night's own glow takes the color of a dark sky's measured B-V where it was
   white, with a sheet of the night before the light was read by wavelength and after.
 - `9ff088e` The observer gains a lobe in the red and its other amplitudes fitted again, so the

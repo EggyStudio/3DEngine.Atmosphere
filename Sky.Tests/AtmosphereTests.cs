@@ -46,13 +46,17 @@ public class AtmosphereTests
         Assert.Equal(0.925f, through.X, 0.004f);
         Assert.Equal(0.849f, through.Y, 0.004f);
         Assert.Equal(0.710f, through.Z, 0.004f);
-        // The Earth's own air, its column of 300 Dobson units and an ordinary clear day's haze,
-        // lets through 0.765, 0.698 and 0.561 of the sun's light in each channel, taken by band
-        // (dotnet test Sky.Tests).
+        // The Earth's own air, its column of 300 Dobson units and a clear day's haze, lets through
+        // 0.878, 0.832 and 0.714 of the sun's light in each channel, taken by band, and an ordinary
+        // day's 0.766, 0.697 and 0.561 (dotnet test Sky.Tests).
         var earth = Earth.Transmittance(0, sin);
-        Assert.Equal(0.765f, earth.X, 0.002f);
-        Assert.Equal(0.698f, earth.Y, 0.002f);
-        Assert.Equal(0.561f, earth.Z, 0.002f);
+        Assert.Equal(0.878f, earth.X, 0.002f);
+        Assert.Equal(0.832f, earth.Y, 0.002f);
+        Assert.Equal(0.714f, earth.Z, 0.002f);
+        var ordinary = Atmosphere.ContinentalAverage.Transmittance(0, sin);
+        Assert.Equal(0.766f, ordinary.X, 0.002f);
+        Assert.Equal(0.697f, ordinary.Y, 0.002f);
+        Assert.Equal(0.561f, ordinary.Z, 0.002f);
     }
 
     [Fact]
@@ -68,7 +72,8 @@ public class AtmosphereTests
     [Fact]
     public void Turbidity_Sets_The_Aerosols_And_Reads_Back()
     {
-        Assert.Equal(2.398f, Earth.Turbidity, 0.001f);
+        Assert.Equal(1.093f, Earth.Turbidity, 0.001f);
+        Assert.Equal(2.392f, Atmosphere.ContinentalAverage.Turbidity, 0.001f);
         Assert.Equal(3, Earth.WithTurbidity(3).Turbidity, 0.0001f);
         Assert.Equal(1, Earth.WithTurbidity(0.5f).Turbidity, 0.0001f);
         Assert.Equal(0, Earth.WithTurbidity(1).AerosolExtinction);
