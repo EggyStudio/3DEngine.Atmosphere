@@ -398,3 +398,12 @@ up to 0.6%, the old sum's own error, which read the dome at 48 fixed turns, so i
 the sun turned between them where the light on a level surface depends on the sun's height alone.
 The new sum reads the same ways about the sun at every turn, and a test holds the lux alike within
 1e-5 at any turn, which failed on the old sum by 2.7e-5 at 10 degrees high.
+
+The module's session, the public surface against the binding section. Of the 23 public types, 22
+were named in the section or a table and `LightningStrike` in neither, which joins the
+`Thunderstorm` row. The read found three things the section's conventions left out, and it says
+them: a compass direction is in degrees clockwise from north, as the wind's, whose vector keeps the
+section's axes, a north wind blowing toward +Z; a `SkyLight` makes its tables on .NET's thread pool;
+and a `Thunderstorm` belongs to one caller as the clock does, where a `LightningFlash` is read from
+any thread. A test fails where a public type is named whole in neither the section nor a row, a
+name as `Star` and not the start of `Stars`, and it failed on `LightningStrike` first.
