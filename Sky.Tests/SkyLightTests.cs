@@ -24,13 +24,13 @@ public class SkyLightTests
     [Fact]
     public void The_Sky_Lights_A_Level_Surface_With_A_Tenth_Of_What_The_Sun_Does()
     {
-        // 7,860 lux at 54 degrees against the sun's 88,900 on the level, the air of HDRP's Earth
+        // 7,710 lux at 54 degrees against the sun's 87,500 on the level, the air of HDRP's Earth
         // holding little haze.
         var sun = Sun.At(Atmosphere.Earth, 54);
         var level = sun.Illuminance * MathF.Sin(float.DegreesToRadians(54));
         var sky = Colorimetry.Luminance(Sky.Illuminance(SunAt(54)));
-        Assert.InRange(level, 88_000, 89_800);
-        Assert.InRange(sky, 7_700, 8_020);
+        Assert.InRange(level, 86_600, 88_400);
+        Assert.InRange(sky, 7_550, 7_870);
     }
 
     [Fact]
@@ -140,7 +140,8 @@ public class SkyLightTests
         // of the yellow and the green high in the air, and the light outdoors turns to shorter
         // waves as the sun sinks through the twilight (Spitschan and others, 2016). So from 4 to
         // 10 degrees down the zenith is bluer than it is red, and at 6, 8 and 10 bluer by a
-        // twentieth at least than in the same air with no ozone.
+        // quarter at least than in the same air with no ozone, the Earth's column making it 1.34
+        // to 1.39 times as blue (dotnet test Sky.Tests).
         var bare = new SkyLight(Atmosphere.Earth with { OzoneAbsorption = Vector3.Zero });
         foreach (var elevation in new[] { -4f, -6, -8, -10 })
         {
@@ -148,20 +149,20 @@ public class SkyLightTests
             Assert.True(zenith.Z > zenith.X, $"at {elevation} degrees the zenith is {zenith}");
             if (elevation > -5) continue;
             var without = bare.Luminance(Vector3.UnitY, SunAt(elevation));
-            Assert.True(zenith.Z / zenith.X > 1.05f * (without.Z / without.X), $"at {elevation} degrees the ozone takes the zenith from {without} to {zenith}");
+            Assert.True(zenith.Z / zenith.X > 1.25f * (without.Z / without.X), $"at {elevation} degrees the ozone takes the zenith from {without} to {zenith}");
         }
     }
 
     [Fact]
-    public void The_Days_Figures_Stand_Where_The_Air_Ended_At_55_Kilometers()
+    public void The_Days_Figures_Stand_At_The_Reference_Scenes_Height_Within_Half_A_Percent()
     {
         // The sun 54 degrees high at the ground, the sky's light on a level surface and its
-        // luminance at the zenith, as they read with the air ended where its molecules thin to a
-        // thousandth, held within 0.5% with the air carried to a millionth (dotnet test Sky.Tests).
+        // luminance at the zenith, through the air carried to 111 km with the Earth's real column
+        // of ozone, held within 0.5% (dotnet test Sky.Tests).
         var sun = Sun.At(Atmosphere.Earth, 54);
-        Assert.Equal(109_968f, sun.Illuminance, 109_968f * 0.005f);
-        Assert.Equal(5_026f, sun.Temperature, 5_026f * 0.005f);
-        Assert.Equal(7_857f, Colorimetry.Luminance(Sky.Illuminance(SunAt(54))), 7_857f * 0.005f);
-        Assert.Equal(1_631f, Colorimetry.Luminance(Sky.Luminance(Vector3.UnitY, SunAt(54))), 1_631f * 0.005f);
+        Assert.Equal(108_177f, sun.Illuminance, 108_177f * 0.005f);
+        Assert.Equal(5_025f, sun.Temperature, 5_025f * 0.005f);
+        Assert.Equal(7_708f, Colorimetry.Luminance(Sky.Illuminance(SunAt(54))), 7_708f * 0.005f);
+        Assert.Equal(1_602f, Colorimetry.Luminance(Sky.Luminance(Vector3.UnitY, SunAt(54))), 1_602f * 0.005f);
     }
 }

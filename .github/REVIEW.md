@@ -550,3 +550,36 @@ moving sun pays nothing, since a `SkyLight` holds the air alone and takes the su
 call. A binding pays the 51 ms and the ground table's 144 when its air changes, as a weather that
 moves the turbidity through `Atmosphere.WithTurbidity` would, so such a binding makes the new one
 off its frame and swaps it in when it is made.
+
+The module's session, the Earth's ozone, for the review's Decision. By the owner's choice of
+2026-11-18, `Atmosphere.Earth` holds a real column of 300 Dobson units and no second preset, the
+ozone's absorption Bruneton's (0.650, 1.881, 0.085) millionths a meter at its densest in a layer
+from 10 to 40 km, a vertical optical depth of 0.028 in green, where it held HDRP's, that
+absorption times 0.6 from 20 to 40 km, 0.011. The rest of the air stays HDRP's. The day's figures
+the tests hold moved by that choice. The sun 54 degrees high reaches the ground at 108,177 lux and
+5,025 K for 109,957 and 5,025, 1.6% less; the sky lights a level surface with 7,708 lux for 7,851,
+1.8% less, and its zenith shows 1,602 candelas a square meter for 1,630, 1.7% less; the
+transmittance at 53.97 degrees is 0.919, 0.833 and 0.709 for 0.926, 0.850 and 0.710, the test
+holding HDRP's own figures with HDRP's ozone set in the test and the Earth's beside them; and the
+sun on a level surface at 54 degrees is 87,500 lux for 88,900. The twilight test's margin is reread,
+the ozone making the zenith's blue over red 1.34 to 1.39 times what ozone-free air gives at 6, 8
+and 10 degrees down where it made it 1.11, so the test holds a quarter where it held a twentieth.
+The ground's table keeps its shape and its tests; its figures follow the sky's. The sheets whose
+stated numbers change are the scene's light, 96,800 lux and an EV100 of 15.24 at 54 degrees, which
+read 95,200 and 15.22; the haze and the cloud, the clear 96,800 and the overcast 24,200 lux, which
+read 95,200 and 23,800; the twilight's mend, 0.31 lux 8 degrees down, which reads 0.58 with the
+higher air and the ozone together; the twilight's air and the dusk into night, the light 9.1 lux 6
+degrees down and 1,399 at the horizon, which read 6.3 and 1,127, its color 5,850 K 6 degrees down,
+which reads 7,400, bluer as Spitschan and others measured the twilight; each sheet stands as it was
+measured on its day. The sheet of this change is
+`.github/assets/readings/2026-11-18-ozone-dusk.webp`.
+
+Each engine's ozone. BevyCSharp holds the same column, `ScatteringTerm.cs:109-112` giving Bevy's
+ozone (0.65, 1.881, 0.085) millionths a meter densest at 25 km in a layer 30 km wide, Bruneton's 300
+Dobson units as Hillaire takes them, so its ozone and the module's agree and nothing moves there.
+3DEngine draws its sky from the module's `Atmosphere`, `AirSky.cs:37-39` packing its ozone's
+absorption, bottom and width and its top for the pass, and its examples' air is `Atmosphere.Earth`
+with the aerosols and the ground's albedo changed alone (`ScenesSponza.cs:129`,
+`ScenesBistro.cs:107`), so its sky takes the real column and the 111 km top with its pointer, its
+day 1.6% dimmer at 54 degrees and its twilight bluer, which its readings of the reference scene
+will show.

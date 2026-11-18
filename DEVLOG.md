@@ -63,6 +63,12 @@ degrees 1.6% less and its color the same, at 10 degrees 6.6% less and 80 K warme
 sunset 776 lux where it is 991 and the end of civil twilight 6.53 where it is 9.45, and the twilight
 zenith's blue over red 3.6 at 10 degrees down where it is 2.9.
 
+![](.github/assets/readings/2026-11-18-ozone-dusk.webp)
+The scene's light and its color from dusk into night at 51 degrees north under HDRP's ozone, dashed,
+and under the Earth's column of 300 Dobson units that Atmosphere.Earth holds, solid, the light at
+the horizon 1,127 lux where it was 1,399 and at 6 degrees down 6.3 lux where it was 9.1, its color
+7,400 K there where it was 5,850, with the published figures beside them.
+
 ## 2026-11-08
 
 Done that day

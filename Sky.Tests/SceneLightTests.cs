@@ -28,8 +28,8 @@ public class SceneLightTests
     public void Full_Sun_At_54_Degrees_Is_Exposed_As_The_Sunny_16_Rule_Within_A_Stop()
     {
         // The sunny 16 rule, f/16 at a hundredth of a second at ISO 100 in full sun, is an EV100
-        // of log2(256 / 0.01), 14.64. The sun 54 degrees high gives 88,900 lux on a level surface
-        // and the sky 7,860.
+        // of log2(256 / 0.01), 14.64. The sun 54 degrees high gives 87,500 lux on a level surface
+        // and the sky 7,710.
         var light = SceneLight.At(Clock(12 - 36 / 15f, 0), Sky);
         Assert.InRange(light.LevelIlluminance, 95_000, 98_500);
         Assert.InRange(light.Exposure, 14.64f - 1, 14.64f + 1);

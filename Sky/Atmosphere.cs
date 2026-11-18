@@ -17,14 +17,19 @@ namespace Sky;
 /// </para>
 /// <para>
 /// <see cref="Earth"/> holds the Earth of Unity's HDRP, whose physically based sky the values are
-/// taken from so an engine's sky can be read beside one drawn there. Its ozone's absorption is
-/// HDRP's times the 0.6 HDRP scales the layer's optical depth by, so the layer here absorbs as much
-/// as HDRP's does.
+/// taken from so an engine's sky can be read beside one drawn there, but for its ozone. That is a
+/// column of 300 Dobson units as Bruneton's precomputed atmospheric scattering of 2017 gives it, a
+/// layer from 10 to 40 km at Bruneton's absorption, a vertical optical depth of 0.028 in green,
+/// where HDRP scales the same absorption by 0.6 over a layer from 20 to 40 km, 0.011, a third of
+/// the Earth's. The real column turns the twilight's zenith blue as the ozone does over the Earth,
+/// and takes 1.6% of the day's light with the sun 54 degrees high.
 /// </para>
 /// </remarks>
 public sealed record Atmosphere
 {
-    /// <summary>The Earth's air on a clear day, with HDRP's values.</summary>
+    /// <summary>
+    /// The Earth's air on a clear day, with HDRP's values and a real column of ozone.
+    /// </summary>
     public static Atmosphere Earth { get; } = new();
 
     /// <summary>The planet's radius in meters, 6,378,100 for the Earth at the equator.</summary>
@@ -70,15 +75,17 @@ public sealed record Atmosphere
 
     /// <summary>
     /// How much of the light the ozone absorbs a meter in the middle of its layer, at each
-    /// wavelength.
+    /// wavelength, Bruneton's for 300 Dobson units unless set.
     /// </summary>
-    public Vector3 OzoneAbsorption { get; init; } = new Vector3(0.65e-6f, 1.88e-6f, 0.08e-6f) * 0.6f;
+    public Vector3 OzoneAbsorption { get; init; } = new(0.650e-6f, 1.881e-6f, 0.085e-6f);
 
-    /// <summary>The height in meters the ozone's layer starts at.</summary>
-    public float OzoneBottom { get; init; } = 20_000;
+    /// <summary>The height in meters the ozone's layer starts at, 10 km unless set.</summary>
+    public float OzoneBottom { get; init; } = 10_000;
 
-    /// <summary>The ozone layer's depth in meters, densest halfway up it.</summary>
-    public float OzoneWidth { get; init; } = 20_000;
+    /// <summary>
+    /// The ozone layer's depth in meters, densest halfway up it, 30 km unless set.
+    /// </summary>
+    public float OzoneWidth { get; init; } = 30_000;
 
     /// <summary>
     /// The share of the light the ground returns at each wavelength, scattered evenly.
