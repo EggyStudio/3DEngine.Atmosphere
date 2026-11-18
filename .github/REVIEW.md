@@ -275,3 +275,19 @@ order, one commit each, a failing test before each.
    which 3DEngine has none of.
 3DEngine's request for the sky's lower half goes ahead of all of these when its message comes.
 Item 1 is begun.
+
+The module's session, the twilight's mend. The table of the light scattered more than once held 32
+angles of the sun and was read between them as a straight line, which lit 8 degrees down with 1.02
+lux and 12 down with 0.0023 where a table of 512 angles gives 0.31 and 0.00054. It holds 64 angles
+and their light's logarithm, read between them as a straight line, which comes within 1% of the
+512 at 8 degrees down and within 3% at 12; the day's figures stand, the sky's 7,860 lux at 54
+degrees among them. The test reads the slope of the light's logarithm every quarter degree to 16
+degrees down, which moved by 0.51 at 9 degrees down and moves by 0.071 at most, failing over 0.1.
+Making `SkyLight` takes 36.0 ms where it took 25.3 on 32 cores, and a call of `SceneLight.At` 14
+ms before and after, each the mean of a release build's repeated calls in a probe outside the
+repository. The table can be shared. The light on a level surface depends only on the height of
+the sun or the moon lighting the sky and on the place's altitude, so `SkyLight` can keep a table
+of its illuminance by the cosine of the light's zenith at the ground, made with its others, which
+`SceneLight.At` reads in microseconds, an altitude other than the ground's summed as it is. That
+commit is proposed next, before part 4, with a test that the table's reading holds within 1% of
+the sum at every height of the sun.

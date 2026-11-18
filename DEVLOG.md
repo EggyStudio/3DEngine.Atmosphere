@@ -16,6 +16,13 @@ Lux, and near the dark site's 7.1e-4 lux from 14 degrees down, the bends near 4 
 standing on the coarse steps of the sky's table of light scattered more than once, which a table
 four times finer smooths.
 
+![](.github/assets/readings/2026-11-18-twilight-mend.webp)
+The scene's light through the twilight before, on the left, and after, on the right, the sky's table
+of light scattered more than once holds 64 angles of the sun and is read between them by the light's
+logarithm, the bend at 9 degrees down gone and the light 8 degrees down 0.31 lux where it was 1.02,
+within 1% of a table of 512 angles, 6.8 lux at the end of civil twilight where it was 7.7, the day's
+figures unchanged.
+
 ## 2026-11-08
 
 Done that day

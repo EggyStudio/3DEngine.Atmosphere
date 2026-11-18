@@ -50,4 +50,23 @@ public class SkyLightTests
         var clear = Colorimetry.Luminance(Sky.Illuminance(SunAt(30)));
         Assert.True(Colorimetry.Luminance(hazy.Illuminance(SunAt(30))) > clear);
     }
+
+    [Fact]
+    public void The_Twilight_Darkens_Without_A_Bend_From_Sunset_To_16_Degrees_Down()
+    {
+        // The sky's light on a level surface falls by orders of magnitude through the twilight,
+        // so its logarithm's slope changes slowly; every quarter degree down to 16 degrees under
+        // the horizon the slope moves by under 0.1, where a table of the light scattered more
+        // than once read between its rows as a straight line moved it by 0.51 at 9 degrees down
+        // and lit 8 degrees down three times too brightly (dotnet test Sky.Tests).
+        static float Lux(float elevation) => Colorimetry.Luminance(Sky.Illuminance(SunAt(elevation)));
+        var (before, last) = (float.NaN, Lux(0));
+        for (var elevation = -0.25f; elevation >= -16; elevation -= 0.25f)
+        {
+            var lux = Lux(elevation);
+            var slope = MathF.Log(lux / last);
+            Assert.True(float.IsNaN(before) || MathF.Abs(slope - before) < 0.1f, $"at {elevation} degrees the slope moves from {before} to {slope}");
+            (before, last) = (slope, lux);
+        }
+    }
 }

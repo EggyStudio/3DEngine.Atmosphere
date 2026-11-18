@@ -29,14 +29,19 @@ public sealed class SkyLight
 {
     // The tables' sizes, heights along one axis and the cosine of the zenith along the other. The
     // transmittance's heights crowd near the ground as the square of their count, where the sky is
-    // seen from, and its angles are fine enough that the horizon's edge spans half a degree.
-    private const int TransmittanceHeights = 32, TransmittanceAngles = 256, ScatterHeights = 32, ScatterAngles = 32;
+    // seen from, and its angles are fine enough that the horizon's edge spans half a degree. The
+    // light scattered more than once falls by orders of magnitude as the sun goes down through the
+    // twilight, so its table holds the light's logarithm, which falls nearly in a straight line
+    // and is read between rows as one, where the light itself read so lit the twilight three
+    // times too brightly 8 degrees down.
+    private const int TransmittanceHeights = 32, TransmittanceAngles = 256, ScatterHeights = 32, ScatterAngles = 64;
 
     // The steps along a way, from the eye and over the 64 ways the light scattered more than once
     // is gathered from.
     private const int ViewSteps = 48, ScatterSteps = 20, ScatterWays = 8;
 
     private readonly Vector3[] _transmittance = new Vector3[TransmittanceHeights * TransmittanceAngles];
+    // The logarithm of the light scattered more than once.
     private readonly Vector3[] _scattered = new Vector3[ScatterHeights * ScatterAngles];
 
     /// <summary>
@@ -55,7 +60,7 @@ public sealed class SkyLight
         Parallel.For(0, ScatterHeights, h =>
         {
             for (int a = 0; a < ScatterAngles; a++)
-                _scattered[h * ScatterAngles + a] = Scattered(air.Top * h / (ScatterHeights - 1), -1 + 2f * a / (ScatterAngles - 1));
+                _scattered[h * ScatterAngles + a] = Log(Scattered(air.Top * h / (ScatterHeights - 1), -1 + 2f * a / (ScatterAngles - 1)));
         });
     }
 
@@ -141,7 +146,7 @@ public sealed class SkyLight
     {
         var row = Math.Clamp(altitude / Air.Top, 0, 1) * (ScatterHeights - 1);
         var column = (Math.Clamp(cosSunZenith, -1, 1) + 1) / 2 * (ScatterAngles - 1);
-        return Bilinear(_scattered, ScatterAngles, row, column);
+        return Exp(Bilinear(_scattered, ScatterAngles, row, column));
     }
 
     // The transmittance table's height at a row, crowded near the ground.
@@ -214,6 +219,10 @@ public sealed class SkyLight
     }
 
     private static Vector3 Exp(Vector3 v) => new(MathF.Exp(v.X), MathF.Exp(v.Y), MathF.Exp(v.Z));
+
+    // The logarithm of a light, held above 1e-30 so a way the light never reaches stays finite.
+    private static Vector3 Log(Vector3 v) =>
+        new(MathF.Log(MathF.Max(v.X, 1e-30f)), MathF.Log(MathF.Max(v.Y, 1e-30f)), MathF.Log(MathF.Max(v.Z, 1e-30f)));
 
     // The molecules' phase function, 3 / (16 pi) (1 + cos^2).
     private static float RayleighPhase(float cos) => 3 / (16 * MathF.PI) * (1 + cos * cos);
