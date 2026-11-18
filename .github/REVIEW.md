@@ -241,3 +241,31 @@ DEVLOG.md generated and the review's files, one commit begun with this Reply; th
 request for the sky's lower half as soon as its coder's message comes, ahead of the rest since an
 engine waits on it, a failing test first where it mends; then the comments wrapped to 100 columns
 and the broken one joined, no code changed, one commit.
+
+The module's session, what the module lacks for both engines to light from it alike, read from its
+public members and from where each engine reads them. 3DEngine reads the air, the moon, the stars
+and the night's floor, and computes its own sun path, sun disc, moon place and night switch at
+twelve degrees down; BevyCSharp reads the clock, the weather and the looks and sets every light in
+its own units by curves of the hour, its sun 12,500 lux outside the air, its moon a fixed blue, its
+exposure switched at fixed hours, its stars hashed and its Milky Way hard-coded, the night's model
+not yet under its pointer at `fbc385e`. Moving those curves onto the module is each engine's
+binding. What the module adds so the two bindings land on one set of numbers is proposed in this
+order, one commit each, a failing test before each.
+1. The sun's disc, its angular size and solid angle beside the moon's and its luminance at the
+   ground, with the light through the air for a sun of another color or strength made public, both
+   of which 3DEngine writes for itself in `DaySky.Air.cs`.
+2. The moon's phase angle in degrees from `SkyClock`, which `Moon.At` takes and each engine works
+   out from the clock's share of the month in its own way.
+3. The scene's light by the clock, the sun's and the moon's `CelestialLight`, the sky's illuminance
+   by each of them and the night's floor, handed from one to the next through the twilight by one
+   rule, with an exposure in EV100 for that light, so a scene at an hour is lit and exposed alike in
+   both engines.
+4. The weather in the light, the cloud cover and density dimming the sun's direct light and moving
+   it into the sky's, the fog as a visibility and an extinction in meters by Koschmieder's 3.912,
+   and the haze and the rain as the air's turbidity, where the conditions change only the drawing
+   in either engine.
+5. The lightning, BevyCSharp's strikes as a Poisson process of `Thunder` with their flash's
+   envelope, distance and the thunder's delay at 343 meters a second, which needs no engine and
+   which 3DEngine has none of.
+3DEngine's request for the sky's lower half goes ahead of all of these when its message comes.
+Item 1 is begun.

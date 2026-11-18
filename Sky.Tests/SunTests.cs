@@ -38,4 +38,45 @@ public class SunTests
         var hazy = Sun.At(Atmosphere.Earth.WithTurbidity(3), 30).Illuminance;
         Assert.InRange(hazy / clear, 0.5f, 0.8f);
     }
+
+    [Fact]
+    public void The_Suns_Disc_Is_Half_A_Degree_Wide_And_1_6e9_Candelas_A_Square_Meter_Bright_At_Noon()
+    {
+        // The sun's mean diameter seen from the earth is 32 minutes of arc, and its disc at the
+        // ground under a high sun is about 1.6e9 candelas a square meter.
+        Assert.Equal(0.533f, Sun.AngularDiameter, 0.001f);
+        Assert.InRange(Sun.SolidAngle, 6.75e-5f, 6.85e-5f);
+        var disc = Colorimetry.Luminance(Sun.DiscLuminance(Atmosphere.Earth, 53.97f));
+        Assert.InRange(disc, 1.5e9f, 1.7e9f);
+        Assert.Equal(Sun.At(Atmosphere.Earth, 53.97f).Illuminance / Sun.SolidAngle, disc, disc * 1e-4f);
+    }
+
+    [Fact]
+    public void The_Share_Of_A_Disc_Above_The_Horizon_Goes_From_None_To_All_As_Its_Edge_Rises()
+    {
+        var radius = Sun.AngularDiameter / 2;
+        Assert.Equal(0, Sun.DiscShare(-radius - 0.01f));
+        Assert.Equal(0.5f, Sun.DiscShare(0), 1e-4f);
+        Assert.Equal(1, Sun.DiscShare(radius + 0.01f));
+        // A segment of a circle whose chord stands half the radius above the middle, a share of
+        // 0.804.
+        Assert.Equal(0.804f, Sun.DiscShare(radius / 2), 0.001f);
+        Assert.Equal(0.5f, Moon.DiscShare(0), 1e-4f);
+        Assert.Equal(0, Moon.DiscShare(-Moon.AngularDiameter / 2 - 0.01f));
+        var share = 0f;
+        for (var elevation = -radius; elevation <= radius; elevation += 0.01f)
+        {
+            Assert.True(Sun.DiscShare(elevation) >= share, $"at {elevation} degrees");
+            share = Sun.DiscShare(elevation);
+        }
+    }
+
+    [Fact]
+    public void A_Sun_Of_Another_Strength_Comes_Through_The_Air_In_Proportion_With_The_Same_Color()
+    {
+        var sun = Sun.At(Atmosphere.Earth, 30);
+        var half = Sun.Through(Atmosphere.Earth, Sun.Outside / 2, 30);
+        Assert.Equal(sun.Illuminance / 2, half.Illuminance, sun.Illuminance * 1e-5f);
+        Assert.Equal(sun.Temperature, half.Temperature, 1f);
+    }
 }

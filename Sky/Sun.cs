@@ -37,24 +37,74 @@ public static class Sun
     public static Vector3 Outside { get; } = Colorimetry.FromTemperature(Temperature) * OutsideIlluminance;
 
     /// <summary>
+    /// How wide the sun's disc looks from the earth, in degrees, its mean of 0.533.
+    /// </summary>
+    public const float AngularDiameter = 0.533f;
+
+    /// <summary>The solid angle of the sun's disc, in steradians, 6.8e-5.</summary>
+    public static float SolidAngle { get; } = 2 * MathF.PI * (1 - MathF.Cos(float.DegreesToRadians(AngularDiameter / 2)));
+
+    /// <summary>
     /// The sun's light at <paramref name="altitude"/> meters through <paramref name="air"/>, with
     /// the sun <paramref name="elevation"/> degrees over the horizon there.
     /// </summary>
     /// <remarks>
     /// The sun is taken as a point, so it is out from the moment its middle meets the ground's
     /// horizon, and the light scattered toward the place by the sky above is the sky's
-    /// (<see cref="SkyLight"/>), none of it counted here.
+    /// (<see cref="SkyLight"/>), none of it counted here. An engine that lets the light go as the
+    /// disc sets multiplies it by <see cref="DiscShare"/>.
     /// </remarks>
     public static CelestialLight At(Atmosphere air, float elevation, float altitude = 0) => Through(air, Outside, elevation, altitude);
 
     /// <summary>
-    /// A light of <paramref name="outside"/> in linear sRGB outside the air, through it from
-    /// <paramref name="elevation"/> degrees.
+    /// The luminance of the sun's disc in candelas a square meter at <paramref name="altitude"/>
+    /// meters through <paramref name="air"/>, the sun <paramref name="elevation"/> degrees over the
+    /// horizon, in linear sRGB whose luminance is the disc's, about 1.6e9 under a high sun.
     /// </summary>
-    internal static CelestialLight Through(Atmosphere air, Vector3 outside, float elevation, float altitude)
+    /// <remarks>
+    /// The light of <see cref="At"/> spread over <see cref="SolidAngle"/>, alike over the disc.
+    /// While the disc sets, its part still up is taken through the air along the horizon, and the
+    /// part below is the engine's to hide by <see cref="DiscShare"/>; once all of it is down it is
+    /// none.
+    /// </remarks>
+    public static Vector3 DiscLuminance(Atmosphere air, float elevation, float altitude = 0)
+    {
+        if (DiscShare(elevation) <= 0) return Vector3.Zero;
+        var light = Through(air, Outside, MathF.Max(elevation, 0), altitude);
+        return light.Color * (light.Illuminance / SolidAngle);
+    }
+
+    /// <summary>
+    /// The share of the sun's disc above the horizon with its middle <paramref name="elevation"/>
+    /// degrees over it, from none once its upper edge is down to all once its lower edge is up.
+    /// </summary>
+    public static float DiscShare(float elevation) => ShareAbove(elevation, AngularDiameter);
+
+    /// <summary>
+    /// A light of <paramref name="outside"/> in linear sRGB outside the air, whose luminance is its
+    /// lux, through <paramref name="air"/> to <paramref name="altitude"/> meters from
+    /// <paramref name="elevation"/> degrees over the horizon.
+    /// </summary>
+    /// <remarks>
+    /// For a sun an engine gives another strength or color than <see cref="Outside"/>, and for the
+    /// moon's light, which <see cref="Moon.At"/> sends through here. The air takes the same share
+    /// of any strength, so the light that comes through is in proportion and its color the same.
+    /// </remarks>
+    public static CelestialLight Through(Atmosphere air, Vector3 outside, float elevation, float altitude = 0)
     {
         var through = outside * air.Transmittance(altitude, MathF.Sin(float.DegreesToRadians(elevation)));
         var lux = Colorimetry.Luminance(through);
         return lux <= 0 ? new CelestialLight(0, Vector3.Zero, 0) : new CelestialLight(lux, through / lux, Colorimetry.TemperatureOf(through));
+    }
+
+    /// <summary>
+    /// The share of a disc <paramref name="angularDiameter"/> degrees wide above the horizon with
+    /// its middle <paramref name="elevation"/> degrees over it, the circle's segment above the
+    /// horizon's line over the whole, the horizon taken as straight across so small a disc.
+    /// </summary>
+    internal static float ShareAbove(float elevation, float angularDiameter)
+    {
+        var x = Math.Clamp(elevation / (angularDiameter / 2), -1, 1);
+        return (MathF.Acos(-x) + x * MathF.Sqrt(1 - x * x)) / MathF.PI;
     }
 }

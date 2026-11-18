@@ -21,6 +21,12 @@ public static class Moon
     public static float SolidAngle => MathF.PI * MathF.Pow(AngularDiameter * 0.5f * MathF.PI / 180f, 2);
 
     /// <summary>
+    /// The share of the moon's disc above the horizon with its middle <paramref name="elevation"/>
+    /// degrees over it, from none once its upper edge is down to all once its lower edge is up.
+    /// </summary>
+    public static float DiscShare(float elevation) => Sun.ShareAbove(elevation, AngularDiameter);
+
+    /// <summary>
     /// The share of the moon's disc the sun lights as seen from the earth, at a phase angle of
     /// <paramref name="phaseAngle"/> degrees, all of it when full and none when new.
     /// </summary>
