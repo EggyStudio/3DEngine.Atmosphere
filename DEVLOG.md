@@ -112,8 +112,17 @@ against the rural evenings Spitschan, Aguirre, Brainard and Sweeney measured, x 
 12,200 before where theirs is 140,500, and the level light's x at 6, 12 and 24 bands, 12 within
 0.003 of 24.
 
+![](.github/assets/readings/2026-11-18-night.webp)
+The night before the light was read by wavelength and after, a full moon overhead 0.238 lux at 5,142
+K before and 0.236 at 4,392 after by the lunar disc's reflectance, the moonless night's own glow of
+7.1e-4 lux white before, x 0.313, and a dark sky's B-V of 0.8 after, x 0.338, and the level light
+from sunset into the dark, its lux the same within 6% and the moonlit night redder after.
+
 Commits that day
 
+- `9ff088e` The observer gains a lobe in the red and its other amplitudes fitted again, so the
+  standard illuminants read within 5 K of their published temperatures, and the Tools pin moves to
+  its head.
 - `e6d564e` The moon reflects the sun band by band by the lunar disc's measured reflectance, so
   moonlight and the moonlit sky are redder than the sun's, and the Tools pin moves forward.
 - `8988890` A color temperature is read as the nearest point of the Planckian locus rather than by a
@@ -136,15 +145,12 @@ Commits that day
   link row facts.
 - `3ca9c29` A test walks the twilight under hazes from the clearest air to a city's, so a table read
   too coarsely for one shows as a bend in its slope.
-- `102482c` The README opens with a row of links to the devlog and the cheat sheet above its title.
 - `6b941f3` A reading of the twilight's color against measured sources, with a test holding the
   light bluest in the nautical twilight as it was measured.
 - `ef7224b` The module names no outside product, its tests and remarks saying what they hold in the
   module's terms and its two sheets naming the old haze and ozone as they were.
 - `3c42619` The module names no engine outside its package and assembly, its documents and comments
   saying what any engine does and its source test reading the refused names from the Tools checks.
-- `a2005ac` The module keeps a cheat sheet of every public type and member written from the built
-  library, a test holding it to the library, and each parameterless constructor gains its summary.
 - `a72ff9e` The Earth's air holds an ordinary clear day's haze, OPAC's continental average, so its
   sunset and its civil twilight stand near the published figures and its noon sun is dimmed as such
   a day dims it.

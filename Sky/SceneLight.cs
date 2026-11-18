@@ -14,7 +14,8 @@ namespace Sky;
 /// times the share of its disc above the horizon; the sky's is <see cref="SkyLight.Illuminance"/>
 /// lit by the sun and again by the moon, the moon's light band by band in place of the sun's, so
 /// the twilight's air goes dark as the earth's shadow climbs it; and under all of it lies the dark
-/// site's sky of <see cref="Night.SkyIlluminance"/>, taken as white.
+/// site's sky of <see cref="Night.SkyIlluminance"/> in its own color
+/// (<see cref="Night.SkyColor"/>).
 /// </para>
 /// <para>
 /// An engine with one directional light aims it along <see cref="KeyToward"/>, the sun's way or the
@@ -58,7 +59,7 @@ public sealed record SceneLight(CelestialLight Sun, Vector3 SunToward, Celestial
         var moon = Scaled(Sky.Moon.At(sky.Air, clock.MoonAltitude, phaseAngle, altitude), Sky.Moon.DiscShare(clock.MoonAltitude));
         // From the sky's table to 10 km up, in microseconds; above it summed over the dome.
         Vector3 Lit(Vector3 toward) => sky.GroundIlluminance(toward, altitude);
-        var skyLight = Lit(sunToward) + sky.GroundIlluminanceBy(Sky.Moon.Outside(phaseAngle), moonToward, altitude) + new Vector3(Night.SkyIlluminance);
+        var skyLight = Lit(sunToward) + sky.GroundIlluminanceBy(Sky.Moon.Outside(phaseAngle), moonToward, altitude) + Night.SkyColor * Night.SkyIlluminance;
         return new SceneLight(sun, sunToward, moon, moonToward, skyLight);
     }
 

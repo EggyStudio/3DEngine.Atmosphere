@@ -133,6 +133,7 @@ CelestialLight At(Atmosphere air, float elevation, float phaseAngle, float altit
 class Night                                              // The light of a clear night with no moon, the stars' and the air's own glow, away from a town's
 float SkyLuminance = 0.000226f;                          // The sky's luminance in candelas a square meter, 2.26e-4, a dark site's sky of 21.7 magnitudes a square arcsecond in the visual band
 float SkyIlluminance = 0.00071f;                         // The illuminance the sky gives a level surface in lux, pi times SkyLuminance, the sky taken as alike over its whole dome
+Vector3 SkyColor { get; }                                // The color of a moonless sky's own glow in linear sRGB at a luminance of 1, a dark sky's B-V of 0.8
 float S10 { get; }                                       // The luminance in candelas a square meter of a tenth-magnitude star in each square degree, the unit S10 the Milky Way's light is given in
 float GalaxyLuminance(float rightAscension, float declination);  // The luminance in candelas a square meter of the Milky Way's starlight along a way given by its right ascension and declination in radians for the equinox of 2000, outside the air, which a dark sky shows over SkyLuminance
 

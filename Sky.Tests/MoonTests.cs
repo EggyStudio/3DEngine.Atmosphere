@@ -79,4 +79,16 @@ public class MoonTests
 
     [Fact]
     public void A_Moonless_Sky_Gives_Less_Than_A_Thousandth_Of_A_Lux() => Assert.InRange(Night.SkyIlluminance, 5e-4f, 1e-3f);
+
+    [Fact]
+    public void A_Moonless_Nights_Own_Glow_Has_The_Color_Of_A_Dark_Skys_Measured_B_Minus_V()
+    {
+        // Benn and Ellison (1998) measured the dark sky over La Palma at B 22.7 and V 21.9
+        // magnitudes a square arcsecond, a B-V of 0.8, redder than the sun's 0.65, where white
+        // light would be the night's color with none of the airglow's red in it.
+        Assert.Equal(Stars.Temperature(0.8f), Colorimetry.TemperatureOf(Night.SkyColor), 150f);
+        Assert.Equal(1, Colorimetry.Luminance(Night.SkyColor), 1e-4f);
+        var night = SceneLight.At(new SkyClock { Latitude = 0, DayOfYear = 79, Hour = 0, MoonAgeAtStart = -79 }, new SkyLight(Atmosphere.Earth));
+        Assert.Equal(Stars.Temperature(0.8f), Colorimetry.TemperatureOf(night.SkyIlluminance), 150f);
+    }
 }

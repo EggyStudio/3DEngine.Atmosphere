@@ -1019,3 +1019,23 @@ Tools moves to `4e922ea` by pin.py, in place of the hand pin to `dc117ac`, which
 already made. It printed that Tools moved from `dc117ac` to `4e922ea` by 3 commits, no fact new or
 changed, CHEATSHEET.md written again the same as it stood, and DEVLOG.md written again by the new
 pin's devlog.py, which now lists each day's commits.
+
+The module's session, S5, the night's own glow in its color. `Night.SkyColor` is a dark sky's B-V
+of 0.8, which Benn and Ellison measured over La Palma (1998) at B 22.7 and V 21.9 magnitudes a square
+arcsecond, read as a star's color is, 5,285 K, and `SceneLight` lays the night's 7.1e-4 lux in that
+color where it laid it white. The test failed first, to build, and holds the color within 150 K of a
+B-V of 0.8's and the moonless midnight's sky in it. The night's sheet for the owner
+(`.github/assets/readings/2026-11-18-night.webp`) sets the night before the spectral work, Sky at
+`128925a`, beside the night now. A full moon overhead lights a surface facing it with 0.236 lux at
+4,392 K where it gave 0.238 at 5,142, the sun's color, 0.6% less overhead and 5% less at 5 degrees,
+the air read band by band. The moonless night's glow is x 0.338 where it was D65's 0.313, and the
+moonlit night's level light x 0.355 where it was 0.338. The level light from sunset into the dark
+keeps its lux within 6% before and after, a full moon rising opposite lifting it from 10 degrees
+down. The B-V is read through a black body's color, where the airglow's light is lines of oxygen and
+sodium and bands of hydroxyl, a chromaticity off the locus, so the glow's color is the measured
+index's and not its spectrum's.
+
+Tools moves to `1e1ec63` by pin.py, which printed that Tools moved from `4e922ea` to `1e1ec63` by 2
+commits, no fact new or changed, CHEATSHEET.md written again and DEVLOG.md written again. The
+cheatsheet gains one line, `Night.SkyColor`. The devlog now leaves out two old commits, `102482c` and
+`a2005ac`, whose sentences write cheat sheet as two words and so fail the line check.

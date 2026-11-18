@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace Sky;
 
 /// <summary>
@@ -131,6 +133,18 @@ public static class Night
     /// the sky taken as alike over its whole dome.
     /// </summary>
     public const float SkyIlluminance = MathF.PI * SkyLuminance;
+
+    /// <summary>
+    /// The color of a moonless sky's own glow in linear sRGB at a luminance of 1, a dark sky's B-V
+    /// of 0.8.
+    /// </summary>
+    /// <remarks>
+    /// Benn and Ellison (1998) measured the dark sky over La Palma at B 22.7 and V 21.9 magnitudes
+    /// a square arcsecond, redder than the sun's 0.65 by the airglow's lines of oxygen and sodium
+    /// and its bands of hydroxyl, and the color of that B-V is read as a star's is
+    /// (<see cref="Stars.Color"/>).
+    /// </remarks>
+    public static Vector3 SkyColor { get; } = Stars.Color(0.8f);
 
     /// <summary>
     /// The luminance in candelas a square meter of the Milky Way's starlight along a way given by
