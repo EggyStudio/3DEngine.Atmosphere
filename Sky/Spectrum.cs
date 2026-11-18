@@ -17,7 +17,13 @@ namespace Sky;
 /// </para>
 /// <para>
 /// The color matching functions are Wyman, Sloan and Shirley's analytic fit of 2013 to CIE 1931's
-/// two-degree observer, each a sum of Gaussians with one width below its peak and another above.
+/// two-degree observer, each a sum of Gaussians with one width below its peak and another above,
+/// with the amplitudes of x-bar's and z-bar's lobes fitted again and one lobe more in x-bar's red
+/// near 676 nm, where their fit runs a fifth under the CIE's. The fit was made against the CIE's
+/// table (CIE 018:2019, DOI 10.25039/CIE.DS.xvudnb9b) by the chromaticity of black bodies from
+/// 1,500 to 20,000 K and the functions' own residuals, y-bar left as theirs so no light's lux
+/// moves, and reads the CIE's illuminants A, D50 and D65 within 5 K of their temperatures where
+/// theirs reads A 27 K under. The table itself is not carried.
 /// </para>
 /// </remarks>
 internal sealed class Spectrum
@@ -176,9 +182,10 @@ internal sealed class Spectrum
     /// The CIE 1931 observer's color matching functions at <paramref name="nm"/>.
     /// </summary>
     public static Vector3 Observe(float nm) => new(
-        1.056f * Lobe(nm, 599.8f, 37.9f, 31.0f) + 0.362f * Lobe(nm, 442.0f, 16.0f, 26.7f) - 0.065f * Lobe(nm, 501.1f, 20.4f, 26.2f),
+        1.0552f * Lobe(nm, 599.8f, 37.9f, 31.0f) + 0.3627f * Lobe(nm, 442.0f, 16.0f, 26.7f) - 0.06886f * Lobe(nm, 501.1f, 20.4f, 26.2f)
+            + 0.00763f * Lobe(nm, 676.1f, 10.0f, 34.59f),
         0.821f * Lobe(nm, 568.8f, 46.9f, 40.5f) + 0.286f * Lobe(nm, 530.9f, 16.3f, 31.1f),
-        1.217f * Lobe(nm, 437.0f, 11.8f, 36.0f) + 0.681f * Lobe(nm, 459.0f, 26.0f, 13.8f));
+        1.24204f * Lobe(nm, 437.0f, 11.8f, 36.0f) + 0.652f * Lobe(nm, 459.0f, 26.0f, 13.8f));
 
     // A Gaussian of one width below its peak and another above.
     private static float Lobe(float x, float peak, float below, float above)

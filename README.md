@@ -26,7 +26,7 @@ module.
 | `LookCycle` | A camera's look by the sun's height, the `LookSettings` kept at heights of the sun and worked out between the two about any other, its curve a `LookCurve` |
 
 Through the Earth's air, its own ozone and an ordinary clear day's haze, the sun 54 degrees high
-reaches the ground at 94,200 lux and 5,021 K and the sky lights a level surface with 20,100 lux
+reaches the ground at 94,200 lux and 5,023 K and the sky lights a level surface with 20,100 lux
 beside the sun's 76,200 (`dotnet test Sky.Tests`). The air takes the light in 12 bands of wavelength
 and turns it into color at the end.
 

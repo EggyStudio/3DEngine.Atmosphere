@@ -984,3 +984,38 @@ degrees, and the moonlit sky's share and redness. The further reddening ROLO
 finds away from the full moon is left out, and no measured moonlight's color by a source I could cite
 was found to hold it against. Tools moves to `dc117ac`, and the cheatsheet written again changes two
 lines, `LookCycle.Keys` and `LookSettings.Tint`, whose tuples now carry their elements' names.
+
+The module's session, the observer, which way was taken and why. A fit of its own closes the CIE's
+A, D50 and D65 within 5 K, so the module takes it and carries no table, as the review ruled. The
+reading that led there, with the CIE's tabulated 1931 observer (CIE 018:2019, DOI
+10.25039/CIE.DS.xvudnb9b) used outside the repository to fit against and to read by: Wyman, Sloan and
+Shirley's x-bar runs low from 660 to 720 nm, 0.0096 under the CIE's 0.047 at 680, a fifth of it. One
+lobe more there, fitted alone to x-bar by least squares, takes A from 27 K under to 8.5 over and
+puts D50 22 K and D65 31 K over; with the main red lobe's amplitude fitted beside it A is 1 K under,
+D50 6 over and D65 12 over. Fitting all seven lobes' amplitudes with the red lobe by the
+chromaticity of black bodies from 1,500 to 20,000 K and the functions' own residuals closes the
+three within 3 K, but it held that lobe 4 nm wide below its peak, a kink, and moved y-bar, the
+luminance, its largest residual from 0.0076 to 0.0136. The fit taken holds the lobe's width to 10
+nm at least and y-bar as theirs, so no light's lux moves, and fits x-bar's and z-bar's amplitudes
+with the red lobe, at 676.1 nm, 0.00763 high, 10.0 nm below its peak and 34.6 above. It reads A at
+2,855.8 K, D50 at 5,001.3 and D65 at 6,503.3, and the CIE's daylight at 15,000 and 25,000 K 0.2%
+and 0.3% under, within the test's 0.5%. Its cost is z-bar's largest residual, 0.0283 where it was
+0.0238 of a peak of 1.78, and x-bar's is 0.0144 where it was 0.0148. The test of A, D50 and D65
+within 5 K failed first at 2,829, 4,990 and 6,498 K.
+
+Every figure, before and after. No lux moves, so the sun at 54 degrees stays 94,200 lux and the
+level lights, the sunset's 590 and the end of civil twilight's 4.64 stay as they were. The sun
+outside the air is 5,921 K where it was 5,920, the sun at 54 degrees 5,023 where it was 5,021, the
+level light at 54 degrees 5,641 where it was 5,640, at 30 degrees 5,464 and at 40 5,559 as before,
+at 20 degrees 5,332 where it was 5,333, the apparent sunset 10,765 where it was 10,780 and the end of
+civil twilight 43,574 where it was 43,640, its x 0.2403 where it was 0.2401. The moon outside the air
+is 4,934 K where it was 4,936 and overhead 4,405 where it was 4,406, and the moonlit sky 6,972 K
+where it was 6,971. A black body's color from `FromTemperature` reads back within 9 K from 2,000 to
+25,000 K where 2,000 K read 38 apart, so that test's bound returns to 25 K, and 50 at 25,000. The
+README, the reference scene's test and the moon's and the daylight test's comments carry the new
+figures.
+
+Tools moves to `4e922ea` by pin.py, in place of the hand pin to `dc117ac`, which `e6d564e` had
+already made. It printed that Tools moved from `dc117ac` to `4e922ea` by 3 commits, no fact new or
+changed, CHEATSHEET.md written again the same as it stood, and DEVLOG.md written again by the new
+pin's devlog.py, which now lists each day's commits.

@@ -46,10 +46,8 @@ public static class Colorimetry
     /// temperature by, the locus made from Planck's law through the module's observer from 360 to
     /// 830 nm a mired apart, from 1,000 mireds, 1,000 K, to none, the end a black body nears as it
     /// grows infinitely hot, and read between two of its points along the segment that joins them.
-    /// The CIE's D50 and D65 and its daylight at 15,000 and 25,000 K read within 0.5% of their
-    /// published temperatures and its illuminant A within 1%, 2,829 K for 2,856, since the
-    /// module's observer, a fit to the CIE's, stands apart from it in the red
-    /// (<c>ColorimetryTests</c>).
+    /// The CIE's illuminants A, D50 and D65 read within 5 K of their published temperatures and its
+    /// daylight at 15,000 and 25,000 K within 0.5% (<c>ColorimetryTests</c>).
     /// </para>
     /// <para>
     /// The nautical twilight's light as measured lies beyond the locus's end, a chromaticity no
