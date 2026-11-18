@@ -514,3 +514,39 @@ and a turbidity of 2 gives 1,067 lux at sunset, 3 gives 926 and 4 gives 818, sti
 sources'. The rest stands on the sky's own light at a low sun, 1,266 of the 1,399 lux, where the
 light scattered more than once is the first to read; it is proposed as the next reading, with the
 end of civil twilight, which the higher air takes from 6.5 to 9.1 lux against 3.4.
+
+The module's session, the light scattered more than once at a low sun, read with nothing changed.
+No fault is in it. Of the sky's 1,268 lux on a level surface with the sun at the horizon the light
+scattered once gives 1,066, and the term scattered more than once adds 16%, 19% at 6 degrees down,
+so the sunset's light stands on the single scattering. The gap to the two sources is the
+conditions, three of them. `SkyClock` gives the sun's true height, where a sunset is the apparent
+one, the sun's middle at the horizon when it stands truly 0.57 degrees down by the horizon's
+refraction of 34 minutes of arc, which takes the module's sunset from 1,268 to 991 lux. The air of
+`Atmosphere.Earth` is a turbidity of 1.11, a very clear one, and its ozone 40% of a real column.
+With a turbidity of 3 and 300 Dobson units together the apparent sunset gives 588 lux against the
+400 and 442 of the Lux article and of Krisciunas and Schaefer after Brown, and the end of civil
+twilight, which is the sun's geometric height by its definition, 4.93 lux against 3.4, each within
+half as much again where it was three times. So no test is written; a binding that compares a
+sunset with a published one takes the sun 0.57 degrees lower than the clock's height there, and
+the air's haze is the weather's.
+
+The ozone, a reading with nothing committed, at
+`.github/assets/readings/2026-11-18-ozone-300du.webp`. Bruneton's precomputed atmospheric
+scattering of 2017 spreads 300 Dobson units over a tent from 10 to 40 km at a peak absorption of
+(0.650, 1.881, 0.085) millionths a meter, the values HDRP takes before it scales them by 0.6 over a
+layer 20 to 40 km, so the real column's vertical optical depth in green is 0.028 where the Earth's
+as set is 0.011. With it the sun 54 degrees high gives 108,177 lux at 5,025 K for 109,957 at 5,025,
+the sky 7,708 lux at 20,330 K for 7,851 at 19,412, all of it 1.6% less; at 10 degrees the sun 62,173
+lux at 3,491 K for 66,488 at 3,571, the sky 4,559 at 13,057 K for 4,888 at 11,826, all of it 6.6%
+less; the apparent sunset 776 lux for 991 and the end of civil twilight 6.53 for 9.45; and the
+twilight zenith's blue over red 1.51, 2.40 and 3.60 at 6, 8 and 10 degrees down for 1.26, 1.98 and
+2.92. The day's figures held to the reference scene move by 1.6% at 54 degrees, which is the
+owner's to weigh.
+
+A `SkyLight` made each frame. No one makes one. Neither engine makes a `SkyLight` outside its
+tests, 3DEngine computing its sky on the GPU from `Atmosphere`'s data and BevyCSharp drawing
+Bevy's atmosphere, and `MakeSkyLight` in 3DEngine's `E3D.DaySky.cs` makes a directional light. A
+moving sun pays nothing, since a `SkyLight` holds the air alone and takes the sun's way at each
+call. A binding pays the 51 ms and the ground table's 144 when its air changes, as a weather that
+moves the turbidity through `Atmosphere.WithTurbidity` would, so such a binding makes the new one
+off its frame and swaps it in when it is made.

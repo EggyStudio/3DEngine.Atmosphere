@@ -56,6 +56,13 @@ the air ended at 55 km, dashed, and carried to 111 km, solid, the light at 6 deg
 where it was 6.5 and its color above 4,530 K through the twilight where it fell to 1,962 K at 10.5
 degrees down, the day's light the same.
 
+![](.github/assets/readings/2026-11-18-ozone-300du.webp)
+A reading of Atmosphere.Earth's ozone as set, a vertical optical depth of 0.011 in green, against a
+column of 300 Dobson units after Bruneton, 0.028, with nothing committed, the day's light at 54
+degrees 1.6% less and its color the same, at 10 degrees 6.6% less and 80 K warmer, the apparent
+sunset 776 lux where it is 991 and the end of civil twilight 6.53 where it is 9.45, and the twilight
+zenith's blue over red 3.6 at 10 degrees down where it is 2.9.
+
 ## 2026-11-08
 
 Done that day
