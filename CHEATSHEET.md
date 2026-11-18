@@ -1,4 +1,4 @@
-# 3DEngine.Sky cheat sheet
+# 3DEngine.Sky cheatsheet
 
 Every public type of the Sky module in the order the README first names it, with its public
 members a line each, the declaration and the first sentence of its summary, for a binding to find

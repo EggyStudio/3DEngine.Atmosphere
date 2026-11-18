@@ -696,7 +696,7 @@ the haze they set and take the new albedo of 0.925 and asymmetry of 0.703; BevyC
 own haze and reads none of the module's. The sheet is
 `.github/assets/readings/2026-11-18-haze-opac.webp`.
 
-The module's session, the cheat sheet. Tools stands at `3720852`, the fifth fact beside the four,
+The module's session, the cheatsheet. Tools stands at `3720852`, the fifth fact beside the four,
 and CHEATSHEET.md is written by `Cheatsheet.Write` with `CHEATSHEET_WRITE=1`, its opening by hand,
 linked from the README's top row beside the devlog and named in AGENTS.md's documents table. It
 lists 23 types and 208 members. Ten constructors stood with no summary. Six were the parameterless
@@ -749,7 +749,7 @@ found. A test holds the bluest light between 6 and 12 degrees down, as Spitschan
 it; it passes under both hazes, so it guards the reading rather than mends a fault.
 
 The module's session, the README's link row. It stands as the file's first line above the title,
-the devlog and the cheat sheet by their addresses on `main`, a space between them, then a blank
+the devlog and the cheatsheet by their addresses on `main`, a space between them, then a blank
 line and the title.
 
 The module's session, the next three, proposed from what a stranger binding the module would miss
@@ -828,3 +828,12 @@ rest. The thorough mend is the light at a dozen or so wavelengths, turned into t
 the end, which moves every figure the engines read and the reference scene's match; the smaller one
 reads the molecules at the primaries' wavelengths, which takes 54 and 90 degrees into the band and
 leaves 20 and 30 under it. Which is the review's and the owner's.
+
+The module's session, the key light's hand-off, read with nothing changed. `SceneLight.KeyToward`
+turns from the sun's way to the moon's at the instant the moon's direct light passes the sun's, and
+read every tenth of a minute through an equinox's dusk with a full moon rising opposite, at 0, 51
+and 65 degrees north, the turn comes with the sun 0.00 to 0.02 degrees down, the full moon itself
+at the horizon, and the key's light then is some 2e-7 lux on a surface facing it against the sky's
+800 lux on a level surface. A light so faint turns unseen, so no test is written and nothing is
+mended. Tools stands at `75d77f2`, and the module writes cheatsheet as one word, the README's link
+row among its lines.

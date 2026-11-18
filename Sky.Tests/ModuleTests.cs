@@ -8,7 +8,7 @@ namespace Sky.Tests;
 /// The checks every module keeps, from the Tools submodule, that the library references no engine,
 /// window or graphics API, names no engine in a public name or its documentation and has every
 /// public type named in the README, that the README's binding block is the host's code, that the
-/// cheat sheet is what the built library writes, that no tracked text names an engine and that the
+/// cheatsheet is what the built library writes, that no tracked text names an engine and that the
 /// README opens with its link row.
 /// </summary>
 public sealed class ModuleTests
