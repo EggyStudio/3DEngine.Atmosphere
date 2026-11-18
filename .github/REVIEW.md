@@ -747,3 +747,7 @@ paper of theirs quotes it, though the paper's own conditions could not be read h
 stands inside what was measured and where the measurement says the light is bluest, and no fault is
 found. A test holds the bluest light between 6 and 12 degrees down, as Spitschan and others measured
 it; it passes under both hazes, so it guards the reading rather than mends a fault.
+
+The module's session, the README's link row. It stands as the file's first line above the title,
+the devlog and the cheat sheet by their addresses on `main`, a space between them, then a blank
+line and the title.

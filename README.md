@@ -1,7 +1,6 @@
-# Sky
+[Devlog](https://github.com/EggyStudio/Sky/blob/main/DEVLOG.md) [Cheat sheet](https://github.com/EggyStudio/Sky/blob/main/CHEATSHEET.md)
 
-[DEVLOG.md](DEVLOG.md) holds what landed by day, with the pictures taken on the way, and
-[CHEATSHEET.md](CHEATSHEET.md) every public type and member a line each.
+# Sky
 
 Sky is a library an engine takes as a git submodule, for the sky's clock, the sun's and the sky's
 light in physical units, the atmosphere's parameters, the weather and the looks by the sun's height.
