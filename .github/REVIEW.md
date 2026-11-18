@@ -310,3 +310,21 @@ next. The table is made at its first reading, 206 ms on 32 cores and 797 ms on 4
 once a `SkyLight`, and making a `SkyLight` stays at 36 ms; the suite takes 5 s where it took 1. The
 sum itself could halve its time by the mirror of the sky about the light's vertical plane, which is
 left for a commit of its own.
+
+The module's session, part 4, the weather in the light. `Haze` gives the air near the ground
+between the eye and a thing, the share of its light that comes through a distance and the share the
+air hides, which the air's own light fills, and the visibility. Clear air takes the molecules' and
+the aerosols' extinction of HDRP's Earth at the ground, 2.35e-5 a meter in green, a visibility of
+166 km by Koschmieder's 3.912, and fog adds an extinction alike in the three channels that thins the
+visibility evenly in its logarithm toward 80 m at `Fog` 1, as BevyCSharp's fog eases it. The haze
+the module gives, in green, is 0.059% at 25 m and 2.3% at a kilometer in clear air, 0.4% and 15%
+at `Fog` 0.25, 2.7% and 66% at 0.5, and 71% at 25 m in the thickest fog; so an atrium 25 m across
+in clear air is hazed by six ten-thousandths, and a gray read there is no air of the module's.
+`SceneLight.Under` gives the scene's light under the cloud cover by Kasten and Czeplak's relations
+of 1980, the global light a quarter of the clear day's under a full cover, two stops down, and its
+diffuse share climbing from the clear sky's own by the cover's square, the direct part exactly none
+under a full cover on every processor; the moon's light and the night's own dim alike. Rain and snow
+add nothing to the haze, since the presets carry their fog with them, the cloud's density and kind
+are left out, and the turbidity the proposal named for the haze is the fog's extinction in its
+place. Eight tests, each figure's source in its comment, and a sheet of the haze by distance and the
+light by cover at `.github/assets/readings/2026-11-18-haze-and-cloud.webp`.

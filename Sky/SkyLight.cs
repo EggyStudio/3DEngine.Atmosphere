@@ -142,7 +142,9 @@ public sealed class SkyLight
     /// <summary>
     /// The illuminance in lux the sky gives a level surface at the ground with the light that
     /// lights it toward <paramref name="lightToward"/>, as <see cref="Illuminance"/> gives it
-    /// within 1%, read from a table in microseconds where the sum takes hundredths of a second.
+    /// within 1%, read from a table in microseconds where the sum takes hundredths of a second. The
+    /// first reading builds the table, a fifth of a second to most of a second by the processor's
+    /// cores, so a binding reads it once while it loads, off its frame.
     /// </summary>
     /// <remarks>
     /// The sky's light on a level surface depends only on how high the light stands, so a table by

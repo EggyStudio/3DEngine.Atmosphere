@@ -98,4 +98,53 @@ public class SceneLightTests
                 Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * MathF.Max(sum[c], lux), $"at {hour} the table gives {table} for {sum}");
         }
     }
+
+    [Fact]
+    public void Under_No_Cloud_The_Light_Is_The_Clear_Skys()
+    {
+        var clear = SceneLight.At(Clock(12 - 36 / 15f, 0), Sky);
+        var under = clear.Under(new WeatherConditions());
+        Assert.Equal(clear.LevelIlluminance, under.LevelIlluminance, clear.LevelIlluminance * 1e-5f);
+        Assert.Equal(clear.Sun.Illuminance, under.Sun.Illuminance, clear.Sun.Illuminance * 1e-5f);
+    }
+
+    [Fact]
+    public void An_Overcast_Sky_Hides_The_Sun_And_Gives_A_Quarter_Of_The_Clear_Light_Two_Stops_Down()
+    {
+        // Kasten and Czeplak (1980) give the global light under a cover of N eighths as the clear
+        // sky's times 1 - 0.75 (N / 8)^3.4, a quarter under a full cover, all of it diffuse, which
+        // is the two stops the sunny 16 rule's table puts between full sun and an overcast day.
+        var clear = SceneLight.At(Clock(12 - 36 / 15f, 0), Sky);
+        var overcast = clear.Under(new WeatherConditions { CloudCover = 1 });
+        Assert.Equal(0, overcast.Sun.Illuminance);
+        Assert.Equal(0.25f, overcast.LevelIlluminance / clear.LevelIlluminance, 1e-4f);
+        Assert.Equal(2, clear.Exposure - overcast.Exposure, 1e-3f);
+        // The light through the cloud is the clear day's whole light, sun and sky, so its color
+        // is theirs.
+        Assert.Equal(Colorimetry.TemperatureOf(clear.Sun.Color * clear.Sun.Illuminance * clear.SunToward.Y + clear.SkyIlluminance),
+            Colorimetry.TemperatureOf(overcast.SkyIlluminance), 100f);
+    }
+
+    [Fact]
+    public void Half_A_Cover_Takes_Seven_Hundredths_Of_The_Light_And_Moves_A_Quarter_Of_The_Rest_Into_The_Sky()
+    {
+        // 1 - 0.75 * 0.5^3.4 is 0.929, and Kasten and Czeplak's diffuse share of the global light
+        // climbs from the clear sky's share by the cover's square, 0.3 + 0.7 (N / 8)^2 in their
+        // fit, taken here from the clear sky's own share at the sun's height.
+        var clear = SceneLight.At(Clock(12 - 36 / 15f, 0), Sky);
+        var half = clear.Under(new WeatherConditions { CloudCover = 0.5f });
+        Assert.Equal(0.929f, half.LevelIlluminance / clear.LevelIlluminance, 0.001f);
+        var clearShare = Colorimetry.Luminance(clear.SkyIlluminance) / clear.LevelIlluminance;
+        var share = Colorimetry.Luminance(half.SkyIlluminance) / half.LevelIlluminance;
+        Assert.Equal(clearShare + (1 - clearShare) * 0.25f, share, 1e-3f);
+    }
+
+    [Fact]
+    public void Cloud_Dims_The_Moon_And_The_Night_As_It_Dims_The_Day()
+    {
+        var full = SceneLight.At(Clock(0, SkyClock.SynodicMonth / 2), Sky);
+        var overcast = full.Under(new WeatherConditions { CloudCover = 1 });
+        Assert.Equal(0, overcast.Moon.Illuminance);
+        Assert.Equal(0.25f, overcast.LevelIlluminance / full.LevelIlluminance, 1e-4f);
+    }
 }

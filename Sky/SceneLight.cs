@@ -97,6 +97,50 @@ public sealed record SceneLight(CelestialLight Sun, Vector3 SunToward, Celestial
     /// </remarks>
     public float Exposure => ExposureFor(LevelIlluminance);
 
+    /// <summary>
+    /// This light under <paramref name="weather"/>'s cloud, the sun's and the moon's direct light
+    /// dimmed and moved into the sky's as the cover grows, none of it direct under a full cover.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Kasten and Czeplak's relations of 1980 for the light at the ground under a cover of N
+    /// eighths, from Hamburg's ten years of hourly readings, take the global light, direct and
+    /// diffuse on a level surface together, as the clear sky's times 1 - 0.75 (N / 8)^3.4, a
+    /// quarter of it under a full cover, and the diffuse share of it as 0.3 + 0.7 (N / 8)^2. The
+    /// clear share here is the clear sky's own at the light's height, where their 0.3 is a mean
+    /// over the day, and it climbs to all of the light by the cover's square as theirs does.
+    /// </para>
+    /// <para>
+    /// The sky keeps its clear part where it is uncovered, and the cloud adds the rest of the
+    /// diffuse light in the color of the clear day's whole light, sun and sky, which the cloud
+    /// scatters alike in every channel. The moon's light and the night's own are dimmed by the
+    /// same relations. The cloud's density and kind are left out, the cover alone setting the
+    /// light.
+    /// </para>
+    /// </remarks>
+    public SceneLight Under(WeatherConditions weather)
+    {
+        ArgumentNullException.ThrowIfNull(weather);
+        var cover = Math.Clamp(weather.CloudCover, 0, 1);
+        var sun = Sun.Color * (Sun.Illuminance * MathF.Max(SunToward.Y, 0));
+        var moon = Moon.Color * (Moon.Illuminance * MathF.Max(MoonToward.Y, 0));
+        var (direct, skyLux) = (Colorimetry.Luminance(sun + moon), Colorimetry.Luminance(SkyIlluminance));
+        var whole = direct + skyLux;
+        if (cover <= 0 || whole <= 0) return this;
+        var under = whole * (1 - 0.75f * MathF.Pow(cover, 3.4f));
+        var clearShare = skyLux / whole;
+        // The direct part as the clear direct share times one less the cover's square, so a full
+        // cover leaves exactly none on every processor.
+        var directLux = under * (1 - clearShare) * (1 - cover * cover);
+        var diffuse = under - directLux;
+        var directShare = direct > 0 ? directLux / direct : 0;
+        var cloud = diffuse - skyLux * (1 - cover);
+        var sky = cloud >= 0
+            ? SkyIlluminance * (1 - cover) + (sun + moon + SkyIlluminance) / whole * cloud
+            : SkyIlluminance * (diffuse / skyLux);
+        return this with { Sun = Scaled(Sun, directShare), Moon = Scaled(Moon, directShare), SkyIlluminance = sky };
+    }
+
     private static CelestialLight Scaled(CelestialLight light, float share) =>
         share <= 0 ? new CelestialLight(0, Vector3.Zero, 0) : light with { Illuminance = light.Illuminance * share };
 }
