@@ -1,7 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <!-- The library both engines reference from their own projects, which knows no engine (N 2.1). -->
+    <!-- The assembly and the package carry the name of the module's family, its namespace the
+         module's own. -->
     <PropertyGroup>
+        <AssemblyName>3DEngine.Sky</AssemblyName>
+        <PackageId>3DEngine.Sky</PackageId>
         <RootNamespace>Sky</RootNamespace>
         <IsPackable>false</IsPackable>
     </PropertyGroup>

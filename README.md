@@ -38,6 +38,8 @@ git submodule add https://github.com/EggyStudio/Sky.git modules/Sky
 <ProjectReference Include="..\modules\Sky\Sky\Sky.csproj" />
 ```
 
+The project builds the assembly `3DEngine.Sky`, whose types are in the namespace `Sky`.
+
 A clone of the engine fetches the module with `git clone --recurse-submodules`, or with
 `git submodule update --init` in a clone made without it, and a workflow checks it out with
 `submodules: true` on `actions/checkout`. A change the engine uses is committed and pushed here

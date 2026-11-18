@@ -10,7 +10,7 @@ public class LibraryTests
     {
         // By its name rather than by a type of its own, so the test reads that the project
         // reference puts the assembly beside the tests.
-        var library = Assembly.Load("Sky");
-        Assert.Equal("Sky", library.GetName().Name);
+        var library = Assembly.Load("3DEngine.Sky");
+        Assert.Equal("3DEngine.Sky", library.GetName().Name);
     }
 }

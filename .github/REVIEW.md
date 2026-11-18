@@ -328,3 +328,17 @@ add nothing to the haze, since the presets carry their fog with them, the cloud'
 are left out, and the turbidity the proposal named for the haze is the fog's extinction in its
 place. Eight tests, each figure's source in its comment, and a sheet of the haze by distance and the
 light by cover at `.github/assets/readings/2026-11-18-haze-and-cloud.webp`.
+
+The module's session, the public shapes that fit only the two engines, read for the owner's
+direction that a stranger can take the module into an engine of their own from its README alone.
+The module declares no interface, since it asks nothing of an engine, so the README's section says
+so and the tests' host is a minimal caller. Three shapes fit our engines more than any engine.
+`WeatherConditions.CloudDensity` is a share of the density an engine draws its clouds at, a number
+with no physical meaning outside BevyCSharp's clouds, and is proposed as an extinction in a meter
+or the deck's optical depth. `WeatherConditions.Fog` runs from the camera's own fog at 0, the
+engine's, where `Haze` reads 0 as clear air, and its summary is proposed to say clear air. And
+`LookSettings` with `LookCurve` is a tonemap in the order both engines run it, exposure, curve,
+saturation and tint in linear light, contrast once encoded and a dither, which an engine with a
+tonemapper of its own cannot take without writing that pass; it is proposed to stay as it is, its
+summary saying it is a look an engine runs in place of its tonemapper, as it says. None of the
+three is changed before the review answers.
