@@ -9,8 +9,8 @@ namespace Sky;
 /// The light is multiplied by <see cref="Exposure"/>, brought under white by <see cref="Curve"/>,
 /// saturated by <see cref="Saturation"/> and multiplied by <see cref="Tint"/> in linear light, then
 /// pushed from the middle of what is shown by <see cref="Contrast"/> once encoded for the screen, in
-/// that order, as 3DEngine's frame runs them, so the same numbers show the same picture in both
-/// engines. A new one changes nothing about a picture whose every channel is under the knee.
+/// that order, which every engine that runs the look keeps, so the same numbers show the same
+/// picture in each. A new one changes nothing about a picture whose every channel is under the knee.
 /// </para>
 /// <para>
 /// Saturation in linear light moves a color away from the gray of its luminance as light mixes,
@@ -105,8 +105,8 @@ public sealed class LookSettings
     /// of 1.12.
     /// </summary>
     /// <remarks>
-    /// The look 3DEngine's block game is graded by, its sky deep blue at the top and its grass and
-    /// roofs vivid in the afternoon sun. The curve darkens the shadows and the saturation in linear
+    /// A look for a clear day, the sky deep blue at the top and grass and roofs vivid in the
+    /// afternoon sun. The curve darkens the shadows and the saturation in linear
     /// light colors them, and the contrast deepens the shade.
     /// </remarks>
     public static LookSettings Vivid() => new()

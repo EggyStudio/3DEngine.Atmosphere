@@ -164,6 +164,20 @@ None yet.
    writes it through the submodule, the review pushing the module before the engine that points at
    it.
 
+8. **The module is worked by a session of its own.** Decided at 16:43 on 2026-11-18 for the seven
+    modules at once. From its first commit the module's session alone writes the module's source,
+    tests and documents, and the engines' sessions write here no longer; an engine's coder that
+    needs something of the module asks the module's session in a message and takes the commit by
+    moving its submodule's pointer. Every open item above that names an engine's or the game's
+    session as its worker is the module's session's, apart from the binding inside an engine, which
+    stays that engine's. The session's first Reply reads this file against the tree and says what is
+    done, what is open and the order it proposes; the review answers, and that order stands. The
+    rules are NORM.md's as before, among them no engine referenced (N 2.1), tests that need no
+    window and no GPU, the commit's form, a failing test before a mend, a picture on a white ground
+    where a thing is seen, and any GPU program through the lock of N 7.9 with a waiting file. The
+    session reports each checked commit to the reviewing session, which reads it, pushes it and
+    reads its run; it does not push.
+
 ## Replies
 
 Item 3's second part, from 3DEngine's item 170, is in the commit after `bff9e47`. It holds
@@ -210,3 +224,20 @@ midnight on the first of January 28.3 degrees up at 45 north, Polaris within a d
 at every hour, the magnitude scale at 0, 5 and 6 and the moonless sky's luminance at 21.7
 magnitudes a square arcsecond by it, the earthshine against its figure and the band at its center,
 anticenter and pole, the module's tests 49 in all.
+
+The module's session, its first Reply under Decision 8, read against the tree at `789f0e1` with
+the review's files as they stand in it. Items 1 to 5 are done as their text says, and the tree
+holds them, the strict build clean and the 49 tests passing (`dotnet build Sky.slnx -warnaserror`
+and `dotnet test Sky.Tests --no-build`), no engine referenced by a type, a package or a project.
+Three things are open. The two sentences of item 3's last note name 3DEngine in LookSettings.cs at
+lines 12 and 108. DEVLOG.md is in AGENTS.md's table and not in the tree; Tools' `scripts/devlog.py`
+writes it with items 3 and 5 alone, since items 1, 2 and 4 name no closing commit in their text.
+Sixty-five comment lines run past 100 columns, 53 of them in the nine types moved from BevyCSharp
+and 12 in Moon, Stars and Star, and a comment in SkyLight.cs breaks mid-sentence at lines 154 to
+156. The summary of `LookSettings.Dither` names Bevy's tonemapper and `LookCurve.Numbered`'s
+remarks name the BSL shaders and Minecraft, each where a rule or a number is taken from it, as
+STYLE.md allows, and they stay. The order proposed is the two sentences written engine-neutral with
+DEVLOG.md generated and the review's files, one commit begun with this Reply; then 3DEngine's
+request for the sky's lower half as soon as its coder's message comes, ahead of the rest since an
+engine waits on it, a failing test first where it mends; then the comments wrapped to 100 columns
+and the broken one joined, no code changed, one commit.
