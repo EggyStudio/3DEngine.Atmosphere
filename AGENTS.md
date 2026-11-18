@@ -1,8 +1,8 @@
 # Sky
 
-Sky is a library both engines, 3DEngine and BevyCSharp, take as a git submodule, for the sky's
-clock, the sun's and the sky's light in physical units, the atmosphere's parameters, the weather and
-the looks by the sun's height. Both engines light from its numbers while each draws its own sky. It
+Sky is a library an engine takes as a git submodule, for the sky's clock, the sun's and the sky's
+light in physical units, the atmosphere's parameters, the weather and the looks by the sun's height.
+An engine lights its scenes from its numbers and draws its own sky from them. It
 references no engine, no engine's package and no engine's bridge (NORM.md, N 2.1). What it needs of
 a renderer, a world, a scheduler or a file system it takes through an interface it declares, which
 each engine implements where it binds the module.

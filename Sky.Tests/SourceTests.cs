@@ -1,4 +1,6 @@
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
+using Tools;
 using Xunit;
 
 namespace Sky.Tests;
@@ -53,11 +55,6 @@ public sealed partial class SourceTests
         Assert.True(over.Count == 0, $"{over.Count} comment lines past {Width} columns:\n" + string.Join("\n", over));
     }
 
-    // The engines the module was written beside, and the framework the second stands on, which
-    // no line of the library's sources names, its private members and comments among them, where
-    // ModuleTests reads its public names and their documentation alone.
-    [GeneratedRegex(@"3DEngine|BevyCSharp|\bBevy\b", RegexOptions.IgnoreCase)]
-    private static partial Regex EngineName();
 
     [Fact]
     public void The_Librarys_Sources_Name_No_Engine()
@@ -69,10 +66,12 @@ public sealed partial class SourceTests
             var relative = Path.GetRelativePath(root, file);
             if (relative.Split(Path.DirectorySeparatorChar).Any(p => p is "bin" or "obj"))
                 continue;
+            // No line of the library's sources names an engine, its private members and comments
+            // among them, by the names Tools' checks refuse, where ModuleTests reads the public
+            // names and their documentation alone.
             var lines = File.ReadAllLines(file);
-            for (var i = 0; i < lines.Length; i++)
-                if (EngineName().IsMatch(lines[i]))
-                    named.Add($"{relative}:{i + 1}");
+            var numbered = lines.Select((line, i) => $"{relative}:{i + 1} {line}");
+            named.AddRange(ModuleChecks.EngineNames(numbered, new XDocument(new XElement("doc"))).Select(found => found.Split(' ')[0]));
         }
 
         Assert.True(named.Count == 0, $"{named.Count} lines name an engine:\n" + string.Join("\n", named));

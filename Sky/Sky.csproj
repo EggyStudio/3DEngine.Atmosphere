@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <!-- The library both engines reference from their own projects, which knows no engine (N 2.1). -->
+    <!-- The library an engine references from its own project, which knows no engine (N 2.1). -->
     <!-- The assembly and the package carry the name of the module's family, its namespace the
          module's own. -->
     <PropertyGroup>

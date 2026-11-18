@@ -190,7 +190,7 @@ class WeatherState                                       // The weather as it go
 WeatherState();                                          // Clear weather easing toward clear, its forecast off and its seed 0, each until set
 WeatherConditions Current { get; }                       // The conditions now
 WeatherConditions Target { get; }                        // The conditions being eased toward
-float HalfLife { get; set; }                             // How many seconds of the game's clock the conditions take to come half the way to the target, 30 unless set
+float HalfLife { get; set; }                             // How many seconds of the world's clock the conditions take to come half the way to the target, 30 unless set
 bool Forecast { get; set; }                              // Whether a forecast writes the target from the clock every step, off unless set
 WeatherClimate Climate { get; set; }                     // What weather the forecast brings, Temperate unless set
 float SystemsPerDay { get; set; }                        // How many weather systems pass a day in the forecast, 1.5 unless set

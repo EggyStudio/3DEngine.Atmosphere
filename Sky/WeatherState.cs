@@ -42,8 +42,8 @@ public sealed class WeatherState
     public WeatherConditions Target { get; private set; } = WeatherConditions.Of(WeatherPreset.Clear);
 
     /// <summary>
-    /// How many seconds of the game's clock the conditions take to come half the way to the target,
-    /// 30 unless set.
+    /// How many seconds of the world's clock the conditions take to come half the way to the
+    /// target, 30 unless set.
     /// </summary>
     public float HalfLife { get; set; } = 30f;
 
@@ -102,7 +102,7 @@ public sealed class WeatherState
     }
 
     /// <summary>Moves the weather on, its conditions, its wind and the ground.</summary>
-    /// <param name="seconds">How many seconds of the game's clock.</param>
+    /// <param name="seconds">How many seconds of the world's clock.</param>
     public void Advance(float seconds)
     {
         var step = Math.Max(seconds, 0f);

@@ -704,3 +704,14 @@ constructors the compiler makes, of `Atmosphere`, `SkyClock`, `WeatherConditions
 `LookCycle` and `LookSettings`, which the source gives explicitly with summaries of what each
 holds until set; four are the positional records' own, of `SceneLight`, `Star`, `LightningStrike`
 and `CelestialLight`, which the writer leaves bare where their type's line says what they hold.
+
+The module's session, the sweep for the engines' names. The search the rule gives found 5 lines and
+finds none. The README's and AGENTS.md's openings say what an engine does with the module rather
+than naming two, the README's binding section says how an engine that draws its sky in its own
+pass and one whose renderer holds an atmosphere of its own each read the module, and the comments
+of the workflow, the props file and the library's project say an engine where they said both
+engines or the engines. `SourceTests` reads the library's source lines through
+`ModuleChecks.EngineNames`, so the test holds no engine's name of its own and finds one by the
+names Tools' checks refuse, which a name planted in `Sun.cs` showed. The weather's half-life and
+step are seconds of the world's clock, where they said the game's, and CHEATSHEET.md and DEVLOG.md
+are written again.

@@ -3,9 +3,9 @@
 [DEVLOG.md](DEVLOG.md) holds what landed by day, with the pictures taken on the way, and
 [CHEATSHEET.md](CHEATSHEET.md) every public type and member a line each.
 
-Sky is a library both engines, 3DEngine and BevyCSharp, take as a git submodule, for the sky's
-clock, the sun's and the sky's light in physical units, the atmosphere's parameters, the weather and
-the looks by the sun's height. Both engines light from its numbers while each draws its own sky. It
+Sky is a library an engine takes as a git submodule, for the sky's clock, the sun's and the sky's
+light in physical units, the atmosphere's parameters, the weather and the looks by the sun's height.
+An engine lights its scenes from its numbers and draws its own sky from them. It
 references no engine, and each engine implements the interfaces it declares where it binds the
 module.
 
@@ -114,9 +114,9 @@ host.SetFogExtinction(Haze.Extinction(sky.Air, weather.Current));
 The ambient luminance is the sky's illuminance over pi, the luminance of a sky alike over its
 dome that lights a level surface as this one does. An engine that draws its own sky reads
 `SkyLight.Luminance` along each way, the sun's disc from `Sun.DiscLuminance`, the moon's from
-`Moon`, and the stars from `Stars.Catalog` placed by `SkyClock.TowardSky`. 3DEngine and BevyCSharp
-are two such bindings, the first drawing its sky in a pass of its own from `SkyLight`'s numbers and
-the second feeding Bevy's atmosphere and clouds from the clock and the weather.
+`Moon`, and the stars from `Stars.Catalog` placed by `SkyClock.TowardSky`. An engine that draws its
+sky in a pass of its own on the GPU reads `Atmosphere`'s terms into it, and one whose renderer holds
+an atmosphere and clouds of its own feeds them from the clock and the weather.
 
 ## Building and testing
 
