@@ -33,7 +33,9 @@ public sealed class SkyLight
     // light scattered more than once falls by orders of magnitude as the sun goes down through the
     // twilight, so its table holds the light's logarithm, which falls nearly in a straight line
     // and is read between rows as one, where the light itself read so lit the twilight three
-    // times too brightly 8 degrees down.
+    // times too brightly 8 degrees down. Its heights crowd near the ground as the transmittance's
+    // do, so through 111 km of air the light near the ground, where the aerosols lie, is read with
+    // its lowest rows 115 meters apart.
     private const int TransmittanceHeights = 32, TransmittanceAngles = 256, ScatterHeights = 32, ScatterAngles = 64;
 
     // The steps along a way, from the eye and over the 64 ways the light scattered more than once
@@ -49,7 +51,7 @@ public sealed class SkyLight
     // GroundError of the larger of the channel and the lux, down to a 64th of a degree. The light
     // 7 to 9 degrees down bends sharply as the earth's shadow overhead passes the top of the air,
     // where the molecules that scatter the most blue lie, and the halving finds that bend.
-    private const float LowestGround = -20, GroundError = 0.003f;
+    private const float LowestGround = -24, GroundError = 0.003f;
     private const int GroundHalvings = 6;
 
     // The ground's table, the light's heights in degrees rising and the logarithm of the sky's
@@ -73,7 +75,7 @@ public sealed class SkyLight
         Parallel.For(0, ScatterHeights, h =>
         {
             for (int a = 0; a < ScatterAngles; a++)
-                _scattered[h * ScatterAngles + a] = Log(Scattered(air.Top * h / (ScatterHeights - 1), -1 + 2f * a / (ScatterAngles - 1)));
+                _scattered[h * ScatterAngles + a] = Log(Scattered(ScatterHeight(h), -1 + 2f * a / (ScatterAngles - 1)));
         });
     }
 
@@ -165,8 +167,8 @@ public sealed class SkyLight
     /// The sky's light on a level surface depends only on how high the light stands, so a table by
     /// the light's height holds it, a row a degree and more where the light's logarithm bends, read
     /// between them by the logarithm. It is made once, at its first reading, across the
-    /// processor's cores. With the light 20 degrees down or lower it gives none, since the sky lit
-    /// so gives under 2e-7 lux, a three-thousandth of <see cref="Night.SkyIlluminance"/>.
+    /// processor's cores. With the light 24 degrees down or lower it gives none, since the sky lit
+    /// so gives under 1.6e-7 lux, a five-thousandth of <see cref="Night.SkyIlluminance"/>.
     /// </remarks>
     public Vector3 GroundIlluminance(Vector3 lightToward)
     {
@@ -199,7 +201,7 @@ public sealed class SkyLight
     /// </summary>
     internal Vector3 ScatteredAt(float altitude, float cosSunZenith)
     {
-        var row = Math.Clamp(altitude / Air.Top, 0, 1) * (ScatterHeights - 1);
+        var row = MathF.Sqrt(Math.Clamp(altitude / Air.Top, 0, 1)) * (ScatterHeights - 1);
         var column = (Math.Clamp(cosSunZenith, -1, 1) + 1) / 2 * (ScatterAngles - 1);
         return Exp(Bilinear(_scattered, ScatterAngles, row, column));
     }
@@ -240,6 +242,13 @@ public sealed class SkyLight
     {
         var r = float.DegreesToRadians(elevation);
         return Log(Illuminance(new Vector3(MathF.Cos(r), MathF.Sin(r), 0)));
+    }
+
+    // The scattering table's height at a row, crowded near the ground as the transmittance's.
+    private float ScatterHeight(int row)
+    {
+        var along = (float)row / (ScatterHeights - 1);
+        return Air.Top * along * along;
     }
 
     // The transmittance table's height at a row, crowded near the ground.

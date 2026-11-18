@@ -50,6 +50,12 @@ the Lux article's 400 lux at sunset, 3.4 at the end of civil twilight, 0.05 to 0
 and 0.002 on a moonless night and against moonlight's 4,100 K, the light's color falling to 1,962 K
 at 10.5 degrees down where the twilight sky is blue.
 
+![](.github/assets/readings/2026-11-18-twilight-air.webp)
+The scene's light on a level surface and its color from dusk into night at 51 degrees north, with
+the air ended at 55 km, dashed, and carried to 111 km, solid, the light at 6 degrees down 9.1 lux
+where it was 6.5 and its color above 4,530 K through the twilight where it fell to 1,962 K at 10.5
+degrees down, the day's light the same.
+
 ## 2026-11-08
 
 Done that day

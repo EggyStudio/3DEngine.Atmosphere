@@ -479,3 +479,38 @@ air toward the sun, its light through long ways that redden it, which is the ben
 the ground's table met. The mend proposed next, a failing test first, carries the air higher and
 reads the twilight's color against Hulburt's ozone, the moonless night's lux left as the dark
 site's by its own source.
+
+The module's session, the twilight's air. `Atmosphere.Top` ends the air where its molecules thin to
+a millionth, 111 km, where it was a thousandth, 55 km, and the scattering table's 32 heights crowd
+near the ground as the transmittance's do, its lowest rows 115 m apart. The earth's shadow overhead
+stands at 35 km with the sun 6 degrees down and 79 km with it 9 down, so the old air lay all in
+shadow from 8 degrees down and the twilight was lit through the low air toward the sun alone. The
+twilight's zenith is blue from 4 to 10 degrees down, its blue over its red 1.26 at 6, 1.98 at 8 and
+2.92 at 10 where it was 0.67 and 0 at 6 and 10, and the light on a level surface stays above
+4,530 K through the twilight where it fell to 1,962 K, at
+`.github/assets/readings/2026-11-18-twilight-air.webp` beside the old. A test holds the zenith
+bluer than red from 4 to 10 degrees down and bluer by a twentieth at least than ozone-free air
+gives at 6, 8 and 10, as Hulburt (1953) has it and as Spitschan and others (2016) measured the
+outdoor light turning to shorter waves through the twilight, and it failed on the old air at 4
+degrees down. The ozone's share is a tenth of the blue over red, since `Atmosphere.Earth`'s ozone,
+HDRP's scaled by 0.6 over a layer 20 km thick, has a vertical optical depth near 0.011 in green
+where the Earth's 300 Dobson units give some 0.03; raising it moves the day's sun, which HDRP's
+figures pin, so it waits for the review. The day's figures stand by a test within 0.5% of what they
+read before, the sun 54 degrees high 109,957 lux and 5,025 K for 109,968 and 5,026, the sky 7,851
+lux for 7,857 and its zenith 1,630 candelas for 1,631. The ground's table starts at 24 degrees down
+where it started at 20, since the higher air lights the sky with 1.1% of the night's own light at
+20 and 2e-4 at 24, and its two tests hold each channel within 1% of itself, the wavering of the
+dim blue that called for the lux's bound being a fifth of what it was. Making a `SkyLight` takes
+51 ms where it took 22, and its ground's table 144 ms where it took 110, the means of 20 in a
+release build's probe on 32 cores, at the same tables' sizes and steps, the taller air's thin
+layers multiplying very small numbers in the twilight.
+
+The sunset's 1,391 lux against the Lux article's 400. A second source, the twilight illuminance of
+Krisciunas and Schaefer (1991) after Brown (1952) as a plot of it in Wikimedia Commons lists it,
+gives some 442 lux at sunset, so the two agree and the module is three times either. The higher air
+does not account for it, moving the sunset's light from 1,391 to 1,399 lux, and the reference's
+conditions account for a part, since `Atmosphere.Earth` is a turbidity of 1.11, a very clear air,
+and a turbidity of 2 gives 1,067 lux at sunset, 3 gives 926 and 4 gives 818, still twice the
+sources'. The rest stands on the sky's own light at a low sun, 1,266 of the 1,399 lux, where the
+light scattered more than once is the first to read; it is proposed as the next reading, with the
+end of civil twilight, which the higher air takes from 6.5 to 9.1 lux against 3.4.

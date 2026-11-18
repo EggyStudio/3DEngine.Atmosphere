@@ -87,9 +87,15 @@ public sealed record Atmosphere
 
     /// <summary>
     /// The height in meters past which the air is taken to end, where its thickest layer has
-    /// thinned to a thousandth or the ozone's layer ends, whichever is higher.
+    /// thinned to a millionth or the ozone's layer ends, whichever is higher, 111 km for Earth.
     /// </summary>
-    public float Top => MathF.Max(-MathF.Log(0.001f) * MathF.Max(RayleighScaleHeight, AerosolScaleHeight), OzoneBottom + OzoneWidth);
+    /// <remarks>
+    /// The twilight's sky is lit through the air high above the earth's shadow, which stands
+    /// overhead at 35 km with the sun 6 degrees down and at 79 km with it 9 down. Air ended at a
+    /// thousandth, 55 km, would lie all in that shadow from 8 degrees down, its twilight lit
+    /// through the low air toward the sun alone and reddened where it is blue.
+    /// </remarks>
+    public float Top => MathF.Max(-MathF.Log(1e-6f) * MathF.Max(RayleighScaleHeight, AerosolScaleHeight), OzoneBottom + OzoneWidth);
 
     /// <summary>
     /// The air's haze, the optical depth of the molecules and the aerosols over that of the

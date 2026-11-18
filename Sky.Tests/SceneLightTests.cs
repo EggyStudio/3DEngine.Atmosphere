@@ -93,9 +93,8 @@ public class SceneLightTests
         {
             var clock = Clock(hour, SkyClock.SynodicMonth / 2);
             var (table, sum) = (SceneLight.At(clock, Sky).SkyIlluminance, SceneLight.At(clock, Sky, 0.01f).SkyIlluminance);
-            var lux = Colorimetry.Luminance(sum);
             for (var c = 0; c < 3; c++)
-                Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * MathF.Max(sum[c], lux), $"at {hour} the table gives {table} for {sum}");
+                Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * sum[c], $"at {hour} the table gives {table} for {sum}");
         }
     }
 

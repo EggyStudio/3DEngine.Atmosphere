@@ -71,27 +71,22 @@ public class SkyLightTests
     }
 
     [Fact]
-    public void The_Ground_Table_Holds_Within_A_Hundredth_Of_The_Sum_From_20_Degrees_Down_To_The_Zenith()
+    public void The_Ground_Table_Holds_Within_A_Hundredth_Of_The_Sum_From_24_Degrees_Down_To_The_Zenith()
     {
         // Read between the table's rows at heights none of them stands at, from the deep
-        // twilight to the zenith, each channel within 1% of itself or of the sum's lux, whichever
-        // is larger. A dim channel is held to the lux, since in the deep twilight the sum's blue, a
-        // thousandth of the night sky's light, wavers from one tenth of a degree to the next, its
-        // logarithm's slope moving from -0.139 to -0.068 a fortieth of a degree at 12.8 degrees
-        // down, which no table read between its rows follows (dotnet test Sky.Tests).
-        for (var elevation = -19.9f; elevation <= 90; elevation += 0.9f)
+        // twilight to the zenith, each channel within 1% of itself.
+        for (var elevation = -23.9f; elevation <= 90; elevation += 0.9f)
         {
             var (table, sum) = (Sky.GroundIlluminance(SunAt(elevation)), Sky.Illuminance(SunAt(elevation)));
-            var lux = Colorimetry.Luminance(sum);
             for (var c = 0; c < 3; c++)
-                Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * MathF.Max(sum[c], lux), $"at {elevation} degrees the table gives {table} for {sum}");
+                Assert.True(MathF.Abs(table[c] - sum[c]) < 0.01f * sum[c], $"at {elevation} degrees the table gives {table} for {sum}");
         }
     }
 
     [Fact]
-    public void Below_20_Degrees_Down_The_Ground_Table_Gives_None_Where_The_Sum_Is_Under_A_Thousandth_Of_The_Night()
+    public void Below_24_Degrees_Down_The_Ground_Table_Gives_None_Where_The_Sum_Is_Under_A_Thousandth_Of_The_Night()
     {
-        foreach (var elevation in new[] { -20.5f, -30, -60, -90 })
+        foreach (var elevation in new[] { -24.5f, -30, -60, -90 })
         {
             Assert.Equal(Vector3.Zero, Sky.GroundIlluminance(SunAt(elevation)));
             Assert.True(Colorimetry.Luminance(Sky.Illuminance(SunAt(elevation))) < Night.SkyIlluminance * 1e-3f);
@@ -136,5 +131,37 @@ public class SkyLightTests
                     Assert.True(MathF.Abs(ground[c] - expected[c]) <= 0.01f * expected[c], $"at {elevation} degrees the ground along {down} shows {ground} for {expected}");
             }
         }
+    }
+
+    [Fact]
+    public void The_Twilight_Zenith_Is_Blue_And_The_Ozone_Makes_It_Bluer()
+    {
+        // The twilight's zenith is blue, which Hulburt (1953) put down to the ozone's absorption
+        // of the yellow and the green high in the air, and the light outdoors turns to shorter
+        // waves as the sun sinks through the twilight (Spitschan and others, 2016). So from 4 to
+        // 10 degrees down the zenith is bluer than it is red, and at 6, 8 and 10 bluer by a
+        // twentieth at least than in the same air with no ozone.
+        var bare = new SkyLight(Atmosphere.Earth with { OzoneAbsorption = Vector3.Zero });
+        foreach (var elevation in new[] { -4f, -6, -8, -10 })
+        {
+            var zenith = Sky.Luminance(Vector3.UnitY, SunAt(elevation));
+            Assert.True(zenith.Z > zenith.X, $"at {elevation} degrees the zenith is {zenith}");
+            if (elevation > -5) continue;
+            var without = bare.Luminance(Vector3.UnitY, SunAt(elevation));
+            Assert.True(zenith.Z / zenith.X > 1.05f * (without.Z / without.X), $"at {elevation} degrees the ozone takes the zenith from {without} to {zenith}");
+        }
+    }
+
+    [Fact]
+    public void The_Days_Figures_Stand_Where_The_Air_Ended_At_55_Kilometers()
+    {
+        // The sun 54 degrees high at the ground, the sky's light on a level surface and its
+        // luminance at the zenith, as they read with the air ended where its molecules thin to a
+        // thousandth, held within 0.5% with the air carried to a millionth (dotnet test Sky.Tests).
+        var sun = Sun.At(Atmosphere.Earth, 54);
+        Assert.Equal(109_968f, sun.Illuminance, 109_968f * 0.005f);
+        Assert.Equal(5_026f, sun.Temperature, 5_026f * 0.005f);
+        Assert.Equal(7_857f, Colorimetry.Luminance(Sky.Illuminance(SunAt(54))), 7_857f * 0.005f);
+        Assert.Equal(1_631f, Colorimetry.Luminance(Sky.Luminance(Vector3.UnitY, SunAt(54))), 1_631f * 0.005f);
     }
 }
