@@ -64,6 +64,10 @@ It stands on these conventions.
 - A height over the horizon, a latitude, a disc's angular size and the moon's phase angle are in
   degrees, and so is a compass direction, as `WeatherConditions.WindFrom`, clockwise from north. A
   right ascension, a declination and `SkyClock.SkyTurn` are in radians.
+- A height is the true one, unbent by the air, unless `SkyClock.Refracted` is set, which
+  lifts the sun, the moon and the stars to the heights an eye sees them at, 34 minutes of arc at
+  the horizon by `SkyClock.ApparentAltitude`. A published sunset is the apparent one, and a
+  twilight's degrees are the sun's true height.
 - `SkyClock.Hour` is the local solar time from 0 to 24, noon when the sun stands highest, and
   `DayOfYear` counts from 0 on the first of January in a year of 365 days. `WeatherState` advances
   by seconds.

@@ -583,3 +583,15 @@ with the aerosols and the ground's albedo changed alone (`ScenesSponza.cs:129`,
 `ScenesBistro.cs:107`), so its sky takes the real column and the 111 km top with its pointer, its
 day 1.6% dimmer at 54 degrees and its twilight bluer, which its readings of the reference scene
 will show.
+
+The module's session, the apparent height. `SkyClock.ApparentAltitude` gives a body's height as an
+eye sees it from its true height by Saemundsson's formula of 1986 with Meeus's correction for the
+air's temperature and pressure, 34.5 minutes of arc at the horizon, one at 45 degrees and none at
+the zenith, falling to none from a degree under the horizon to two, where the formula's denominator
+nears none and no one sees the body. `SkyClock.Refracted`, off unless set, lifts the sun, the moon
+and the stars to it with their bearings kept, so the heights the engines read stand as they did,
+and the README's conventions say a height is the true one unless it is set. Three tests, which
+failed to build before the members, hold the horizon's 34.5 minutes, Saemundsson's from the true
+height against Bennett's of 1982 from the apparent within a tenth of a minute from the horizon to
+the zenith, the correction's air, and a refracted clock's sun at the horizon where an unrefracted
+one stands 0.57 degrees under it.

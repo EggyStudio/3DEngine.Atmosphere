@@ -114,4 +114,54 @@ public sealed class SkyClockTests
             Assert.Equal(clock.MoonLit, Moon.LitShare(clock.MoonPhaseAngle), 1e-4f);
         }
     }
+
+    // Bennett's refraction (1982) in minutes of arc from the apparent height, as Meeus's
+    // Astronomical Algorithms gives it, chapter 16, a check on Saemundsson's from the true.
+    private static float Bennett(float apparent) =>
+        1 / MathF.Tan(float.DegreesToRadians(apparent + 7.31f / (apparent + 4.4f)));
+
+    [Fact]
+    public void A_Sun_At_The_Horizon_Is_Lifted_34_Minutes_Of_Arc_By_The_Air()
+    {
+        // The sun's middle seen at the horizon stands truly some 34 minutes of arc below it,
+        // which Saemundsson's formula from the true height gives as Bennett's from the apparent
+        // does, both within a tenth of a minute from the horizon to the zenith.
+        var horizon = -34.5f / 60;
+        Assert.Equal(0, SkyClock.ApparentAltitude(horizon), 0.01f);
+        for (var apparent = 0f; apparent <= 90; apparent += 1.5f)
+        {
+            var truly = apparent - Bennett(apparent) / 60;
+            Assert.Equal(apparent, SkyClock.ApparentAltitude(truly), 0.1f / 60);
+        }
+        // A minute of arc at 45 degrees, none at the zenith, and none for a sun two degrees down
+        // or lower, which no one sees.
+        Assert.Equal(45 + 1f / 60, SkyClock.ApparentAltitude(45), 0.05f / 60);
+        Assert.Equal(90, SkyClock.ApparentAltitude(90), 1e-4f);
+        Assert.Equal(-2, SkyClock.ApparentAltitude(-2));
+        Assert.Equal(-10, SkyClock.ApparentAltitude(-10));
+    }
+
+    [Fact]
+    public void Cold_Dense_Air_Bends_More_And_Warm_Thin_Air_Less()
+    {
+        // Meeus's correction, the refraction times the pressure over 1,010 hectopascals and 283
+        // kelvin over the air's temperature.
+        var standard = SkyClock.ApparentAltitude(5) - 5;
+        Assert.Equal(standard * 283 / 253f, SkyClock.ApparentAltitude(5, celsius: -20) - 5, 1e-5f);
+        Assert.Equal(standard * 0.9f, SkyClock.ApparentAltitude(5, hectopascals: 909) - 5, 1e-4f);
+    }
+
+    [Fact]
+    public void A_Refracted_Clock_Lifts_The_Sun_And_An_Unrefracted_One_Gives_Its_True_Height()
+    {
+        var truly = new SkyClock { Latitude = 0, DayOfYear = 79, Hour = 18f + 0.5746f / 15 };
+        var seen = new SkyClock { Latitude = 0, DayOfYear = 79, Hour = 18f + 0.5746f / 15, Refracted = true };
+        Assert.False(truly.Refracted);
+        Assert.Equal(-0.5746f, truly.SunAltitude, 0.01f);
+        Assert.Equal(0, seen.SunAltitude, 0.02f);
+        // The lift is toward the zenith, the sun's bearing the same.
+        var (a, b) = (truly.SunDirection, seen.SunDirection);
+        Assert.Equal(MathF.Atan2(a.Z, a.X), MathF.Atan2(b.Z, b.X), 1e-4f);
+        Assert.Equal(1, b.Length(), 1e-5f);
+    }
 }

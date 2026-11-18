@@ -84,6 +84,18 @@ public sealed class SkyClock
     /// </remarks>
     public float MoonPhaseAngle => MathF.Abs(180f - (MoonPhase * 360f));
 
+    /// <summary>
+    /// Whether the sun, the moon and the stars stand at their apparent heights, lifted by the air's
+    /// refraction as an eye sees them, or at their true ones, true unless set.
+    /// </summary>
+    /// <remarks>
+    /// A published sunset or moonrise is the apparent one, the sun's middle at the horizon when it
+    /// stands truly 34 minutes of arc below it, where a twilight's degrees are the sun's true
+    /// height. The lift is <see cref="ApparentAltitude"/>'s for air at 10 degrees and 1,010
+    /// hectopascals, toward the zenith with the bearing kept.
+    /// </remarks>
+    public bool Refracted { get; set; }
+
     /// <summary>The way toward the sun.</summary>
     public Vector3 SunDirection => Toward(SunLongitude);
 
@@ -152,7 +164,35 @@ public sealed class SkyClock
         var east = -MathF.Cos(declination) * MathF.Sin(hourAngle);
         var north = (MathF.Sin(declination) * MathF.Cos(phi)) - (MathF.Cos(declination) * MathF.Cos(hourAngle) * MathF.Sin(phi));
         var up = (MathF.Sin(declination) * MathF.Sin(phi)) + (MathF.Cos(declination) * MathF.Cos(hourAngle) * MathF.Cos(phi));
-        return Vector3.Normalize(new Vector3(east, up, -north));
+        var way = Vector3.Normalize(new Vector3(east, up, -north));
+        if (!Refracted) return way;
+        var level = new Vector2(way.X, way.Z).Length();
+        if (level < 1e-6f) return way;
+        var seen = Radians(ApparentAltitude(Degrees(MathF.Asin(Math.Clamp(way.Y, -1f, 1f)))));
+        return new Vector3(way.X / level * MathF.Cos(seen), MathF.Sin(seen), way.Z / level * MathF.Cos(seen));
+    }
+
+    /// <summary>
+    /// The height in degrees a body <paramref name="trueAltitude"/> degrees over the horizon is
+    /// seen at through air at <paramref name="celsius"/> degrees and
+    /// <paramref name="hectopascals"/>, lifted by the air's refraction, 34 minutes of arc at the
+    /// horizon, one at 45 degrees and none at the zenith.
+    /// </summary>
+    /// <remarks>
+    /// Saemundsson's formula of 1986 from the true height, R = 1.02 / tan(h + 10.3 / (h + 5.11))
+    /// minutes of arc, times the pressure over 1,010 hectopascals and 283 kelvin over the air's
+    /// temperature, as Meeus's Astronomical Algorithms gives it, which agrees with Bennett's from
+    /// the apparent height within a tenth of a minute. A body more than a degree under the horizon
+    /// is seen by no one and the formula's denominator nears none there, so the lift falls to none
+    /// from a degree under to two.
+    /// </remarks>
+    public static float ApparentAltitude(float trueAltitude, float celsius = 10f, float hectopascals = 1010f)
+    {
+        if (trueAltitude <= -2f) return trueAltitude;
+        var h = MathF.Max(trueAltitude, -1f);
+        var minutes = MathF.Max(1.02f / MathF.Tan(Radians(h + (10.3f / (h + 5.11f)))), 0f) * hectopascals / 1010f * 283f / (273f + celsius);
+        if (trueAltitude < -1f) minutes *= trueAltitude + 2f;
+        return trueAltitude + (minutes / 60f);
     }
 
     private static float Radians(float degrees) => degrees * MathF.PI / 180f;

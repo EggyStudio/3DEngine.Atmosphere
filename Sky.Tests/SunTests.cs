@@ -11,7 +11,8 @@ public class SunTests
         // 97,050 lux at 5,633 K outside the air, which HDRP's Earth dims to 73,900 lux at 4,924 K
         // at the ground, the sun's color the same within a hundred kelvin and its lux two thirds
         // of this, since that sun outside the air is 120,000 lux times the sine of its height.
-        // The Earth's real column of ozone takes 1.6% more than HDRP's, 108,170 lux.
+        // The ozone Atmosphere.Earth holds takes its share of the light as well, so the sun
+        // reaches the ground at some 108,000 lux.
         var sun = Sun.At(Atmosphere.Earth, 53.97f);
         Assert.InRange(sun.Illuminance, 107_100, 109_300);
         Assert.InRange(sun.Temperature, 4_976, 5_076);

@@ -17,18 +17,15 @@ namespace Sky;
 /// </para>
 /// <para>
 /// <see cref="Earth"/> holds the Earth of Unity's HDRP, whose physically based sky the values are
-/// taken from so an engine's sky can be read beside one drawn there, but for its ozone. That is a
-/// column of 300 Dobson units as Bruneton's precomputed atmospheric scattering of 2017 gives it, a
-/// layer from 10 to 40 km at Bruneton's absorption, a vertical optical depth of 0.028 in green,
-/// where HDRP scales the same absorption by 0.6 over a layer from 20 to 40 km, 0.011, a third of
-/// the Earth's. The real column turns the twilight's zenith blue as the ozone does over the Earth,
-/// and takes 1.6% of the day's light with the sun 54 degrees high.
+/// taken from so an engine's sky can be read beside one drawn there, but for its ozone, a column of
+/// 300 Dobson units in a layer from 10 to 40 km (<see cref="OzoneAbsorption"/>), a vertical optical
+/// depth of 0.028 in green, which turns the twilight's zenith blue.
 /// </para>
 /// </remarks>
 public sealed record Atmosphere
 {
     /// <summary>
-    /// The Earth's air on a clear day, with HDRP's values and a real column of ozone.
+    /// The Earth's air on a clear day, its ozone a column of 300 Dobson units.
     /// </summary>
     public static Atmosphere Earth { get; } = new();
 
@@ -75,7 +72,8 @@ public sealed record Atmosphere
 
     /// <summary>
     /// How much of the light the ozone absorbs a meter in the middle of its layer, at each
-    /// wavelength, Bruneton's for 300 Dobson units unless set.
+    /// wavelength, unless set the absorption Bruneton's precomputed atmospheric scattering of 2017
+    /// gives a column of 300 Dobson units.
     /// </summary>
     public Vector3 OzoneAbsorption { get; init; } = new(0.650e-6f, 1.881e-6f, 0.085e-6f);
 
