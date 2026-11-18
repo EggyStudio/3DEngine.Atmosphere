@@ -425,3 +425,57 @@ eye stands above the ground, and a test holds it within 1% of the albedo times b
 ground's term on its own, `atmosphere_sky.slang` line 59, so its binding adds the sky's light there
 to match. The horizon color without fog is `SkyLight.Luminance` along the horizon, as it is; the
 fog's blend over it stays the engine's drawing.
+
+The module's session, the bridge's binding, read from BevyCSharp at its head with nothing changed
+there. Every number it computes or sets itself for the sky that the module could give, by its file
+and line.
+
+| Where | What the bridge computes or sets | What Sky gives |
+|---|---|---|
+| `games/FeatureTest/Behaviors/DayNight.cs:63` | The sun above the air, 12,500 lux in (1, 0.98, 0.95) | `Sun.Outside`, 128,000 lux at 5,772 K, and `Sun.At` at the ground |
+| `DayNight.cs:66-78` | The sun's lux and color by the hour, 0 to 12,500 | `Sun.At` by `SkyClock.SunAltitude`, or `SceneLight.At` |
+| `DayNight.cs:351` | The sun's and the moon's light faded over 0.05 of height at the horizon | `Sun.DiscShare` and `Moon.DiscShare` |
+| `DayNight.cs:85-93`, `:242` | The moon at 900 lux in day terms, a fixed blue, times `MoonLit` | `Moon.At` by `SkyClock.MoonPhaseAngle` |
+| `DayNight.cs:104-137` | The ambient and the sky's ambient light by the hour, 20 to 1,000 | `SceneLight.SkyIlluminance`, by sun, moon and night |
+| `DayNight.cs:155-171`, `Applied.cs:164-165` | EV100 9.7 by day, a night lens of -0.12, switched at 18:45 and 5:30 | `SceneLight.Exposure`, by the light rather than the hour |
+| `BevyCSharp/Sky/NightSkySettings.cs:30`, `Kernels/night_sky.slang:130-144` | Stars of 600 nits, hashed one cell in five | `Stars.Catalog` with `Stars.Luminance` |
+| `night_sky.slang:143` | A star's tint picked between two at random | `Stars.Color` by its B-V |
+| `NightSkySettings.cs:39`, `night_sky.slang:154-161` | The Milky Way at 25 nits about a hard-coded pole and center | `Night.GalaxyLuminance` |
+| `night_sky.slang:187` | Stars faded in from 3 to 9 degrees under the horizon | `SkyLight.Luminance` over `Night.SkyLuminance` |
+| `NightSkySettings.cs:42`, `:48` | The full moon at 4,000 nits, earthshine 0.012 of it | `Moon.LitLuminance`, 4,870, and `Moon.EarthshineLuminance`, 8e-5 |
+| `NightSkySettings.cs:45`, `Applied.cs:211` | The moon 0.7 degrees wide, 1.5 in FeatureTest | `Moon.AngularDiameter`, 0.518 |
+| `BevyCSharp/Rendering/SunDisk.cs:21` | The sun's disc of 0.00931 radians at an intensity of 1 | `Sun.AngularDiameter`, 0.533 degrees, and `Sun.DiscLuminance` |
+| `ScatteringTerm.cs:93-112` | Rayleigh, Mie and ozone of its own Earth | `Atmosphere.Earth` |
+| `native/bevy_csharp/src/render/post/atmosphere.rs:108-126`, `RenderSky.Clouds.cs:92` | A planet of 6,360,000 m, and Bevy's ground albedo | `Atmosphere.PlanetRadius`, 6,378,100 m, and `GroundAlbedo` |
+| `BevyCSharp/Sky/RenderSky.cs:126` | The clouds' density times `CloudDensity` | `CloudOpticalDepth` over the deck's thickness |
+| `RenderSky.cs:137`, `Kernels/sky_fog.slang:96` | The fog's visibility eased toward 80 m, its extinction 3 over it | `Haze.Visibility` and `Haze.Extinction` by Koschmieder's 3.912 |
+| `SkyFogSettings.cs:59`, `Applied.cs:207` | The fog at 5,000 nits and the dusk's backdrop at 600 | `SkyLight.Luminance` along the horizon |
+| `RenderSky.Thunder.cs:75-79`, `:210-250` | The flash's life, envelope, color and the strikes' Poisson process and places | `Thunderstorm` and `LightningFlash` |
+| `RenderSky.Thunder.cs:76` | Sound at 343 m/s | `Thunderstorm.SpeedOfSound` by the weather's temperature |
+| `RenderSky.Thunder.cs:217` | Two thirds of strikes to the ground | `Thunderstorm.GroundShare`, a quarter |
+
+Three numbers have no counterpart in Sky, the second Earth of the map's sky
+(`ScatteringTerm.cs:142`), the clouds' phase lobes and ambient (`RenderSky.Clouds.cs:248`) and the
+bolt's core of 1e7 nits (`RenderSky.Thunder.cs:78`). One looks a fault of the bridge's own.
+`ScatteringTerm.cs:100-101` gives its aerosols an absorption of 3.996e-6 and a scattering of
+0.444e-6 a meter, a single scattering albedo of 0.1, where Hillaire's Earth, whose Rayleigh terms
+the file takes, scatters 3.996e-6 in an extinction of 4.44e-6, an albedo of 0.9, so the two look
+swapped and the bridge's haze takes light it should scatter.
+
+The module's session, the dusk into night, `SceneLight.At` at 51 degrees north on the equinox from
+the sun 10 degrees up to 24 down, with no moon and with a full moon rising opposite the sunset, at
+`.github/assets/readings/2026-11-18-dusk-to-night.webp`. Against the table of Wikipedia's article
+Lux the module gives 1,391 lux at sunset for its 400, 3.5 times as bright; 6.5 lux at the end of
+civil twilight for its 3.4; 0.10 lux under the full moon 22 degrees up, inside its 0.05 to 0.3; and
+7.1e-4 lux on a moonless night for its 0.002 with airglow, a third of it, since `Night.SkyLuminance`
+is a dark site's 21.7 magnitudes a square arcsecond. The moonlit light is 5,100 K for the 4,100 of
+Wikipedia's article Color temperature, the moon's light taken as the sun's through the air. The
+fault the sheet shows is the twilight's color. The light reddens from 5,800 K at sunset to 1,962 K
+at 10.5 degrees down, 2,837 K at 8.8 with the moon, where the twilight sky is blue, which Hulburt
+(1953) explained by the ozone's absorption of the yellow and the green high in the air. The air of
+`Atmosphere.Earth` ends at 55 km, the height where the molecules fall to a thousandth, and the
+earth's shadow overhead stands above that from about 8 degrees down, so the air left lit is the low
+air toward the sun, its light through long ways that redden it, which is the bend at 8.2 degrees
+the ground's table met. The mend proposed next, a failing test first, carries the air higher and
+reads the twilight's color against Hulburt's ozone, the moonless night's lux left as the dark
+site's by its own source.

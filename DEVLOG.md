@@ -43,6 +43,13 @@ The flashes of seeds 1 to 3 each scaled to its own brightest, so each reaches 1 
 point there where seed 2's stood flat at 1 for some 30 ms and seed 1's never reached it, beside
 where 600 strikes of one storm land seen from above with each ring's distance on it.
 
+![](.github/assets/readings/2026-11-18-dusk-to-night.webp)
+The scene's light on a level surface and its color from the sun 10 degrees up to 24 down at 51
+degrees north on the equinox, with no moon and with a full moon rising opposite the sunset, against
+the Lux article's 400 lux at sunset, 3.4 at the end of civil twilight, 0.05 to 0.3 under a full moon
+and 0.002 on a moonless night and against moonlight's 4,100 K, the light's color falling to 1,962 K
+at 10.5 degrees down where the twilight sky is blue.
+
 ## 2026-11-08
 
 Done that day
