@@ -627,6 +627,6 @@ to 8 km and seven ways each, above and below the horizon; it failed first, the v
 The module's session, the moon's bands in the tables' view. `SkyLaneTables.Moon(phaseAngle)` gives
 the moon's light outside the air in a lane's three bands, and the README says the moonlit sky is
 the same march toward the moon with it in place of `Sun`, the ground's term scaled by the moon's
-bands over the sun's. The README reader so lit gives the module's moonlit sky within 0.5% at the
-moon 60, 15 and 2 degrees down and phase angles of 0 and 60, four ways each; it failed first, to
-build.
+bands over the sun's. The README reader so lit gives the module's moonlit sky within 0.5% with the
+moon 60 and 15 degrees up and 2 down and phase angles of 0 and 60, four ways each; it failed first,
+to build.
