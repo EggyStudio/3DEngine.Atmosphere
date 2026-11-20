@@ -6,6 +6,13 @@ repository keeps under `.github/assets` and the pictures made while an item was 
 notes written beside them as Markdown files named the same way. A line under Done names the item of
 .github/REVIEW.md or .github/REVIEW-ARCHIVE.md and the commit that closed it.
 
+## 2026-11-19
+
+Commits that day
+
+- `9040738` The tables' view gives the moon's light in each lane's bands, so an engine draws the
+  moonlit sky on a GPU as the module does.
+
 ## 2026-11-18
 
 ![](.github/assets/readings/2026-11-18-scene-light.webp)
