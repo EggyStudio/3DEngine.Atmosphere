@@ -6,6 +6,13 @@ repository keeps under `.github/assets` and the pictures made while an item was 
 notes written beside them as Markdown files named the same way. A line under Done names the item of
 .github/REVIEW.md or .github/REVIEW-ARCHIVE.md and the commit that closed it.
 
+## 2026-11-21
+
+Commits that day
+
+- `645c3d8` The sun test and the comments of the light scattered more than once say what they hold
+  in the module's own terms, the clear air's source named once in the README.
+
 ## 2026-11-20
 
 Commits that day
