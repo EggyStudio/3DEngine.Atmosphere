@@ -11,7 +11,7 @@ list is written by `Cheatsheet.Write` from the built library, and this text by h
 ```csharp
 record Atmosphere                                        // The air around a planet as a sky is drawn and lit from it, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with the heights each thins over, and the ground's albedo, in meters and per meter at sea level
 Atmosphere();                                            // The Earth's air, each term as Earth holds it until set
-Atmosphere Earth { get; }                                // The Earth's air on a clear day, its ozone a column of 300 Dobson units, as Hillaire (2020) sets it
+Atmosphere Earth { get; }                                // The Earth's air on a clear day, its ozone a column of 300 Dobson units, a turbidity of 1.09 and 178 km visibility
 Atmosphere ContinentalAverage { get; }                   // The Earth's air on an ordinary day, its haze OPAC's continental average aerosol at a relative humidity of 80%, a turbidity of 2.39 and 44 km visibility
 float PlanetRadius { get; init; }                        // The planet's radius in meters, 6,360,000 for the Earth
 Vector3 RayleighScattering { get; init; }                // How much of the light the molecules scatter a meter at sea level, at 680, 550 and 440 nanometers, which they take nothing of otherwise

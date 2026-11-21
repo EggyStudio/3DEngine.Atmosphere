@@ -17,14 +17,12 @@ namespace Sky;
 /// a coefficient multiplies is a color of the frame.
 /// </para>
 /// <para>
-/// <see cref="Earth"/> holds the Earth's air as Hillaire's scalable sky and atmosphere rendering
-/// technique of 2020 sets it in its Table 1, after Bruneton's precomputed atmospheric scattering of
-/// 2017: the planet 6,360 km in radius, the molecules' scattering at 680, 550 and 440 nm, a haze
-/// that scatters 3.996e-6 of the light a meter at the ground and absorbs 4.40e-6 over a scale
-/// height of 1,200 m with an asymmetry of 0.8, alike at every wavelength, an ozone column of 300
-/// Dobson units from 10 to 40 km, and a ground of albedo 0.3. Its haze is a clear day's, a
-/// turbidity of 1.09 and 178 km visibility, under which the day's sky is a deep blue with a tight
-/// halo about the sun.
+/// <see cref="Earth"/> holds the Earth's air on a clear day, the planet 6,360 km in radius, the
+/// molecules' scattering at 680, 550 and 440 nm, a haze that scatters 3.996e-6 of the light a
+/// meter at the ground and absorbs 4.40e-6 over a scale height of 1,200 m with an asymmetry of
+/// 0.8, alike at every wavelength, an ozone column of 300 Dobson units from 10 to 40 km, and a
+/// ground of albedo 0.3. Its haze gives a turbidity of 1.09 and 178 km visibility, under which
+/// the day's sky is a deep blue with a tight halo about the sun.
 /// </para>
 /// <para>
 /// <see cref="ContinentalAverage"/> holds the same air with an ordinary day's haze in place of the
@@ -41,8 +39,8 @@ public sealed record Atmosphere
     }
 
     /// <summary>
-    /// The Earth's air on a clear day, its ozone a column of 300 Dobson units, as Hillaire (2020)
-    /// sets it.
+    /// The Earth's air on a clear day, its ozone a column of 300 Dobson units, a turbidity of 1.09
+    /// and 178 km visibility.
     /// </summary>
     public static Atmosphere Earth { get; } = new();
 

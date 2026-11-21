@@ -12,10 +12,10 @@ namespace Sky;
 /// Along a way from the eye the air scatters the sun's light toward the eye once, by the
 /// molecules' phase function and Cornette and Shanks's for the aerosols, each part dimmed by the
 /// air between the sun and the point and between the point and the eye. The light scattered more
-/// than once is Hillaire's approximation of 2020, which takes the light at a point scattered twice
-/// or more as alike from every way, the second order's luminance divided by one less the share the
-/// air sends on at each order. A way that meets the ground takes the ground's light, the sun's
-/// light it returns by its albedo, and the second order carries the ground's light too.
+/// than once is taken at a point as alike from every way, the second order's luminance divided by
+/// one less the share the air sends on at each order. A way that meets the ground takes the
+/// ground's light, the sun's light it returns by its albedo, and the second order carries the
+/// ground's light too.
 /// </para>
 /// <para>
 /// The light's strength scales with the sun's outside the air, so an engine whose sun is given

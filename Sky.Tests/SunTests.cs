@@ -7,13 +7,9 @@ public class SunTests
     [Fact]
     public void The_Sun_At_54_Degrees_Reaches_The_Ground_At_112000_Lux_And_5300_Kelvin()
     {
-        // The reference scene, 27 June at 15:05 in Cologne, sets its sun 53.97 degrees high to
-        // 97,050 lux at 5,633 K outside the air, which the scene's own air dims to 73,900 lux at
-        // 4,924 K at the ground, an ordinary day's, which ContinentalAverage holds within a
-        // hundred kelvin, its lux less since that sun outside the air is 120,000 lux times the sine
-        // of its height. Through the Earth's clear day the sun reaches the ground at some 111,700
-        // lux and 5,291 K and through the ordinary day's at 94,100 and 5,021 (dotnet test
-        // Sky.Tests).
+        // A sun 53.97 degrees high reaches the ground through the Earth's clear day at some 111,700
+        // lux and 5,291 K, and through the ordinary day's thicker haze, which takes more of the
+        // light and more of its blue, at 94,100 lux and 5,021 K (dotnet test Sky.Tests).
         var ordinary = Sun.At(Atmosphere.ContinentalAverage, 53.97f);
         Assert.InRange(ordinary.Illuminance, 93_200, 95_000);
         Assert.InRange(ordinary.Temperature, 4_971, 5_071);

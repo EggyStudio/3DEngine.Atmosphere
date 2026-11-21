@@ -4,9 +4,10 @@ namespace Sky;
 
 // The sky's light in three of the spectrum's bands, which SkyLight reads in lanes and turns into
 // color. Each channel of its vectors is a band, the sun's light outside the air in each given, and
-// the arithmetic is the light scattered once along a way and Hillaire's light scattered more than
-// once, each band alike, so a lane of the module's air read in its bands gives its share of the
-// sky's light in watts a square meter a nanometer a steradian, or a nanometer on a level surface.
+// the arithmetic is the light scattered once along a way and the light scattered more than once,
+// taken at a point as alike from every way, each band alike, so a lane of the module's air read
+// in its bands gives its share of the sky's light in watts a square meter a nanometer a
+// steradian, or a nanometer on a level surface.
 internal sealed class SkyLane
 {
     // The sun's light outside the air in the lane's three bands.
@@ -292,7 +293,7 @@ internal sealed class SkyLane
         return Air.Top * along * along;
     }
 
-    // Hillaire's light scattered twice or more at a height with the sun at a cosine with the
+    // The light scattered twice or more at a height with the sun at a cosine with the
     // zenith, gathered over ways spread evenly over the sphere, each marched in even steps.
     private Vector3 Scattered(float altitude, float cosSunZenith)
     {
@@ -342,7 +343,7 @@ internal sealed class SkyLane
     }
 
     // A step of a march, the light the step's source adds over its length dimmed by the air within
-    // it, as Hillaire integrates a step.
+    // it, the source integrated against the step's own extinction and not held at its start.
     private static (Vector3 Light, Vector3 Through) Step(Vector3 light, Vector3 through, Vector3 source, Vector3 extinction, float length) =>
         (light + through * source * Span(extinction, length), through * Exp(-extinction * length));
 
