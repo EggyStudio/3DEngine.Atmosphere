@@ -2,10 +2,11 @@
 
 # Sky
 
-Sky is a library an engine takes as a git submodule, for the sky's clock, the sun's and the sky's
-light in physical units, the atmosphere's parameters, the weather and the looks by the sun's height.
-An engine lights its scenes from its numbers and draws its own sky from them. It
-references no engine, and each engine implements the interfaces it declares where it binds the
+Sky is a physically based sky, an atmosphere worked out by wavelength in twelve bands from 380 to
+780 nm, the sun's, the moon's and the night's light in lux and candelas a square meter, the sky's
+clock, the weather and the looks by the sun's height. An engine takes it as a git submodule,
+lights its scenes from its numbers and draws its sky on a GPU from the tables a made sky gives.
+It references no engine, and each engine implements the interfaces it declares where it binds the
 module.
 
 ## What it holds
