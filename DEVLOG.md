@@ -6,10 +6,29 @@ repository keeps under `.github/assets` and the pictures made while an item was 
 notes written beside them as Markdown files named the same way. A line under Done names the item of
 .github/REVIEW.md or .github/REVIEW-ARCHIVE.md and the commit that closed it.
 
+## 2026-11-22
+
+![](.github/assets/readings/2026-11-22-sky-by-time.webp)
+The sky the module draws from its own numbers as a fisheye at noon, at sunset, at the end of civil
+twilight and under a full moon, each at the exposure its scene's incident meter gives and encoded by
+sRGB's curve with no tone curve.
+
+![](.github/assets/readings/2026-11-22-sky-panoramas.webp)
+The sky at sunset and on a moonless night as a panorama from 10 degrees under the horizon to the
+zenith, the sunset's light thinning upward from a bright horizon and the night's glow lying in a
+faint arch over the stars.
+
+Commits that day
+
+- `080abb5` The README and AGENTS.md open by naming the module a physically based sky and what it
+  holds.
+
 ## 2026-11-21
 
 Commits that day
 
+- `bd7dc37` The Tools pin moves to its newest commit and the rule on the GPU lock names the one gate
+  for it.
 - `645c3d8` The sun test and the comments of the light scattered more than once say what they hold
   in the module's own terms, the clear air's source named once in the README.
 

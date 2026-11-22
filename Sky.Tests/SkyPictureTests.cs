@@ -51,7 +51,8 @@ public class SkyPictureTests
         // dotnet test Sky.Tests with SKY_PICTURES set to a folder writes the fisheye and the
         // panorama of each scene there as PNG, the sun's place ringed, each at the scene's metered
         // exposure and again at a reflected reading of the sky, with scenes.csv naming each by its
-        // sun's height and both exposures, for a sheet to set them on.
+        // sun's height and both exposures, for a sheet to set them on, and the two again at the
+        // scene's metered exposure with no ring, the plain pictures of the sky itself.
         var folder = Environment.GetEnvironmentVariable("SKY_PICTURES");
         if (string.IsNullOrEmpty(folder)) return;
         Directory.CreateDirectory(folder);
@@ -66,6 +67,8 @@ public class SkyPictureTests
                 SkyPicture.Fisheye(Sky, clock, ev, 400, markSun: true).WritePng(Path.Combine(folder, $"{name}-fisheye{tag}.png"));
                 SkyPicture.Panorama(Sky, clock, ev, 1080, 330, markSun: true).WritePng(Path.Combine(folder, $"{name}-panorama{tag}.png"));
             }
+            SkyPicture.Fisheye(Sky, clock, exposure, 400).WritePng(Path.Combine(folder, $"{name}-fisheye-plain.png"));
+            SkyPicture.Panorama(Sky, clock, exposure, 1080, 330).WritePng(Path.Combine(folder, $"{name}-panorama-plain.png"));
             list.WriteLine(FormattableString.Invariant($"{name},{clock.SunAltitude:F2},{clock.MoonAltitude:F2},{exposure:F2},{reflected:F2}"));
         }
     }

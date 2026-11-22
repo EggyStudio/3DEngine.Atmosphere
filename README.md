@@ -2,6 +2,14 @@
 
 # Sky
 
+![The sky at noon, at sunset, at the end of civil twilight and under a full moon](.github/assets/readings/2026-11-22-sky-by-time.webp)
+
+The module's own sky as a fisheye at noon, at sunset, at the end of civil twilight and under a full moon.
+
+![The sky at sunset and on a moonless night, from 10 degrees under the horizon to the zenith](.github/assets/readings/2026-11-22-sky-panoramas.webp)
+
+The same sky as a panorama, at sunset and on a moonless night.
+
 Sky is a physically based sky, an atmosphere worked out by wavelength in twelve bands from 380 to
 780 nm, the sun's, the moon's and the night's light in lux and candelas a square meter, the sky's
 clock, the weather and the looks by the sun's height. An engine takes it as a git submodule,
