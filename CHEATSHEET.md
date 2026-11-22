@@ -1,6 +1,6 @@
-# 3DEngine.Sky cheatsheet
+# 3DEngine.Atmosphere cheatsheet
 
-Every public type of the Sky module in the order the README first names it, with its public
+Every public type of the Atmosphere module in the order the README first names it, with its public
 members a line each, the declaration and the first sentence of its summary, for a binding to find
 a member by. The conventions the numbers stand on, meters, +Y up with north along -Z, linear sRGB
 and light in lux and candelas a square meter, are in the README's section Binding it in your
@@ -9,10 +9,10 @@ list is written by `Cheatsheet.Write` from the built library, and this text by h
 
 <!-- written by Cheatsheet.Write from the built library -->
 ```csharp
-record Atmosphere                                        // The air around a planet as a sky is drawn and lit from it, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with the heights each thins over, and the ground's albedo, in meters and per meter at sea level
-Atmosphere();                                            // The Earth's air, each term as Earth holds it until set
-Atmosphere Earth { get; }                                // The Earth's air on a clear day, its ozone a column of 300 Dobson units, a turbidity of 1.09 and 178 km visibility
-Atmosphere ContinentalAverage { get; }                   // The Earth's air on an ordinary day, its haze OPAC's continental average aerosol at a relative humidity of 80%, a turbidity of 2.39 and 44 km visibility
+record Air                                               // The air around a planet as a sky is drawn and lit from it, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with the heights each thins over, and the ground's albedo, in meters and per meter at sea level
+Air();                                                   // The Earth's air, each term as Earth holds it until set
+Air Earth { get; }                                       // The Earth's air on a clear day, its ozone a column of 300 Dobson units, a turbidity of 1.09 and 178 km visibility
+Air ContinentalAverage { get; }                          // The Earth's air on an ordinary day, its haze OPAC's continental average aerosol at a relative humidity of 80%, a turbidity of 2.39 and 44 km visibility
 float PlanetRadius { get; init; }                        // The planet's radius in meters, 6,360,000 for the Earth
 Vector3 RayleighScattering { get; init; }                // How much of the light the molecules scatter a meter at sea level, at 680, 550 and 440 nanometers, which they take nothing of otherwise
 float RayleighScaleHeight { get; init; }                 // The height in meters over which the molecules thin to a share of 1/e, 8,000 for the Earth
@@ -27,7 +27,7 @@ float OzoneWidth { get; init; }                          // The ozone layer's de
 Vector3 GroundAlbedo { get; init; }                      // The share of the light the ground returns at each wavelength, scattered evenly
 float Top { get; }                                       // The height in meters past which the air is taken to end, where its thickest layer has thinned to a millionth or the ozone's layer ends, whichever is higher, 111 km for Earth
 float Turbidity { get; }                                 // The air's haze, the optical depth of the molecules and the aerosols over that of the molecules alone straight up at 550 nanometers, 1 for air with no aerosols in it, 1.09 for Earth's clear day and 2.39 for ContinentalAverage's ordinary one
-Atmosphere WithTurbidity(float turbidity);               // This air with the aerosols' extinction set so its Turbidity is turbidity, 1 at least
+Air WithTurbidity(float turbidity);                      // This air with the aerosols' extinction set so its Turbidity is turbidity, 1 at least
 Vector3 RayleighAt(float altitude);                      // How much of the light the molecules scatter a meter at altitude meters, at each wavelength
 float AerosolAt(float altitude);                         // How much of the light the aerosols take out a meter at altitude meters
 Vector3 OzoneAt(float altitude);                         // How much of the light the ozone absorbs a meter at altitude meters, at each wavelength
@@ -40,14 +40,14 @@ float Temperature = 5772f;                               // The sun's effective 
 float AngularDiameter = 0.533f;                          // How wide the sun's disc looks from the earth, in degrees, its mean of 0.533
 Vector3 Outside { get; }                                 // The sun's light outside the air in linear sRGB, its luminance in lux, its color its measured spectrum's
 float SolidAngle { get; }                                // The solid angle of the sun's disc, in steradians, 6.8e-5
-CelestialLight At(Atmosphere air, float elevation, float altitude = 0f);  // The sun's light at altitude meters through air, with the sun elevation degrees over the horizon there
-Vector3 DiscLuminance(Atmosphere air, float elevation, float altitude = 0f);  // The luminance of the sun's disc in candelas a square meter at altitude meters through air, the sun elevation degrees over the horizon, in linear sRGB whose luminance is the disc's, about 1.3e9 under a high sun
+CelestialLight At(Air air, float elevation, float altitude = 0f);  // The sun's light at altitude meters through air, with the sun elevation degrees over the horizon there
+Vector3 DiscLuminance(Air air, float elevation, float altitude = 0f);  // The luminance of the sun's disc in candelas a square meter at altitude meters through air, the sun elevation degrees over the horizon, in linear sRGB whose luminance is the disc's, about 1.3e9 under a high sun
 float DiscShare(float elevation);                        // The share of the sun's disc above the horizon with its middle elevation degrees over it, from none once its upper edge is down to all once its lower edge is up
-CelestialLight Through(Atmosphere air, Vector3 outside, float elevation, float altitude = 0f);  // A light of outside in linear sRGB outside the air, whose luminance is its lux, through air to altitude meters from elevation degrees over the horizon
+CelestialLight Through(Air air, Vector3 outside, float elevation, float altitude = 0f);  // A light of outside in linear sRGB outside the air, whose luminance is its lux, through air to altitude meters from elevation degrees over the horizon
 
 class SkyLight                                           // The light the sky gives, the sun's light scattered by the air toward a place, as luminance along each way from it and as illuminance on a level surface there, for the sun outside the air of Outside
-SkyLight(Atmosphere air);                                // Makes the sky of air, its tables made at once over the processor's cores, a row of heights to a core, the light scattered more than once read from the transmittance's
-Atmosphere Air { get; }                                  // The air the sky is made of
+SkyLight(Air air);                                       // Makes the sky of air, its tables made at once over the processor's cores, a row of heights to a core, the light scattered more than once read from the transmittance's
+Air Air { get; }                                         // The air the sky is made of
 int GroundRowsMade { get; }                              // How many of the ground table's 13 rows are made, which PrepareGround and a first reading near an altitude make
 SkyTables Tables { get; }                                // The sky's tables as a read-only view, for an engine that draws the sky on a GPU and repeats Luminance's arithmetic there, its README section "Drawing the sky on a GPU" saying how each is read
 Vector3 Luminance(Vector3 view, Vector3 sunToward, float altitude = 0f);  // The sky's luminance in candelas a square meter along view from altitude meters, with the sun toward sunToward, both with +Y up, in linear sRGB whose luminance is the sky's
@@ -146,10 +146,10 @@ WeatherConditions Of(WeatherPreset preset);              // The conditions a pre
 class Haze                                               // The air near the ground between the eye and what it sees, clear and in fog, as the share of a thing's light that comes through a distance and the share the air hides, in linear sRGB, and as the visibility in meters
 float Contrast = 3.912f;                                 // The optical depth at which a black thing's contrast against the horizon falls to 2%, the eye's threshold, 3.912, by which Koschmieder's law turns an extinction into a visibility
 float FogVisibility = 80f;                               // The visibility in meters of the thickest fog, at Fog 1
-float Visibility(Atmosphere air, WeatherConditions? weather = null);  // How far a black thing can be told from the horizon through air at the ground in weather's fog, in meters, 178 km in the Earth's clear air, 44 km in an ordinary day's and 80 m in the thickest fog
-Vector3 Extinction(Atmosphere air, WeatherConditions? weather = null);  // The share of a thing's light the air at the ground takes in a meter, in each channel, the clear air's with weather's fog added alike in all three
-Vector3 Transmittance(Atmosphere air, float distance, WeatherConditions? weather = null);  // The share of a thing's light that comes through distance meters of air along the ground in weather's fog, in each channel
-Vector3 Share(Atmosphere air, float distance, WeatherConditions? weather = null);  // The share of a thing's light the air hides over distance meters along the ground in weather's fog, in each channel, which the air's own light fills, in green 0.00055 at 25 meters and 0.022 at a kilometer in the Earth's clear air and 0.0022 and 0.085 in an ordinary day's
+float Visibility(Air air, WeatherConditions? weather = null);  // How far a black thing can be told from the horizon through air at the ground in weather's fog, in meters, 178 km in the Earth's clear air, 44 km in an ordinary day's and 80 m in the thickest fog
+Vector3 Extinction(Air air, WeatherConditions? weather = null);  // The share of a thing's light the air at the ground takes in a meter, in each channel, the clear air's with weather's fog added alike in all three
+Vector3 Transmittance(Air air, float distance, WeatherConditions? weather = null);  // The share of a thing's light that comes through distance meters of air along the ground in weather's fog, in each channel
+Vector3 Share(Air air, float distance, WeatherConditions? weather = null);  // The share of a thing's light the air hides over distance meters along the ground in weather's fog, in each channel, which the air's own light fills, in green 0.00055 at 25 meters and 0.022 at a kilometer in the Earth's clear air and 0.0022 and 0.085 in an ordinary day's
 
 class Moon                                               // The moon's light outside the air by its phase and where it reaches the ground through it
 float AngularDiameter = 0.518f;                          // How wide the moon's disc looks from the earth, in degrees, its mean of 0.518
@@ -160,7 +160,7 @@ float LitShare(float phaseAngle);                        // The share of the moo
 float LitLuminance(float phaseAngle);                    // The luminance in candelas a square meter of the moon's sunlit part outside the air, at a phase angle of phaseAngle degrees, its illuminance spread over the lit share of its disc, 4,900 when full
 float EarthshineLuminance(float phaseAngle);             // The luminance in candelas a square meter of the moon's dark part outside the air, which the earth's sunlit side lights, at the moon's phase angle of phaseAngle degrees, the most at a new moon, when the moon sees the earth full, and none when full
 float OutsideIlluminance(float phaseAngle);              // The moon's illuminance outside the air in lux on a surface facing it, at a phase angle of phaseAngle degrees, about 0.31 when full
-CelestialLight At(Atmosphere air, float elevation, float phaseAngle, float altitude = 0f);  // The moon's light at altitude meters through air, the moon elevation degrees over the horizon there at a phase angle of phaseAngle degrees
+CelestialLight At(Air air, float elevation, float phaseAngle, float altitude = 0f);  // The moon's light at altitude meters through air, the moon elevation degrees over the horizon there at a phase angle of phaseAngle degrees
 
 class Night                                              // The light of a clear night with no moon, the stars' and the air's own glow, away from a town's
 float SkyLuminance = 0.000226f;                          // The sky's luminance in candelas a square meter, 2.26e-4, a dark site's sky of 21.7 magnitudes a square arcsecond in the visual band

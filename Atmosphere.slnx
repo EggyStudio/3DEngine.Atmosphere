@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="AGENTS.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Atmosphere/Atmosphere.csproj" />
+  <Project Path="Atmosphere.Tests/Atmosphere.Tests.csproj" />
+</Solution>

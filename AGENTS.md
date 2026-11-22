@@ -1,12 +1,12 @@
-# Sky
+# Atmosphere
 
-Sky is a physically based sky, an atmosphere worked out by wavelength in twelve bands from 380 to
-780 nm, the sun's, the moon's and the night's light in lux and candelas a square meter, the sky's
-clock, the weather and the looks by the sun's height. An engine takes it as a git submodule,
-lights its scenes from its numbers and draws its sky on a GPU from the tables a made sky gives.
-It references no engine, no engine's package and no engine's bridge (NORM.md, N 2.1). What it
-needs of a renderer, a world, a scheduler or a file system it takes through an interface it
-declares, which each engine implements where it binds the module.
+Atmosphere is a physically based sky, an atmosphere worked out by wavelength in twelve bands from
+380 to 780 nm, the sun's, the moon's and the night's light in lux and candelas a square meter, the
+sky's clock, the weather and the looks by the sun's height. An engine takes it as a git submodule,
+lights its scenes from its numbers and draws its sky on a GPU from the tables a made sky gives. It
+references no engine, no engine's package and no engine's bridge (NORM.md, N 2.1). What it needs of
+a renderer, a world, a scheduler or a file system it takes through an interface it declares, which
+each engine implements where it binds the module.
 
 ## Documents
 
@@ -17,14 +17,14 @@ declares, which each engine implements where it binds the module.
 | [.github/COMMITS.md](.github/COMMITS.md) | How and when work is committed |
 | [.github/REVIEW.md](.github/REVIEW.md) | Direction from the reviewing session, which comes before any other order of work |
 | [.github/NORM.md](.github/NORM.md) | The numbered rules the module keeps, each with what checks it, the same text in the seven module repositories |
-| [DEVLOG.md](DEVLOG.md) | What landed by day, with the pictures `.github/assets/readings` keeps, generated from them and the history by `python3 -I modules/Tools/scripts/devlog.py . Sky` in every commit that closes an item or adds a picture |
-| [CHEATSHEET.md](CHEATSHEET.md) | Every public type and member a line each, its list written from the built library by `Cheatsheet.Write`, run with `CHEATSHEET_WRITE=1 dotnet test Sky.Tests`, and its opening by hand |
+| [DEVLOG.md](DEVLOG.md) | What landed by day, with the pictures `.github/assets/readings` keeps, generated from them and the history by `python3 -I modules/Tools/scripts/devlog.py . Atmosphere` in every commit that closes an item or adds a picture |
+| [CHEATSHEET.md](CHEATSHEET.md) | Every public type and member a line each, its list written from the built library by `Cheatsheet.Write`, run with `CHEATSHEET_WRITE=1 dotnet test Atmosphere.Tests`, and its opening by hand |
 
 ## Building and testing
 
 ```bash
-dotnet build Sky.slnx
-dotnet test Sky.Tests
+dotnet build Atmosphere.slnx
+dotnet test Atmosphere.Tests
 ```
 
 The tests need no window and no GPU. The build workflow builds with warnings failing the build and
@@ -35,8 +35,8 @@ runs the tests on Linux, Windows and macOS on every push (NORM.md, N 6.1 and N 6
 | Path | Holds |
 |---|---|
 | `.github` | The documents above but the README, and the build workflow |
-| `Sky` | The library, `Sky.csproj` |
-| `Sky.Tests` | The xunit tests of the library |
+| `Atmosphere` | The library, `Atmosphere.csproj` |
+| `Atmosphere.Tests` | The xunit tests of the library |
 | `modules` | The Tools module as a git submodule, `modules/Tools`, whose checks of a module the tests take and the library does not |
 | `build` | The version, `version.txt`'s major and minor set by hand and `version.sh`, which prints it with the patch counted from the history |
 

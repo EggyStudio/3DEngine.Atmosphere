@@ -1,6 +1,6 @@
-[Devlog](https://github.com/EggyStudio/3DEngine.Sky/blob/main/DEVLOG.md) [Cheatsheet](https://github.com/EggyStudio/3DEngine.Sky/blob/main/CHEATSHEET.md)
+[Devlog](https://github.com/EggyStudio/3DEngine.Atmosphere/blob/main/DEVLOG.md) [Cheatsheet](https://github.com/EggyStudio/3DEngine.Atmosphere/blob/main/CHEATSHEET.md)
 
-# Sky
+# Atmosphere
 
 ![The sky at noon, at sunset, at the end of civil twilight and under a full moon](.github/assets/readings/2026-11-22-sky-by-time.webp)
 
@@ -10,18 +10,18 @@ The module's own sky as a fisheye at noon, at sunset, at the end of civil twilig
 
 The same sky as a panorama, at sunset and on a moonless night, each at the exposure its label gives.
 
-Sky is a physically based sky, an atmosphere worked out by wavelength in twelve bands from 380 to
-780 nm, the sun's, the moon's and the night's light in lux and candelas a square meter, the sky's
-clock, the weather and the looks by the sun's height. An engine takes it as a git submodule,
-lights its scenes from its numbers and draws its sky on a GPU from the tables a made sky gives.
-It references no engine, and each engine implements the interfaces it declares where it binds the
+Atmosphere is a physically based sky, an atmosphere worked out by wavelength in twelve bands from
+380 to 780 nm, the sun's, the moon's and the night's light in lux and candelas a square meter, the
+sky's clock, the weather and the looks by the sun's height. An engine takes it as a git submodule,
+lights its scenes from its numbers and draws its sky on a GPU from the tables a made sky gives. It
+references no engine, and each engine implements the interfaces it declares where it binds the
 module.
 
 ## What it holds
 
 | Type | Gives |
 |---|---|
-| `Atmosphere` | The air as data, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with their heights, the ground's albedo, and the transmittance along a way through it. `Atmosphere.Earth` is the Earth's air on a clear day, a real column of ozone, 300 Dobson units, `Atmosphere.ContinentalAverage` an ordinary day's, and `WithTurbidity` sets its haze |
+| `Air` | The air as data, the planet's radius, the molecules' scattering, the aerosols' extinction and the ozone's absorption with their heights, the ground's albedo, and the transmittance along a way through it. `Air.Earth` is the Earth's air on a clear day, a real column of ozone, 300 Dobson units, `Air.ContinentalAverage` an ordinary day's, and `WithTurbidity` sets its haze |
 | `Sun` | The sun's light outside the air, 133,800 lux in its measured spectrum's color, and `Sun.At`, its lux, color and color temperature at the ground for its height over the horizon, with its disc's size, its luminance and the share of it above the horizon, and `Sun.Through` for a light of another strength or color |
 | `SkyLight` | The sky's luminance along a way and its illuminance on a level surface, the sun's light scattered once and more than once, in candelas a square meter and lux, with the illuminance at the ground read from a table in microseconds |
 | `SkyTables` and `SkyLaneTables` | A made `SkyLight`'s tables as a read-only view, each lane's transmittance, light scattered more than once and ground table with its sizes and axes, the air's coefficients in its bands and the matrix that turns its bands into linear sRGB, for a sky drawn on a GPU |
@@ -37,7 +37,7 @@ module.
 
 Through the Earth's air, its own ozone and a clear day's haze, the sun 54 degrees high reaches
 the ground at 111,700 lux and 5,292 K and the sky lights a level surface with 9,200 lux beside the
-sun's 90,400 (`dotnet test Sky.Tests`). The air takes the light in 12 bands of wavelength
+sun's 90,400 (`dotnet test Atmosphere.Tests`). The air takes the light in 12 bands of wavelength
 and turns it into color at the end.
 
 ## Taking it into an engine
@@ -46,14 +46,15 @@ An engine adds the repository as a git submodule under `modules/` and references
 from a project one folder below the engine's root.
 
 ```bash
-git submodule add https://github.com/EggyStudio/3DEngine.Sky.git modules/Sky
+git submodule add https://github.com/EggyStudio/3DEngine.Atmosphere.git modules/Atmosphere
 ```
 
 ```xml
-<ProjectReference Include="..\modules\Sky\Sky\Sky.csproj" />
+<ProjectReference Include="..\modules\Atmosphere\Atmosphere\Atmosphere.csproj" />
 ```
 
-The project builds the assembly `3DEngine.Sky`, whose types are in the namespace `Sky`.
+The project builds the assembly `3DEngine.Atmosphere`, whose types are in the namespace
+`Atmosphere`.
 
 A clone of the engine fetches the module with `git clone --recurse-submodules`, or with
 `git submodule update --init` in a clone made without it, and a workflow checks it out with
@@ -87,12 +88,12 @@ It stands on these conventions.
 - A color is linear sRGB, the BT.709 primaries with a D65 white and no transfer curve. Where a
   color carries a light, its luminance is the light's lux or candelas a square meter; a
   `CelestialLight`'s color has a luminance of 1 and its illuminance carries the strength.
-- `Atmosphere.Earth` is a clear day's air as Hillaire's sky and atmosphere rendering technique of
+- `Air.Earth` is a clear day's air as Hillaire's sky and atmosphere rendering technique of
   2020 sets it, a visibility of 178 km and a turbidity of 1.09, its day sky a deep blue with a
   tight halo about the sun and its apparent sunset and end of civil twilight within twice the
-  published figures. `Atmosphere.ContinentalAverage` is an ordinary day's, OPAC's continental
+  published figures. `Air.ContinentalAverage` is an ordinary day's, OPAC's continental
   average haze, 44 km and 2.39, its sunset and civil twilight within 1.55 times them. A binding
-  with another day's air sets it through `Atmosphere.WithTurbidity` and the haze's terms.
+  with another day's air sets it through `Air.WithTurbidity` and the haze's terms.
 - Illuminance is in lux, luminance in candelas a square meter, a color temperature in kelvin and an
   exposure in EV100 by an incident meter's calibration of 250. The sun gives 133,800 lux outside the
   air, and an engine whose sun is another strength scales what the module returns by its sun's over
@@ -109,13 +110,13 @@ It stands on these conventions.
   A `SkyClock`, a `WeatherState` and a `Thunderstorm` change as they advance and belong to one
   caller.
 
-The smallest binding makes the sky once and reads the scene's light each step of the world's
-clock, in a file that references the assembly `3DEngine.Sky` and opens the namespaces `Sky` and
-`System.Numerics`. `host` stands for the engine's own calls, whatever it names them.
+The smallest binding makes the sky once and reads the scene's light each step of the world's clock,
+in a file that references the assembly `3DEngine.Atmosphere` and opens the namespaces `Atmosphere`
+and `System.Numerics`. `host` stands for the engine's own calls, whatever it names them.
 
 ```csharp
 // Once, as the world loads and off the frame, the air, its sky and the sky's ground table.
-var sky = new SkyLight(Atmosphere.Earth);
+var sky = new SkyLight(Air.Earth);
 sky.PrepareGround(0, 2_000);
 host.UploadSkyTables(sky.Tables);
 var clock = new SkyClock { Latitude = 51, DayOfYear = 172, Hour = 15 };
@@ -135,11 +136,11 @@ host.SetFogExtinction(Haze.Extinction(sky.Air, weather.Current));
 The ambient luminance is the sky's illuminance over pi, the luminance of a sky alike over its
 dome that lights a level surface as this one does. An engine that draws its own sky reads
 `SkyLight.Luminance` along each way, the sun's disc from `Sun.DiscLuminance`, the moon's from
-`Moon`, and the stars from `Stars.Catalog` placed by `SkyClock.TowardSky`. The tests draw the sky
-so on the CPU with no engine, `Sky.Tests/SkyPicture.cs`, a fisheye and a panorama of each scene
-written where `SKY_PICTURES` names a folder, as a reference a binding's own sky is set against. An
-engine that draws its sky in a pass of its own on the GPU reads `Atmosphere`'s terms into it, and
-one whose renderer holds an atmosphere and clouds of its own feeds them from the clock and the
+`Moon`, and the stars from `Stars.Catalog` placed by `SkyClock.TowardSky`. The tests draw the sky so
+on the CPU with no engine, `Atmosphere.Tests/SkyPicture.cs`, a fisheye and a panorama of each scene
+written where `ATMOSPHERE_PICTURES` names a folder, as a reference a binding's own sky is set
+against. An engine that draws its sky in a pass of its own on the GPU reads `Air`'s terms into it,
+and one whose renderer holds an atmosphere and clouds of its own feeds them from the clock and the
 weather.
 
 ### Drawing the sky on a GPU
@@ -195,8 +196,8 @@ The tests take the checks every module keeps from the Tools module, a git submod
 `git submodule update --init` in a clone made without it. With the .NET 10 SDK:
 
 ```bash
-dotnet build Sky.slnx
-dotnet test Sky.Tests
+dotnet build Atmosphere.slnx
+dotnet test Atmosphere.Tests
 ```
 
 ## License

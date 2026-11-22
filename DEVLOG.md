@@ -1,10 +1,10 @@
-# Sky devlog
+# Atmosphere devlog
 
-What landed in Sky, by day and newest first, with the pictures taken on the way, the captures the
-repository keeps under `.github/assets` and the pictures made while an item was built, kept under
-`.github/assets/readings` as WebP files named by their day, each on the day its name says, and the
-notes written beside them as Markdown files named the same way. A line under Done names the item of
-.github/REVIEW.md or .github/REVIEW-ARCHIVE.md and the commit that closed it.
+What landed in Atmosphere, by day and newest first, with the pictures taken on the way, the captures
+the repository keeps under `.github/assets` and the pictures made while an item was built, kept
+under `.github/assets/readings` as WebP files named by their day, each on the day its name says, and
+the notes written beside them as Markdown files named the same way. A line under Done names the item
+of .github/REVIEW.md or .github/REVIEW-ARCHIVE.md and the commit that closed it.
 
 ## 2026-11-22
 
@@ -21,6 +21,8 @@ black with its stars and the band of the Milky Way, encoded by sRGB's curve with
 
 Commits that day
 
+- `a42d48a` The README's pictures are retaken each at an exposure fitting its time of day, said in
+  its label.
 - `1b9b9b0` The README opens with pictures of the sky the module draws, by time of day and by night.
 - `080abb5` The README and AGENTS.md open by naming the module a physically based sky and what it
   holds.

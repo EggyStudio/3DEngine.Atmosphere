@@ -112,6 +112,22 @@ its model here from the first commit rather than moving it later.
     `ff8f9df`, its run green at 12:32 on 2026-11-08, the module's tests 49; the common noun's
     spelling, catalog, in `a9573d6`, pushed at 13:30.
 
+6. **The module is named Atmosphere.** Sky names one part of what the module holds, the air, the
+    sun, the moon and the stars, the clock, the weather, the fog, the lightning and the looks by the
+    sun's height, so the module takes the wider name. The repository is 3DEngine.Atmosphere, the
+    assembly and the package id 3DEngine.Atmosphere, the namespace Atmosphere, the projects
+    Atmosphere and Atmosphere.Tests in folders of those names and the solution Atmosphere.slnx. The
+    class Atmosphere becomes Air, as its own summary calls it, with its members and presets
+    unchanged, so the namespace and a type in it do not share a name. The types that name the sky
+    itself keep their names, SkyLight, SkyClock, SkyTables, SkyLaneTables and the tests' SkyPicture.
+    The variable that names the pictures' folder becomes ATMOSPHERE_PICTURES. The README's title and
+    first paragraph, the link row, the cheatsheet, the guide, AGENTS.md, the workflow and the
+    generated devlog's links take the name, and the dated lines of the devlog and the review keep
+    the words they were written in. The change is made outright in one commit with no older name
+    kept beside the new, the suite whole on it. The folder on this machine keeps its name until the
+    session is started again in the new one, and the repository on GitHub is renamed by the review
+    once the commit is up.
+
 ## Verdicts
 
 1. **The disc's share is not exactly one on arm64.** Run 44341456796 of `1fc8aca` at 16:57 on
