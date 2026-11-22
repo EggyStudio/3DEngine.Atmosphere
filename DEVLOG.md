@@ -10,16 +10,18 @@ notes written beside them as Markdown files named the same way. A line under Don
 
 ![](.github/assets/readings/2026-11-22-sky-by-time.webp)
 The sky the module draws from its own numbers as a fisheye at noon, at sunset, at the end of civil
-twilight and under a full moon, each at the exposure its scene's incident meter gives and encoded by
-sRGB's curve with no tone curve.
+twilight and under a full moon, each at the EV100 its label gives, 14.5, 10.5, 4.5 and minus 1.5,
+set so the dome's mean falls mid-range by day and dark by night, and encoded by sRGB's curve with no
+tone curve.
 
 ![](.github/assets/readings/2026-11-22-sky-panoramas.webp)
 The sky at sunset and on a moonless night as a panorama from 10 degrees under the horizon to the
-zenith, the sunset's light thinning upward from a bright horizon and the night's glow lying in a
-faint arch over the stars.
+zenith, at EV100 10.5 and minus 6.5, the sunset's orange kept at the horizon and the night near
+black with its stars and the band of the Milky Way, encoded by sRGB's curve with no tone curve.
 
 Commits that day
 
+- `1b9b9b0` The README opens with pictures of the sky the module draws, by time of day and by night.
 - `080abb5` The README and AGENTS.md open by naming the module a physically based sky and what it
   holds.
 

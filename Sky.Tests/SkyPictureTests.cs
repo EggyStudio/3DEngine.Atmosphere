@@ -10,6 +10,18 @@ public class SkyPictureTests
 {
     private static readonly SkyLight Sky = Skies.Earth;
 
+    // The EV100 each scene's plain picture is taken at, as a photographer would set it for the
+    // time of day: the day's and the twilight's put the dome's mean luminance at 0.13 to 0.19 of
+    // full, which sRGB's curve encodes near the middle of its range, and a night's at 0.02, so it
+    // lands dark with the stars, the moon and the Milky Way standing out. The disc is let clip.
+    // The incident meter's exposure is a stop or more over these in the day, which leaves the
+    // Earth's clear air a dark blue, and as far under them at night, where it shows a gray.
+    private static readonly Dictionary<string, float> Plain = new()
+    {
+        ["noon"] = 14.5f, ["morning"] = 14.5f, ["sunset"] = 10.5f, ["civil-end"] = 4.5f,
+        ["nautical"] = 0f, ["moonlit"] = -1.5f, ["moonless"] = -6.5f,
+    };
+
     [Fact]
     public void The_Fisheyes_Middle_Pixel_At_Noon_Is_The_Zeniths_Luminance_Exposed_And_Encoded()
     {
@@ -46,18 +58,33 @@ public class SkyPictureTests
     }
 
     [Fact]
+    public void Each_Plain_Pictures_Exposure_Puts_The_Domes_Mean_Where_Its_Time_Of_Day_Wants_It()
+    {
+        // The mean over the dome as a share of the full a pixel takes, 0.13 to 0.19 by day and in
+        // the twilights, 0.02 by night, where the stars and the Milky Way are to show.
+        foreach (var (name, clock) in SkyPicture.Scenes())
+        {
+            var share = SkyPicture.MeanLuminance(Sky, clock) / SkyPicture.Saturation(Plain[name]);
+            if (name.StartsWith("moon"))
+                Assert.InRange(share, 0.015f, 0.03f);
+            else
+                Assert.InRange(share, 0.12f, 0.2f);
+        }
+    }
+
+    [Fact]
     public void The_Pictures_Are_Written_Where_SKY_PICTURES_Names_A_Folder()
     {
         // dotnet test Sky.Tests with SKY_PICTURES set to a folder writes the fisheye and the
         // panorama of each scene there as PNG, the sun's place ringed, each at the scene's metered
         // exposure and again at a reflected reading of the sky, with scenes.csv naming each by its
-        // sun's height and both exposures, for a sheet to set them on, and the two again at the
-        // scene's metered exposure with no ring, the plain pictures of the sky itself.
+        // sun's height and the three exposures, for a sheet to set them on, and the two again at
+        // the exposure of the plain table with no ring, the plain pictures of the sky itself.
         var folder = Environment.GetEnvironmentVariable("SKY_PICTURES");
         if (string.IsNullOrEmpty(folder)) return;
         Directory.CreateDirectory(folder);
         using var list = new StreamWriter(Path.Combine(folder, "scenes.csv"));
-        list.WriteLine("name,sun,moon,exposure,reflected");
+        list.WriteLine("name,sun,moon,exposure,reflected,plain");
         foreach (var (name, clock) in SkyPicture.Scenes())
         {
             var exposure = SceneLight.At(clock, Sky).Exposure;
@@ -67,9 +94,9 @@ public class SkyPictureTests
                 SkyPicture.Fisheye(Sky, clock, ev, 400, markSun: true).WritePng(Path.Combine(folder, $"{name}-fisheye{tag}.png"));
                 SkyPicture.Panorama(Sky, clock, ev, 1080, 330, markSun: true).WritePng(Path.Combine(folder, $"{name}-panorama{tag}.png"));
             }
-            SkyPicture.Fisheye(Sky, clock, exposure, 400).WritePng(Path.Combine(folder, $"{name}-fisheye-plain.png"));
-            SkyPicture.Panorama(Sky, clock, exposure, 1080, 330).WritePng(Path.Combine(folder, $"{name}-panorama-plain.png"));
-            list.WriteLine(FormattableString.Invariant($"{name},{clock.SunAltitude:F2},{clock.MoonAltitude:F2},{exposure:F2},{reflected:F2}"));
+            SkyPicture.Fisheye(Sky, clock, Plain[name], 400).WritePng(Path.Combine(folder, $"{name}-fisheye-plain.png"));
+            SkyPicture.Panorama(Sky, clock, Plain[name], 1080, 330).WritePng(Path.Combine(folder, $"{name}-panorama-plain.png"));
+            list.WriteLine(FormattableString.Invariant($"{name},{clock.SunAltitude:F2},{clock.MoonAltitude:F2},{exposure:F2},{reflected:F2},{Plain[name]:F1}"));
         }
     }
 }
