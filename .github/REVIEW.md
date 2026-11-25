@@ -646,3 +646,25 @@ the same march toward the moon with it in place of `Sun`, the ground's term scal
 bands over the sun's. The README reader so lit gives the module's moonlit sky within 0.5% with the
 moon 60 and 15 degrees up and 2 down and phase angles of 0 and 60, four ways each; it failed first,
 to build.
+
+The module's session, the nautical twilight against the ozone, a reading with nothing changed. The
+level light's x and y with the sun at 6, 8, 10 and 12 degrees down, read through `Air.Earth` and
+variants of its ozone alone, the measured evenings' being x 0.235 and y 0.242 at 6 and x 0.216 at 10.
+
+| Ozone | 6 down | 8 down | 10 down | 12 down |
+|---|---|---|---|---|
+| Earth, 10 to 40 km | 0.249, 0.253 | 0.249, 0.255 | 0.256, 0.262 | 0.262, 0.264 |
+| layer from 8 to 36 km, peak at 22 km | 0.254, 0.264 | 0.256, 0.267 | 0.263, 0.273 | 0.269, 0.275 |
+| layer from 12 to 32 km, peak at 22 km | 0.272, 0.284 | 0.274, 0.287 | 0.282, 0.294 | 0.290, 0.298 |
+| 1.3 times the absorption | 0.232, 0.231 | 0.233, 0.234 | 0.239, 0.240 | 0.243, 0.240 |
+| 1.6 times | 0.219, 0.212 | 0.220, 0.215 | 0.225, 0.221 | 0.229, 0.220 |
+| 2 times | 0.206, 0.191 | 0.208, 0.195 | 0.212, 0.200 | 0.214, 0.197 |
+
+The gap at 10 degrees down is 0.040 in x under the clear air, where it was 0.022 under the old one.
+Moving the layer's peak to 22 km with the peak absorption kept makes the light redder, since the
+tent then holds less ozone, so the layer's height is not the cause and the lower peak is no mend.
+More absorption blues it, 1.6 times bringing 10 degrees down to 0.225 in x, but it takes y at 6
+degrees down to 0.212 where the measured evenings read 0.242 with a spread of 0.029, so the column
+alone closes x and opens y. The evenings are bluer in x with y held, which a change of the ozone's
+amount does not give, so the cross-section's temperature, the stratosphere's aerosol and the light
+scattered more than once taken alike every way stay untried. The probe is not kept.
